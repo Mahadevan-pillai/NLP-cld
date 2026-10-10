@@ -107,6 +107,12 @@ def test_ping_success(env_uri, mock_client):
     [
         (ServerSelectionTimeoutError(f"timeout reaching {FAKE_URI}"), "could not reach"),
         (OperationFailure(f"bad auth for fakeuser:{FAKE_PASSWORD}", code=18), "authentication failed"),
+        # Atlas reports bad credentials as code 8000 / AtlasError
+        (OperationFailure("bad auth : authentication failed", code=8000,
+                          details={"errmsg": "bad auth : authentication failed",
+                                   "code": 8000, "codeName": "AtlasError"}), "authentication failed"),
+        (OperationFailure("other atlas error", code=8000,
+                          details={"errmsg": "something else", "code": 8000}), "code 8000"),
         (OperationFailure("not allowed", code=13), "not authorized"),
     ],
 )

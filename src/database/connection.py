@@ -95,7 +95,10 @@ def safe_error_message(exc: Exception) -> str:
             "that the cluster is running."
         )
     if isinstance(exc, OperationFailure):
-        if getattr(exc, "code", None) == 18:
+        # Standard MongoDB reports bad credentials as code 18; Atlas uses
+        # its generic code 8000 ("AtlasError") with a "bad auth" message.
+        errmsg = str((exc.details or {}).get("errmsg", "")).lower()
+        if exc.code == 18 or (exc.code == 8000 and "bad auth" in errmsg):
             return "authentication failed. Check the database user's credentials in your .env."
         if getattr(exc, "code", None) == 13:
             return "the database user is not authorized for this operation."
