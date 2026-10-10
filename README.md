@@ -177,6 +177,17 @@ python -m pytest
 For an NVIDIA GPU, install PyTorch first with the command from
 <https://pytorch.org/get-started/locally/>, then install the rest.
 
+**If the repository is inside a cloud-synced folder (e.g. OneDrive),**
+create the virtual environment *outside* it so the large environment
+is not synced, for example:
+
+```bash
+python -m venv C:\Users\<you>\venvs\nlp-cld
+```
+
+and activate it with `C:\Users\<you>\venvs\nlp-cld\Scripts\Activate.ps1`.
+(The primary developer machine uses this layout.)
+
 ## 15. Environment Variable Instructions
 1. Copy `.env.example` to `.env` in the repository root.
 2. Fill in your own values (`MONGODB_URI`, `MONGODB_DATABASE`,
