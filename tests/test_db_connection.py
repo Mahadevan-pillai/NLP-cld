@@ -175,6 +175,7 @@ def test_check_script_failure_output_is_safe(env_uri, mock_client, capsys):
     out = capsys.readouterr().out
     assert "MongoDB connection failed: " in out
     assert_no_secret(out)
+    assert out.count("MongoDB connection failed") == 1  # prefix not duplicated
 
 
 def test_init_script_runs_ensure_indexes(env_uri, mock_client, capsys):

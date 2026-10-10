@@ -133,9 +133,7 @@ class MongoConnection:
                     tzinfo=timezone.utc,
                 )
             except Exception as exc:  # e.g. DNS failure for mongodb+srv URIs
-                raise DatabaseConnectionError(
-                    f"MongoDB connection failed: {safe_error_message(exc)}"
-                ) from None
+                raise DatabaseConnectionError(safe_error_message(exc)) from None
         return self._client
 
     @property
@@ -149,9 +147,7 @@ class MongoConnection:
         except DatabaseConnectionError:
             raise
         except Exception as exc:
-            raise DatabaseConnectionError(
-                f"MongoDB connection failed: {safe_error_message(exc)}"
-            ) from None
+            raise DatabaseConnectionError(safe_error_message(exc)) from None
         return True
 
     def close(self) -> None:
