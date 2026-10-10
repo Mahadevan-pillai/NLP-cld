@@ -24,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.data import inspection as ins  # noqa: E402
 from src.data.datasets import DATASETS, RAW_DIR  # noqa: E402
 from src.utils.config import REPO_ROOT  # noqa: E402
+from src.utils.io import write_json_if_changed  # noqa: E402
 
 TABLES = REPO_ROOT / "results" / "tables"
 METRICS = REPO_ROOT / "results" / "metrics"
@@ -125,7 +126,8 @@ def inventory_row(r: dict) -> dict:
         "duplicate_text_conflicting_label_groups": dup.get("duplicate_text_groups_with_conflicting_labels", "NOT_APPLICABLE"),
         "exact_duplicate_image_groups": img.get("exact_duplicate_image_groups", "UNKNOWN"),
         "license_status": d["license"],
-        "source_status": "Paper DOI verified; download source TO_BE_VERIFIED",
+        "source_status": ("Paper DOI + dataset card found; confirm your download source matches"
+                          if d.get("dataset_card") else "Paper DOI verified; download source TO_BE_VERIFIED"),
         "notes": "; ".join(measured_issues(r)),
     }
 
@@ -167,16 +169,7 @@ def write_csv(path: Path, rows: list[dict]) -> None:
 
 
 def write_report(out: Path, report: dict) -> str:
-    """Write the JSON unless only the timestamp would change (keeps reruns clean)."""
-    if out.exists():
-        old = json.loads(out.read_text(encoding="utf-8"))
-        same = {k: v for k, v in old.items() if k != "generated_at"} == \
-               {k: v for k, v in report.items() if k != "generated_at"}
-        if same:
-            return "unchanged"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-    return "written"
+    return write_json_if_changed(out, report)
 
 
 def main() -> int:

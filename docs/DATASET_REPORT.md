@@ -12,6 +12,20 @@ Every statement is tagged:
 - **[TO BE VERIFIED]**: not confirmed; must be checked before relying on it.
 - **[ANALYSIS]**: our interpretation/recommendation.
 
+> **Update (Task 4, 2026-10-10).** The MIMIC dataset card
+> (<https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset>)
+> resolves several TO-BE-VERIFIED items below **[DOCUMENTED]**:
+>
+> - `Misogyny` **1 = Misogynistic, 0 = Non Misogynistic**;
+> - licence **CC-BY-4.0**;
+> - `ExtractedText` was produced by **OCR** ("EasyORC", presumably
+>   EasyOCR);
+> - the release has **no official split** (the 4,044/1,010 split is a
+>   third-party choice).
+>
+> The measurements in this report are unchanged. Cleaning decisions are
+> in `docs/DATA_CLEANING_REPORT.md`.
+
 Raw data was only read, never modified: a fingerprint of every file
 (path, size, modification time) under `data/raw/` was identical before
 and after running the inspection. [MEASURED]

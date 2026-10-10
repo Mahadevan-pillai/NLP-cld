@@ -124,28 +124,36 @@ interpretability.
 Key principle: the app imports the same preprocessing and model code
 used in training, so training and inference stay consistent.
 
-## 7. Datasets (inspected in Task 3)
+## 7. Datasets (FINAL strategy, Task 4)
 
-- **MIMIC** — *Misogyny Identification in Multimodal Internet Content in
-  Hindi-English Code-Mixed Language* (Singh, Sharma & Singh, 2024,
-  ACM TALLIP, https://doi.org/10.1145/3656169). INSPECTED: 5,054 memes
-  (image + `ExtractedText`), binary `Misogyny` label (0: 2,539 /
-  1: 2,515) plus sub-labels Objectification / Prejudice / Humiliation.
-  All images present and readable. **RECOMMENDED as the single primary
-  dataset** (final strategy confirmed in Task 4).
-- No other dataset is part of the project. No external-validation
-  dataset is available yet.
-- Full measurements and recommendation: `docs/DATASET_REPORT.md`.
+- **MIMIC**: *Misogyny Identification in Multimodal Internet Content
+  in Hindi-English Code-Mixed Language* (Singh, Sharma & Singh, 2024,
+  ACM TALLIP, https://doi.org/10.1145/3656169; dataset card
+  https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset).
+  - **Role:** the single **PRIMARY TRAINING DATASET** for all
+    experiments.
+  - **Contents:** 5,054 memes (image + OCR text), binary `Misogyny`
+    label (documented: 1 = misogynistic, 0 = non-misogynistic) plus
+    sub-labels Objectification / Prejudice / Humiliation. Licence
+    CC-BY-4.0 (per dataset card).
+  - **Cleaned (Task 4):** 5,044 samples in
+    `data/processed/mimic_cleaned.csv`. 10 excluded: 6 identical
+    copies, plus 2 identical memes labelled both ways.
+- No datasets are merged. Other local files (`Downloads/DATASET 0x`)
+  are NOT USED. Offensive/hate data, if ever used, is a separate
+  auxiliary task. No external-validation dataset is available yet.
+- Details: `docs/DATASET_REPORT.md` (inspection) and
+  `docs/DATA_CLEANING_REPORT.md` (cleaning).
 
-## 8. Remaining dataset uncertainty
+## 8. Remaining dataset caveats
 
-TO BE VERIFIED: licence; meaning of label values (whether `Misogyny=1`
-means misogynistic); origin of `ExtractedText` (OCR or manual — affects
-RQ3); official 4,044 / 1,010 split membership (not in the local file).
-
-Known data issues (measured, not yet handled): file names encode the
-label (never use as features); 4 duplicate-text groups and 2
-identical-image pairs with conflicting labels; 148 empty texts.
+- The dataset has **no official split**; the project creates its own.
+  It must keep `duplicate_group` members together.
+- File names encode the label; they must never be used as features.
+- 148 samples have empty text (106 misogynistic / 42 not). The
+  experiment design must state how the text-only model handles them.
+- `ExtractedText` is **OCR output** (EasyOCR per the dataset card), not
+  a human transcription (see the RQ3 note in §10).
 
 Datasets will **not** be combined until label/task compatibility has
 been demonstrated.
@@ -172,6 +180,16 @@ Listing a model here does not finalize it.
 These may be refined after dataset inspection and literature review.
 Novelty must not be claimed until relevant literature is reviewed.
 
+**RQ3 / OCR experiment: TO BE REFRAMED (finding from Task 4).** The
+dataset text is itself OCR output (EasyOCR per the dataset card), so
+there is no human "reference text". Options to decide before the OCR
+task:
+- dataset OCR vs the project's own OCR pipeline;
+- a small manually transcribed subset as reference.
+
+The research question has not been changed yet; that is a decision for
+the developer.
+
 ## 11. Planned experiments (PLANNED — no results exist)
 
 | ID | Modality | Hinglish normalization |
@@ -182,8 +200,9 @@ Novelty must not be claimed until relevant literature is reviewed.
 | E4 | Image + Text | Without |
 | E5 | Image + Text | With |
 
-OCR experiment (PLANNED): reference dataset text vs OCR-extracted text
-vs OCR-extracted + normalized text.
+OCR experiment (PLANNED; TO BE REFRAMED, see §10): reference dataset
+text vs OCR-extracted text vs OCR-extracted + normalized text. Note
+that the "reference" dataset text is itself OCR output.
 
 Every run is recorded in `RESEARCH_LOG.md`.
 
@@ -281,8 +300,7 @@ data, document what is persisted, avoid logging raw user input.
 
 ## 17. Current project stage
 
-**Task 3 — Dataset Inventory, Verification and Compatibility Analysis
-(complete).**
+**Task 4 — Dataset Cleaning and Final Dataset Strategy (complete).**
 
 IMPLEMENTED in Task 1: directory structure, documentation
 (`CLAUDE.md`, `PROJECT_CONTEXT.md`, `RESEARCH_LOG.md`, `README.md`),
@@ -301,12 +319,22 @@ IMPLEMENTED in Task 3: read-only dataset inspection (`src/data/`,
 `config.yaml`, log entry `INS-20261010-01`. MIMIC recommended as the
 single primary dataset.
 
-NOT STARTED: dataset cleaning, preprocessing, EDA, splitting, model
-training, tuning, OCR, explainability, Streamlit UI, deployment, paper
-writing. No experimental results exist.
+IMPLEMENTED in Task 4:
+- MIMIC finalized as the single primary dataset.
+- Deterministic cleaning pipeline (`src/data/cleaning.py`,
+  `scripts/clean_dataset.py`), producing `data/processed/mimic_cleaned.csv`
+  (5,044 samples, git-ignored).
+- Exclusion log, duplicate decisions and cleaning summary in
+  `results/tables/`; fingerprint in `results/metrics/`.
+- `docs/DATA_CLEANING_REPORT.md`; log entry `INS-20261010-02`.
+- Label meaning, licence and text origin documented from the dataset
+  card.
 
-Next planned task: **Task 4 — Dataset Cleaning and Final Dataset
-Strategy.**
+NOT STARTED: EDA, text preprocessing, Hinglish normalization,
+splitting, model training, tuning, OCR, explainability, Streamlit UI,
+deployment, paper writing. No experimental results exist.
+
+Next planned task: **Task 5 — Exploratory Data Analysis (EDA).**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

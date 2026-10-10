@@ -158,3 +158,67 @@ Limitations: language profile is heuristic; only exact duplicates detected; labe
 Conclusion: MIMIC is recommended as the single primary dataset for text-only, image-only and multimodal models on the same samples. No merge with other datasets.
 
 Next Experiment: TASK 4: Dataset Cleaning and Final Dataset Strategy (duplicate/conflict policy, empty-text policy, split).
+
+### Experiment ID: INS-20261010-02
+
+Date: 2026-10-10
+
+Status: COMPLETED
+
+Research Question: Not an experiment. Task 4: final dataset strategy decision and deterministic metadata cleaning.
+
+Dataset: MIMIC (decision: single PRIMARY TRAINING DATASET; no datasets merged; `Downloads/DATASET 0x` files NOT USED)
+
+Dataset Version: `MIMIC2024.csv`, SHA-256 `98dd8843ef81…`; licence CC-BY-4.0 and label meaning (1 = misogynistic) per dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card above
+
+Train Split: NOT_APPLICABLE (no split created; the release has no official split)
+
+Validation Split: NOT_APPLICABLE
+
+Test Split: NOT_APPLICABLE
+
+Input Modality: Metadata + image integrity (no modelling)
+
+Preprocessing: None. `original_text` is the raw OCR text, byte-for-byte; images referenced, not copied.
+
+Feature Representation: NOT_APPLICABLE
+
+Model: NOT_APPLICABLE
+
+Model Version / Pretrained Checkpoint: NOT_APPLICABLE
+
+Hyperparameters: NOT_APPLICABLE
+
+Random Seed: NOT_USED (cleaning is deterministic)
+
+Training Environment: Windows 11, Python 3.10.0, pandas 2.3.3, Pillow 12.3.0
+
+Training Details: `python scripts/clean_dataset.py`. Cleaning version 1.0, policy in `src/data/cleaning.py` (`POLICY`).
+
+Validation Metrics: NOT_APPLICABLE
+
+Test Metrics: NOT_APPLICABLE
+
+Runtime / Resource Notes: ~5 s
+
+Artifacts: `data/processed/mimic_cleaned.csv` (git-ignored, SHA-256 `1ff17281346f…`), `results/tables/excluded_samples.csv`, `results/tables/duplicate_decisions.csv`, `results/tables/cleaning_summary.csv`, `results/metrics/mimic_cleaning_fingerprint.json`, `docs/DATA_CLEANING_REPORT.md`
+
+Observations (measured):
+- 5,054 → 5,044 samples; 10 excluded:
+  - 6 later copies of identical image + text + label;
+  - 4 = 2 identical memes annotated with both labels.
+- `Misogyny` 0: 2,539 → 2,537; 1: 2,515 → 2,507.
+- 148 empty texts kept (`has_text=False`; 106 misogynistic / 42 not).
+- 10 same-text groups on different images kept and grouped.
+- 23 samples flagged for review.
+- All 10 post-cleaning checks passed; two runs gave byte-identical outputs.
+
+Error Analysis Notes: NOT_APPLICABLE
+
+Limitations: exact duplicates only; conflicting identical memes excluded rather than resolved; `ExtractedText` is OCR output, so RQ3's "reference vs OCR" comparison needs reframing.
+
+Conclusion: Cleaned MIMIC metadata supports text-only, image-only and multimodal experiments on the same 5,044 samples and labels.
+
+Next Experiment: TASK 5: Exploratory Data Analysis (EDA).

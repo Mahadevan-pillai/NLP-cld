@@ -1,10 +1,8 @@
 """Dataset adapters: where each dataset lives and which columns mean what.
 
 Column names below were VERIFIED by reading the actual file header
-(Task 3). Label *meanings* are NOT encoded here: which raw value means
-"misogynistic" must come from the dataset's official documentation and
-is TO_BE_VERIFIED. `positive_value` is only the raw value used to
-compare primary and sub-labels during inspection.
+(Task 3). Label meanings come from the dataset card (Task 4) and are
+kept in `documented`, separate from anything measured.
 
 Add a new DatasetSpec when another dataset is placed in data/raw/.
 """
@@ -22,6 +20,7 @@ class DatasetSpec:
     directory: str                  # relative to data/raw
     annotation_file: str            # relative to the dataset directory
     id_column: str
+    image_directory: str | None = field(default=None, kw_only=True)  # relative to the dataset directory
     text_column: str | None
     image_column: str | None
     primary_label: str
@@ -39,6 +38,10 @@ class DatasetSpec:
     @property
     def annotation_path(self):
         return self.root / self.annotation_file
+
+    @property
+    def image_root(self):
+        return self.root / self.image_directory if self.image_directory else self.root
 
 
 MIMIC = DatasetSpec(
@@ -63,16 +66,18 @@ MIMIC = DatasetSpec(
                       "abuse, sarcasm or sentiment)",
         "language": "Hindi-English code-mixed",
         "modalities": "meme image + text",
-        "reported_split": "4,044 train / 1,010 test (as reported in 'M3Hop-CoT: "
-                          "Misogynous Meme Identification with Multimodal Multi-hop "
-                          "Chain-of-Thought', arXiv:2410.09220, Table 1); split "
-                          "membership is not present in the local file",
-        "license": "TO_BE_VERIFIED",
-        "label_value_meaning": "TO_BE_VERIFIED",
-        "text_origin": "TO_BE_VERIFIED (column name 'ExtractedText' suggests text "
-                       "extracted from the meme)",
+        "reported_split": "No official split in the release (dataset card shows a "
+                          "single 5,054-row set). A third-party paper ('M3Hop-CoT', "
+                          "arXiv:2410.09220, Table 1) used 4,044 train / 1,010 test; "
+                          "that split is not present in the local file",
+        "dataset_card": "https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset",
+        "license": "CC-BY-4.0 (dataset card licence tag; confirm it matches your download source)",
+        "label_value_meaning": "Misogyny: 1 = Misogynistic, 0 = Non Misogynistic (dataset card)",
+        "text_origin": "OCR: the dataset card says text was extracted with 'EasyORC' "
+                       "(presumably EasyOCR)",
     },
     recommended_role="PRIMARY TRAINING DATASET",
+    image_directory="Files",
 )
 
 DATASETS = {"mimic": MIMIC}

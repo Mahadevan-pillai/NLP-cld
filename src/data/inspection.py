@@ -196,9 +196,29 @@ def text_summary(series: pd.Series) -> dict:
 # Duplicates and integrity
 # ------------------------------------------------------------------
 
-def _dup_key(text: str) -> str:
+def dup_key(text: str) -> str:
     """Comparison key for duplicate detection only (data is not changed)."""
     return " ".join(str(text).casefold().split())
+
+
+_dup_key = dup_key  # backwards-compatible alias
+
+
+def check_image(path: Path) -> dict:
+    """Read-only check of one image: SHA-256, readability, format and size."""
+    from PIL import Image
+
+    data = Path(path).read_bytes()
+    result = {"sha256": hashlib.sha256(data).hexdigest(), "readable": False,
+              "format": None, "width": None, "height": None}
+    try:
+        with Image.open(path) as img:
+            img.verify()  # integrity check; image must be reopened afterwards
+        with Image.open(path) as img:
+            result.update(readable=True, format=img.format, width=img.size[0], height=img.size[1])
+    except Exception:
+        pass
+    return result
 
 
 def duplicate_summary(df: pd.DataFrame, id_col: str, text_col: str | None, label_col: str | None) -> dict:
@@ -249,8 +269,6 @@ def image_summary(root: Path, referenced: pd.Series) -> dict:
     Opens each image read-only with Pillow (verify + size); computes
     SHA-256 of file bytes to find exact duplicates. No image is changed.
     """
-    from PIL import Image
-
     root = Path(root)
     on_disk = {}
     for p in root.rglob("*"):
@@ -277,16 +295,12 @@ def image_summary(root: Path, referenced: pd.Series) -> dict:
     hashes = {}
     for name in found:
         path = on_disk[name][0]
-        data = path.read_bytes()
-        hashes.setdefault(hashlib.sha256(data).hexdigest(), []).append(name)
-        try:
-            with Image.open(path) as img:
-                img.verify()  # integrity check; image must be reopened afterwards
-            with Image.open(path) as img:
-                fmt, (w, h) = img.format, img.size
-        except Exception:
+        info = check_image(path)
+        hashes.setdefault(info["sha256"], []).append(name)
+        if not info["readable"]:
             corrupt.append(name)
             continue
+        fmt, w, h = info["format"], info["width"], info["height"]
         formats[fmt] += 1
         widths.append(w)
         heights.append(h)

@@ -1,7 +1,7 @@
 {
   "dataset": "MIMIC",
   "status": "INSPECTED",
-  "generated_at": "2026-10-10T10:12:49+00:00",
+  "generated_at": "2026-10-10T10:24:00+00:00",
   "annotation_file": "data/raw/mimic/MIMIC2024.csv",
   "annotation_sha256": "98dd8843ef8189e44f7acbd2b61b5a2d263146700b838a93127c427f109c7f26",
   "documented": {
@@ -11,10 +11,11 @@
     "task_scope": "misogyny specifically (not general offensiveness, hate, abuse, sarcasm or sentiment)",
     "language": "Hindi-English code-mixed",
     "modalities": "meme image + text",
-    "reported_split": "4,044 train / 1,010 test (as reported in 'M3Hop-CoT: Misogynous Meme Identification with Multimodal Multi-hop Chain-of-Thought', arXiv:2410.09220, Table 1); split membership is not present in the local file",
-    "license": "TO_BE_VERIFIED",
-    "label_value_meaning": "TO_BE_VERIFIED",
-    "text_origin": "TO_BE_VERIFIED (column name 'ExtractedText' suggests text extracted from the meme)"
+    "reported_split": "No official split in the release (dataset card shows a single 5,054-row set). A third-party paper ('M3Hop-CoT', arXiv:2410.09220, Table 1) used 4,044 train / 1,010 test; that split is not present in the local file",
+    "dataset_card": "https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset",
+    "license": "CC-BY-4.0 (dataset card licence tag; confirm it matches your download source)",
+    "label_value_meaning": "Misogyny: 1 = Misogynistic, 0 = Non Misogynistic (dataset card)",
+    "text_origin": "OCR: the dataset card says text was extracted with 'EasyORC' (presumably EasyOCR)"
   },
   "recommended_role": "PRIMARY TRAINING DATASET",
   "files": {

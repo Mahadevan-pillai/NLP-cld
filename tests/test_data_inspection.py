@@ -128,8 +128,10 @@ def test_inspection_does_not_modify_files(tmp_path, table):
 def test_mimic_spec_points_inside_data_raw():
     spec = DATASETS["mimic"]
     assert spec.annotation_path.parts[-3:] == ("raw", "mimic", "MIMIC2024.csv")
-    assert spec.documented["license"] == "TO_BE_VERIFIED"
-    assert spec.documented["label_value_meaning"] == "TO_BE_VERIFIED"
+    assert spec.image_root.parts[-3:] == ("raw", "mimic", "Files")
+    # Documented facts must name their source.
+    assert "dataset card" in spec.documented["license"]
+    assert spec.documented["dataset_card"].startswith("https://huggingface.co/")
 
 
 # ---------------- scripts/inspect_datasets.py ----------------

@@ -31,11 +31,24 @@ def test_tuning_never_on_test_set(config):
     assert config["evaluation"]["tune_on"] == "validation"
 
 
-def test_label_meaning_not_assumed(config):
-    # Which raw value means "misogynistic" must come from documentation.
+def test_label_configuration_consistent(config):
+    # Label meaning is documented (dataset card, Task 4); config must be self-consistent.
     ds = config["dataset"]
-    for key in ("labels", "positive_label", "license"):
-        assert ds[key] is None, f"dataset.{key} should be null until verified"
+    values = set(ds["label_values"])
+    assert set(ds["labels"]) == values
+    assert set(ds["label_mapping"]) == values
+    assert ds["positive_label"] in values
+    assert ds["labels"][ds["positive_label"]] == "misogynistic"
+    assert sorted(ds["label_mapping"].values()) == [0, 1]
+
+
+def test_label_meaning_matches_documented_source(config):
+    from src.data.datasets import DATASETS
+
+    spec = DATASETS[config["dataset"]["primary"]]
+    meaning = spec.documented["label_value_meaning"]
+    assert "1 = Misogynistic" in meaning and "0 = Non Misogynistic" in meaning
+    assert "dataset card" in meaning   # the source is recorded next to the fact
 
 
 def test_configured_columns_exist_in_dataset_file(config):
