@@ -330,11 +330,30 @@ IMPLEMENTED in Task 4:
 - Label meaning, licence and text origin documented from the dataset
   card.
 
-NOT STARTED: EDA, text preprocessing, Hinglish normalization,
-splitting, model training, tuning, OCR, explainability, Streamlit UI,
-deployment, paper writing. No experimental results exist.
+IMPLEMENTED in Task 5:
+- Reproducible EDA (`src/data/eda.py`, `src/data/eda_plots.py`,
+  `scripts/run_eda.py`, `notebooks/02_eda.ipynb`).
+- 17 tables in `results/tables/eda/`, 13 figures in
+  `results/figures/eda/`, `docs/EDA_REPORT.md`, log entry
+  `INS-20261010-03`.
 
-Next planned task: **Task 5 — Exploratory Data Analysis (EDA).**
+Key EDA findings for later tasks:
+- The classes are balanced.
+- **Shortcut and leakage risks:**
+  - class-exclusive `@handles` (watermarks);
+  - class-correlated image resolutions;
+  - 48 near-duplicate image pairs not yet grouped;
+  - label-encoding file names.
+- The splitting task must group near-duplicates and `duplicate_group`s
+  together.
+- Handle masking should be tested in preprocessing ablations.
+
+NOT STARTED: text preprocessing, Hinglish normalization, splitting,
+model training, tuning, OCR, explainability, Streamlit UI, deployment,
+paper writing. No experimental results exist.
+
+Next planned task: **Task 6 — Text Preprocessing and Hinglish
+Normalization.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

@@ -53,3 +53,9 @@ streamlit>=1.35
 
 # Testing
 pytest>=8.0
+
+# Notebooks (Task 5): create, execute and validate notebooks/*.ipynb
+# (ipykernel also lets VS Code / Jupyter run them in this environment)
+nbformat>=5.9
+nbclient>=0.10
+ipykernel>=6.29

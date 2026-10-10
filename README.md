@@ -156,20 +156,20 @@ checks connectivity (needs `MONGODB_URI` in `.env`), and
 │   ├── raw/              # original datasets (git-ignored)
 │   ├── processed/        # derived data (git-ignored)
 │   └── splits/           # train/val/test splits (git-ignored)
-├── notebooks/            # exploration / EDA
+├── notebooks/            # 02_eda.ipynb (reproduces the EDA)
 ├── src/
 │   ├── data/  preprocessing/  features/  models/  training/
 │   ├── evaluation/  explainability/
 │   ├── database/         # MongoDB connection, schemas, repositories, indexes
 │   └── utils/            # config.py — config loader
-├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py
+├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py
 ├── models/{text,image,multimodal}/   # model artifacts (git-ignored)
 ├── results/
 │   ├── figures/  metrics/  tables/  paper/   # versioned small outputs
 │   └── predictions/      # per-sample outputs (git-ignored)
 ├── app/                  # Streamlit app (later)
 ├── tests/                # pytest tests
-└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md
+└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md
 ```
 
 ## 14. Setup Instructions
@@ -229,6 +229,7 @@ For an NVIDIA GPU, install PyTorch first with the command from
 tests; live Atlas connectivity depends on your `.env`).
 **Task 3 — Dataset Inventory & Compatibility: complete.**
 **Task 4 — Dataset Cleaning & Final Dataset Strategy: complete.**
+**Task 5 — Exploratory Data Analysis: complete.**
 - ✅ Repository structure, documentation, configuration, ignore rules,
   dependency list, config loader with tests.
 - ✅ Database layer: connection manager, validation, repositories,
@@ -238,7 +239,9 @@ tests; live Atlas connectivity depends on your `.env`).
 - ✅ Dataset cleaning: 5,044 cleaned samples, every exclusion logged
   (`docs/DATA_CLEANING_REPORT.md`). Text left exactly as provided.
 - ❌ Train/validation/test splitting — not done.
-- ❌ Preprocessing / EDA — not done.
+- ✅ EDA: 17 tables, 13 figures, notebook, `docs/EDA_REPORT.md`. It found shortcut risks (watermark
+  handles, image resolutions, near-duplicate images) that later tasks must handle.
+- ❌ Text preprocessing / Hinglish normalization — not done.
 - ❌ Model training — **not started**.
 - ❌ Experimental metrics — **none exist**.
 - ❌ OCR, explainability, Streamlit UI, deployment — not started.
@@ -248,17 +251,18 @@ tests; live Atlas connectivity depends on your `.env`).
 2. ✅ Task 2 — MongoDB Atlas foundation and secure database layer
 3. ✅ Task 3 — Dataset inventory, verification and compatibility analysis
 4. ✅ Task 4 — Dataset cleaning and final dataset strategy
-5. EDA, preprocessing, Hinglish normalization, leakage-safe splits
-6. Text baselines (TF-IDF + LR / SVM)
-7. Transformer text model, image model, multimodal fusion
-8. Hyperparameter tuning (validation only) and final test evaluation
-9. OCR evaluation and OCR-noise experiment (to be reframed: dataset text is already OCR output)
-10. Explainability
-11. Streamlit application, history, dashboard, feedback
-12. Deployment
-13. Research paper (IEEE format)
+5. ✅ Task 5 — Exploratory data analysis
+6. Text preprocessing, Hinglish normalization, leakage-safe splits
+7. Text baselines (TF-IDF + LR / SVM)
+8. Transformer text model, image model, multimodal fusion
+9. Hyperparameter tuning (validation only) and final test evaluation
+10. OCR evaluation and OCR-noise experiment (to be reframed: dataset text is already OCR output)
+11. Explainability
+12. Streamlit application, history, dashboard, feedback
+13. Deployment
+14. Research paper (IEEE format)
 
-The order after Task 4 is indicative and may change.
+The order after Task 5 is indicative and may change.
 
 ## 20. Disclaimer
 This repository is an academic research project in progress.

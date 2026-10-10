@@ -222,3 +222,67 @@ Limitations: exact duplicates only; conflicting identical memes excluded rather 
 Conclusion: Cleaned MIMIC metadata supports text-only, image-only and multimodal experiments on the same 5,044 samples and labels.
 
 Next Experiment: TASK 5: Exploratory Data Analysis (EDA).
+
+### Experiment ID: INS-20261010-03
+
+Date: 2026-10-10
+
+Status: COMPLETED
+
+Research Question: Not an experiment. Task 5: exploratory data analysis (supports RQ1–RQ3 design and MSE-1 dataset / model-identification sections).
+
+Dataset: MIMIC, cleaned (5,044 samples)
+
+Dataset Version: `data/processed/mimic_cleaned.csv`, SHA-256 `1ff17281346f…` (Task 4 cleaning v1.0; verified against fingerprint before analysis)
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: NOT_APPLICABLE (no split created)
+
+Validation Split: NOT_APPLICABLE
+
+Test Split: NOT_APPLICABLE
+
+Input Modality: Text statistics + image metadata (no modelling, no embeddings)
+
+Preprocessing: None. EDA-only tokenization (lowercase letter runs) for counting; never written back.
+
+Feature Representation: NOT_APPLICABLE
+
+Model: NOT_APPLICABLE
+
+Model Version / Pretrained Checkpoint: NOT_APPLICABLE
+
+Hyperparameters: NOT_APPLICABLE
+
+Random Seed: NOT_USED (deterministic)
+
+Training Environment: Windows 11, Python 3.10.0, pandas 2.3.3, matplotlib 3.10.9, Pillow 12.3.0
+
+Training Details: `python scripts/run_eda.py`; `notebooks/02_eda.ipynb` (executed end-to-end with nbclient: 14 code cells, 0 errors)
+
+Validation Metrics: NOT_APPLICABLE
+
+Test Metrics: NOT_APPLICABLE
+
+Runtime / Resource Notes: ~27 s (near-duplicate dHash ~20 s)
+
+Artifacts: `results/tables/eda/` (17 CSV), `results/figures/eda/` (13 PNG, 300 dpi), `results/metrics/eda_summary.json`, `docs/EDA_REPORT.md`
+
+Observations (measured):
+- **Labels:** 2,537 / 2,507 (ratio 1.012).
+- **Text length:** median 55 chars / 11 words (non-empty texts).
+- **Vocabulary:** 14,244 EDA token types, 65% occurring once.
+- **Script:** about 29% of samples contain Devanagari (heuristic).
+- **Text features:** 0 URLs and 0 emojis; uppercase-heavy text 8.1% (misogynistic) vs 2.9%.
+- **Watermark handles:** `@doublemeaning` (59) and `@doublemean` (56) occur only in misogynistic samples.
+- **Image resolutions:** class-correlated (1440×1800: 57/57 misogynistic).
+- **Near-duplicate images:** 55 candidate pairs (dHash ≤ 4), 48 not grouped by Task 4, 4 cross-class.
+
+Error Analysis Notes: NOT_APPLICABLE
+
+Limitations: heuristic language indicators; crude EDA tokenization; near-duplicates are candidates needing manual review; no significance tests; text is OCR output.
+
+Conclusion: Classes are balanced; the main risks are shortcut/leakage features (handles, file names, resolutions, near-duplicate images). These must be addressed in splitting and tested in preprocessing ablations.
+
+Next Experiment: TASK 6: Text Preprocessing and Hinglish Normalization.

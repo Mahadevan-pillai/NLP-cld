@@ -1,0 +1,9 @@
+script_category,count_non_misogynistic,percent_non_misogynistic,count_misogynistic,percent_misogynistic,count_all,percent_all
+devanagari_only,205,8.08,244,9.73,449,8.9
+mixed_script,570,22.47,435,17.35,1005,19.92
+latin_hindi_markers_only,536,21.13,564,22.5,1100,21.81
+latin_hindi_and_english_markers,424,16.71,353,14.08,777,15.4
+latin_english_markers_only,475,18.72,465,18.55,940,18.64
+latin_no_markers,283,11.15,333,13.28,616,12.21
+no_letters,2,0.08,7,0.28,9,0.18
+empty,42,1.66,106,4.23,148,2.93

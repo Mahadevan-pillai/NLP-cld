@@ -1,0 +1,701 @@
+{
+  "generated_at": "2026-10-10T10:39:28+00:00",
+  "input_checks": {
+    "file_sha256_matches_task4_fingerprint": true,
+    "row_count_matches_task4": true,
+    "required_columns_present": true,
+    "sample_ids_unique": true,
+    "target_labels_valid": true,
+    "all_image_files_exist": true
+  },
+  "class_distribution": [
+    {
+      "target_label": 0,
+      "label_name": "non_misogynistic",
+      "count": 2537,
+      "percent": 50.3
+    },
+    {
+      "target_label": 1,
+      "label_name": "misogynistic",
+      "count": 2507,
+      "percent": 49.7
+    }
+  ],
+  "imbalance": {
+    "total": 5044,
+    "majority_class": "non_misogynistic",
+    "minority_class": "misogynistic",
+    "imbalance_ratio_majority_to_minority": 1.012
+  },
+  "availability": {
+    "samples": 5044,
+    "with_usable_text": 4896,
+    "with_usable_image": 5044,
+    "with_text_and_image": 4896,
+    "image_only_experiment_samples": 5044,
+    "multimodal_experiment_samples": 5044,
+    "text_only_experiment_samples_nonempty_text": 4896
+  },
+  "vocabulary": {
+    "all": {
+      "tokens": 55403,
+      "vocabulary_size": 14244,
+      "latin_types": 11051,
+      "devanagari_types": 3193,
+      "hapax_legomena": 9241
+    },
+    "non_misogynistic": {
+      "tokens": 29149,
+      "vocabulary_size": 9072,
+      "latin_types": 7295,
+      "devanagari_types": 1777,
+      "hapax_legomena": 5976
+    },
+    "misogynistic": {
+      "tokens": 26254,
+      "vocabulary_size": 8407,
+      "latin_types": 6290,
+      "devanagari_types": 2117,
+      "hapax_legomena": 5583
+    }
+  },
+  "secondary": {
+    "per_label": [
+      {
+        "label": "Objectification",
+        "count_all_samples": 1488,
+        "percent_all_samples": 29.5,
+        "count_within_positive_class": 1488,
+        "percent_within_positive_class": 59.35,
+        "count_in_negative_class": 0
+      },
+      {
+        "label": "Prejudice",
+        "count_all_samples": 916,
+        "percent_all_samples": 18.16,
+        "count_within_positive_class": 916,
+        "percent_within_positive_class": 36.54,
+        "count_in_negative_class": 0
+      },
+      {
+        "label": "Humiliation",
+        "count_all_samples": 392,
+        "percent_all_samples": 7.77,
+        "count_within_positive_class": 392,
+        "percent_within_positive_class": 15.64,
+        "count_in_negative_class": 0
+      }
+    ],
+    "labels_per_positive_sample": {
+      "0": 1,
+      "1": 2219,
+      "2": 284,
+      "3": 3
+    }
+  },
+  "text_lengths": [
+    {
+      "metric": "char_count",
+      "group": "all",
+      "count": 4896,
+      "mean": 59.606,
+      "std": 31.555,
+      "min": 1.0,
+      "p25": 37.75,
+      "median": 55.0,
+      "p75": 77.0,
+      "p90": 101.0,
+      "p95": 117.0,
+      "max": 283.0
+    },
+    {
+      "metric": "char_count",
+      "group": "non_misogynistic",
+      "count": 2495,
+      "mean": 62.043,
+      "std": 30.713,
+      "min": 1.0,
+      "p25": 40.0,
+      "median": 59.0,
+      "p75": 81.0,
+      "p90": 104.0,
+      "p95": 117.29999999999973,
+      "max": 193.0
+    },
+    {
+      "metric": "char_count",
+      "group": "misogynistic",
+      "count": 2401,
+      "mean": 57.072,
+      "std": 32.219,
+      "min": 1.0,
+      "p25": 35.0,
+      "median": 52.0,
+      "p75": 74.0,
+      "p90": 99.0,
+      "p95": 116.0,
+      "max": 283.0
+    },
+    {
+      "metric": "word_count",
+      "group": "all",
+      "count": 4896,
+      "mean": 11.598,
+      "std": 6.28,
+      "min": 1.0,
+      "p25": 7.0,
+      "median": 11.0,
+      "p75": 15.0,
+      "p90": 20.0,
+      "p95": 23.0,
+      "max": 64.0
+    },
+    {
+      "metric": "word_count",
+      "group": "non_misogynistic",
+      "count": 2495,
+      "mean": 11.995,
+      "std": 5.979,
+      "min": 1.0,
+      "p25": 8.0,
+      "median": 11.0,
+      "p75": 16.0,
+      "p90": 20.0,
+      "p95": 23.0,
+      "max": 40.0
+    },
+    {
+      "metric": "word_count",
+      "group": "misogynistic",
+      "count": 2401,
+      "mean": 11.186,
+      "std": 6.554,
+      "min": 1.0,
+      "p25": 7.0,
+      "median": 10.0,
+      "p75": 14.0,
+      "p90": 19.0,
+      "p95": 23.0,
+      "max": 64.0
+    }
+  ],
+  "class_text": [
+    {
+      "target_label": 0,
+      "label_name": "non_misogynistic",
+      "samples": 2495,
+      "mean_chars": 62.043,
+      "median_chars": 59.0,
+      "mean_words": 11.995,
+      "median_words": 11.0,
+      "mean_devanagari_letter_share": 0.137,
+      "empty_text_samples": 42
+    },
+    {
+      "target_label": 1,
+      "label_name": "misogynistic",
+      "samples": 2401,
+      "mean_chars": 57.072,
+      "median_chars": 52.0,
+      "mean_words": 11.186,
+      "median_words": 10.0,
+      "mean_devanagari_letter_share": 0.167,
+      "empty_text_samples": 106
+    }
+  ],
+  "devanagari_letter_share_nonempty": {
+    "count": 4887,
+    "mean": 0.151,
+    "std": 0.333,
+    "min": 0.0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.023255813953488372,
+    "p90": 0.9480000000000018,
+    "p95": 1.0,
+    "max": 1.0
+  },
+  "script_categories": [
+    {
+      "script_category": "devanagari_only",
+      "count_non_misogynistic": 205,
+      "percent_non_misogynistic": 8.08,
+      "count_misogynistic": 244,
+      "percent_misogynistic": 9.73,
+      "count_all": 449,
+      "percent_all": 8.9
+    },
+    {
+      "script_category": "mixed_script",
+      "count_non_misogynistic": 570,
+      "percent_non_misogynistic": 22.47,
+      "count_misogynistic": 435,
+      "percent_misogynistic": 17.35,
+      "count_all": 1005,
+      "percent_all": 19.92
+    },
+    {
+      "script_category": "latin_hindi_markers_only",
+      "count_non_misogynistic": 536,
+      "percent_non_misogynistic": 21.13,
+      "count_misogynistic": 564,
+      "percent_misogynistic": 22.5,
+      "count_all": 1100,
+      "percent_all": 21.81
+    },
+    {
+      "script_category": "latin_hindi_and_english_markers",
+      "count_non_misogynistic": 424,
+      "percent_non_misogynistic": 16.71,
+      "count_misogynistic": 353,
+      "percent_misogynistic": 14.08,
+      "count_all": 777,
+      "percent_all": 15.4
+    },
+    {
+      "script_category": "latin_english_markers_only",
+      "count_non_misogynistic": 475,
+      "percent_non_misogynistic": 18.72,
+      "count_misogynistic": 465,
+      "percent_misogynistic": 18.55,
+      "count_all": 940,
+      "percent_all": 18.64
+    },
+    {
+      "script_category": "latin_no_markers",
+      "count_non_misogynistic": 283,
+      "percent_non_misogynistic": 11.15,
+      "count_misogynistic": 333,
+      "percent_misogynistic": 13.28,
+      "count_all": 616,
+      "percent_all": 12.21
+    },
+    {
+      "script_category": "no_letters",
+      "count_non_misogynistic": 2,
+      "percent_non_misogynistic": 0.08,
+      "count_misogynistic": 7,
+      "percent_misogynistic": 0.28,
+      "count_all": 9,
+      "percent_all": 0.18
+    },
+    {
+      "script_category": "empty",
+      "count_non_misogynistic": 42,
+      "percent_non_misogynistic": 1.66,
+      "count_misogynistic": 106,
+      "percent_misogynistic": 4.23,
+      "count_all": 148,
+      "percent_all": 2.93
+    }
+  ],
+  "social_features": [
+    {
+      "feature": "has_url",
+      "count_non_misogynistic": 0,
+      "percent_non_misogynistic": 0.0,
+      "count_misogynistic": 0,
+      "percent_misogynistic": 0.0
+    },
+    {
+      "feature": "has_mention",
+      "count_non_misogynistic": 247,
+      "percent_non_misogynistic": 9.9,
+      "count_misogynistic": 201,
+      "percent_misogynistic": 8.37
+    },
+    {
+      "feature": "has_hashtag",
+      "count_non_misogynistic": 18,
+      "percent_non_misogynistic": 0.72,
+      "count_misogynistic": 12,
+      "percent_misogynistic": 0.5
+    },
+    {
+      "feature": "has_emoji",
+      "count_non_misogynistic": 0,
+      "percent_non_misogynistic": 0.0,
+      "count_misogynistic": 0,
+      "percent_misogynistic": 0.0
+    },
+    {
+      "feature": "has_repeated_punctuation",
+      "count_non_misogynistic": 251,
+      "percent_non_misogynistic": 10.06,
+      "count_misogynistic": 211,
+      "percent_misogynistic": 8.79
+    },
+    {
+      "feature": "has_repeated_characters",
+      "count_non_misogynistic": 47,
+      "percent_non_misogynistic": 1.88,
+      "count_misogynistic": 31,
+      "percent_misogynistic": 1.29
+    },
+    {
+      "feature": "is_uppercase_heavy",
+      "count_non_misogynistic": 72,
+      "percent_non_misogynistic": 2.89,
+      "count_misogynistic": 194,
+      "percent_misogynistic": 8.08
+    },
+    {
+      "feature": "has_digit",
+      "count_non_misogynistic": 618,
+      "percent_non_misogynistic": 24.77,
+      "count_misogynistic": 475,
+      "percent_misogynistic": 19.78
+    },
+    {
+      "feature": "has_romanized_hindi_marker",
+      "count_non_misogynistic": 1204,
+      "percent_non_misogynistic": 48.26,
+      "count_misogynistic": 1071,
+      "percent_misogynistic": 44.61
+    },
+    {
+      "feature": "has_english_marker",
+      "count_non_misogynistic": 1153,
+      "percent_non_misogynistic": 46.21,
+      "count_misogynistic": 961,
+      "percent_misogynistic": 40.02
+    }
+  ],
+  "image_statistics": [
+    {
+      "metric": "width",
+      "group": "all",
+      "count": 5044,
+      "mean": 875.131,
+      "std": 251.697,
+      "min": 107.0,
+      "p25": 720.0,
+      "median": 768.0,
+      "p75": 1080.0,
+      "p90": 1080.0,
+      "p95": 1100.699999999999,
+      "max": 2048.0
+    },
+    {
+      "metric": "width",
+      "group": "non_misogynistic",
+      "count": 2537,
+      "mean": 900.797,
+      "std": 222.832,
+      "min": 110.0,
+      "p25": 720.0,
+      "median": 945.0,
+      "p75": 1080.0,
+      "p90": 1080.0,
+      "p95": 1080.0,
+      "max": 2048.0
+    },
+    {
+      "metric": "width",
+      "group": "misogynistic",
+      "count": 2507,
+      "mean": 849.158,
+      "std": 275.493,
+      "min": 107.0,
+      "p25": 720.0,
+      "median": 720.0,
+      "p75": 1080.0,
+      "p90": 1080.0,
+      "p95": 1280.0,
+      "max": 2048.0
+    },
+    {
+      "metric": "height",
+      "group": "all",
+      "count": 5044,
+      "mean": 921.814,
+      "std": 294.075,
+      "min": 108.0,
+      "p25": 720.0,
+      "median": 899.0,
+      "p75": 1079.0,
+      "p90": 1280.0,
+      "p95": 1360.699999999999,
+      "max": 2048.0
+    },
+    {
+      "metric": "height",
+      "group": "non_misogynistic",
+      "count": 2537,
+      "mean": 913.168,
+      "std": 256.251,
+      "min": 108.0,
+      "p25": 720.0,
+      "median": 900.0,
+      "p75": 1078.0,
+      "p90": 1248.4,
+      "p95": 1338.0,
+      "max": 2048.0
+    },
+    {
+      "metric": "height",
+      "group": "misogynistic",
+      "count": 2507,
+      "mean": 930.562,
+      "std": 327.762,
+      "min": 109.0,
+      "p25": 720.0,
+      "median": 899.0,
+      "p75": 1080.0,
+      "p90": 1325.8000000000002,
+      "p95": 1563.199999999999,
+      "max": 2048.0
+    },
+    {
+      "metric": "aspect_ratio",
+      "group": "all",
+      "count": 5044,
+      "mean": 0.975,
+      "std": 0.192,
+      "min": 0.4395300621976503,
+      "p25": 0.8362078006828803,
+      "median": 1.0,
+      "p75": 1.0301657766274612,
+      "p90": 1.1944921410645886,
+      "p95": 1.3308454173315751,
+      "max": 3.0
+    },
+    {
+      "metric": "aspect_ratio",
+      "group": "non_misogynistic",
+      "count": 2537,
+      "mean": 1.012,
+      "std": 0.192,
+      "min": 0.4395300621976503,
+      "p25": 0.8866995073891626,
+      "median": 1.0009267840593141,
+      "p75": 1.072644721906924,
+      "p90": 1.2553450737743934,
+      "p95": 1.3640304781923274,
+      "max": 2.117088607594937
+    },
+    {
+      "metric": "aspect_ratio",
+      "group": "misogynistic",
+      "count": 2507,
+      "mean": 0.937,
+      "std": 0.184,
+      "min": 0.4428656009473061,
+      "p25": 0.8039431888840747,
+      "median": 0.9498680738786279,
+      "p75": 1.0009267840593141,
+      "p90": 1.1002647712756317,
+      "p95": 1.2381792616691014,
+      "max": 3.0
+    },
+    {
+      "metric": "file_bytes",
+      "group": "all",
+      "count": 5044,
+      "mean": 86582.085,
+      "std": 48797.712,
+      "min": 4821.0,
+      "p25": 54130.75,
+      "median": 76936.0,
+      "p75": 107276.25,
+      "p90": 140915.3,
+      "p95": 165582.4,
+      "max": 626548.0
+    },
+    {
+      "metric": "file_bytes",
+      "group": "non_misogynistic",
+      "count": 2537,
+      "mean": 86908.138,
+      "std": 41942.761,
+      "min": 4821.0,
+      "p25": 56965.0,
+      "median": 80105.0,
+      "p75": 108687.0,
+      "p90": 138627.4,
+      "p95": 153538.19999999998,
+      "max": 626548.0
+    },
+    {
+      "metric": "file_bytes",
+      "group": "misogynistic",
+      "count": 2507,
+      "mean": 86252.129,
+      "std": 54876.39,
+      "min": 4899.0,
+      "p25": 51360.5,
+      "median": 73908.0,
+      "p75": 104443.5,
+      "p90": 145179.40000000002,
+      "p95": 184169.79999999993,
+      "max": 625790.0
+    }
+  ],
+  "image_resolutions_top": [
+    {
+      "resolution": "720x720",
+      "non_misogynistic": 99,
+      "misogynistic": 131,
+      "samples": 230,
+      "share_non_misogynistic": 0.43,
+      "share_misogynistic": 0.57
+    },
+    {
+      "resolution": "1080x1080",
+      "non_misogynistic": 36,
+      "misogynistic": 96,
+      "samples": 132,
+      "share_non_misogynistic": 0.273,
+      "share_misogynistic": 0.727
+    },
+    {
+      "resolution": "1080x1079",
+      "non_misogynistic": 86,
+      "misogynistic": 17,
+      "samples": 103,
+      "share_non_misogynistic": 0.835,
+      "share_misogynistic": 0.165
+    },
+    {
+      "resolution": "1080x1078",
+      "non_misogynistic": 86,
+      "misogynistic": 16,
+      "samples": 102,
+      "share_non_misogynistic": 0.843,
+      "share_misogynistic": 0.157
+    },
+    {
+      "resolution": "945x944",
+      "non_misogynistic": 73,
+      "misogynistic": 12,
+      "samples": 85,
+      "share_non_misogynistic": 0.859,
+      "share_misogynistic": 0.141
+    },
+    {
+      "resolution": "960x960",
+      "non_misogynistic": 24,
+      "misogynistic": 38,
+      "samples": 62,
+      "share_non_misogynistic": 0.387,
+      "share_misogynistic": 0.613
+    },
+    {
+      "resolution": "720x900",
+      "non_misogynistic": 12,
+      "misogynistic": 49,
+      "samples": 61,
+      "share_non_misogynistic": 0.197,
+      "share_misogynistic": 0.803
+    },
+    {
+      "resolution": "720x718",
+      "non_misogynistic": 47,
+      "misogynistic": 10,
+      "samples": 57,
+      "share_non_misogynistic": 0.825,
+      "share_misogynistic": 0.175
+    },
+    {
+      "resolution": "1440x1800",
+      "non_misogynistic": 0,
+      "misogynistic": 57,
+      "samples": 57,
+      "share_non_misogynistic": 0.0,
+      "share_misogynistic": 1.0
+    },
+    {
+      "resolution": "720x719",
+      "non_misogynistic": 30,
+      "misogynistic": 16,
+      "samples": 46,
+      "share_non_misogynistic": 0.652,
+      "share_misogynistic": 0.348
+    }
+  ],
+  "image_formats": {
+    "JPEG": 5044
+  },
+  "image_modes": {
+    "RGB": 5044
+  },
+  "near_duplicates": {
+    "max_distance": 4,
+    "pairs": 55,
+    "cross_class": 4,
+    "same_text": 7,
+    "already_grouped_in_task4": 7,
+    "distance_0": 6
+  },
+  "handles": [
+    {
+      "handle": "@doublemeaning",
+      "samples": 59,
+      "count_non_misogynistic": 0,
+      "count_misogynistic": 59,
+      "max_class_share": 1.0
+    },
+    {
+      "handle": "@doublemean",
+      "samples": 56,
+      "count_non_misogynistic": 0,
+      "count_misogynistic": 56,
+      "max_class_share": 1.0
+    },
+    {
+      "handle": "@fun",
+      "samples": 24,
+      "count_non_misogynistic": 8,
+      "count_misogynistic": 16,
+      "max_class_share": 0.667
+    },
+    {
+      "handle": "@kyahogyafatima",
+      "samples": 20,
+      "count_non_misogynistic": 17,
+      "count_misogynistic": 3,
+      "max_class_share": 0.85
+    },
+    {
+      "handle": "@memerladka",
+      "samples": 5,
+      "count_non_misogynistic": 1,
+      "count_misogynistic": 4,
+      "max_class_share": 0.8
+    }
+  ],
+  "id_pattern": {
+    "pattern_label_counts": {
+      "#_M_pic_#.jpg": {
+        "1": 2507
+      },
+      "#_NM_pic.jpg": {
+        "0": 2537
+      }
+    },
+    "pattern_perfectly_predicts_label": true
+  },
+  "outliers": {
+    "aspect_ratio_extreme": 22,
+    "image_file_large": 55,
+    "image_small": 9,
+    "text_very_long": 107,
+    "text_very_short": 20
+  },
+  "figures": [
+    "01_class_distribution.png",
+    "02_text_char_length_hist.png",
+    "03_text_length_by_class.png",
+    "04_word_count_hist.png",
+    "05_top_terms_overall.png",
+    "06_distinctive_terms_by_class.png",
+    "07_image_width_hist.png",
+    "08_image_height_hist.png",
+    "09_aspect_ratio_hist.png",
+    "10_script_categories_by_class.png",
+    "11_social_media_features_by_class.png",
+    "12_secondary_label_combinations.png",
+    "13_mention_handles_by_class.png"
+  ]
+}
