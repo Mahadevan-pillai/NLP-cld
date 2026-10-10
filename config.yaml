@@ -1,0 +1,132 @@
+# ==================================================================
+# config.yaml — central project configuration
+# ==================================================================
+# Conventions:
+#   null  = not decided yet (TBD). Code must treat null as "not
+#           configured" and fail clearly rather than guess.
+#   Paths are relative to the repository root.
+#   NO SECRETS IN THIS FILE. Secrets come from environment variables;
+#   this file only stores the *names* of those variables.
+# ==================================================================
+
+project:
+  name: "Hinglish Multimodal Meme Detection"
+  title: "Explainable Multimodal Hinglish Misogynistic Meme Detection Using Text and Vision-Language Models"
+  stage: "task-1-foundation"
+  config_version: 1
+
+# Global random seed used for splitting, model initialisation, etc.
+random_seed: 42
+
+paths:
+  data_raw: "data/raw"                # original datasets, never modified
+  data_processed: "data/processed"
+  data_splits: "data/splits"
+  models_text: "models/text"
+  models_image: "models/image"
+  models_multimodal: "models/multimodal"
+  results_figures: "results/figures"
+  results_metrics: "results/metrics"
+  results_tables: "results/tables"
+  results_predictions: "results/predictions"
+  results_paper: "results/paper"
+  research_log: "RESEARCH_LOG.md"
+
+# Everything below is TO BE VERIFIED by the dataset inspection task.
+# Do not fill these in by assumption.
+dataset:
+  primary: null                 # TBD after inspection (candidate: MIMIC)
+  candidates:
+    - name: "MIMIC"
+      status: "to_be_verified"
+  version: null
+  source: null
+  license: null
+  text_column: null
+  image_column: null
+  label_column: null
+  labels: null                  # list of label names, TBD
+  positive_label: null          # which label means "misogynistic", TBD
+
+splitting:
+  # "official" if the dataset ships its own split, otherwise
+  # "stratified_random" is the likely choice. TBD after inspection.
+  strategy: null
+  # PROPOSED ratios, used only if we create our own split.
+  # Must sum to 1.0. Can be changed if the dataset requires.
+  train: 0.70
+  validation: 0.15
+  test: 0.15
+  stratify: null                # TBD once label distribution is known
+  deduplicate_before_split: true   # research rule 9: avoid duplicate leakage
+
+text_preprocessing:
+  # Steps are designed in a later task. E1/E4 vs E2/E5 differ only in
+  # whether Hinglish normalization is applied.
+  hinglish_normalization: null  # true/false per experiment, TBD
+  lowercase: null
+  steps: []
+
+text_model:
+  baselines:                    # PROPOSED, not finalized
+    - "tfidf_logistic_regression"
+    - "tfidf_linear_svm"
+  tfidf: {}                     # ngram_range, max_features, min_df ... TBD
+  transformer:
+    checkpoint: null            # TBD: multilingual/Hinglish-capable encoder
+    max_length: null
+
+image_model:
+  checkpoint: null              # TBD: vision or vision-language encoder
+  image_size: null
+
+multimodal_model:
+  # PROPOSED: start with a simple fusion (e.g. concatenation of image
+  # and text embeddings + classifier) before complex architectures.
+  fusion: null
+  hidden_dim: null
+  dropout: null
+
+training:
+  device: null                  # "cpu" / "cuda", TBD per environment
+  batch_size: null
+  learning_rate: null
+  weight_decay: null
+  epochs: null
+  early_stopping_patience: null
+  class_weight: null            # TBD after class distribution is known
+
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1"
+    - "macro_f1"
+    - "weighted_f1"
+    - "per_class"
+    - "confusion_matrix"
+  primary_metric: null          # TBD (accuracy alone is not sufficient)
+  tune_on: "validation"         # never "test"
+
+database:
+  provider: "mongodb_atlas"
+  # Names of environment variables — NOT their values.
+  uri_env_var: "MONGODB_URI"
+  database_name_env_var: "MONGODB_DATABASE"
+  collections:                  # PROPOSED names
+    analysis_history: "analysis_history"
+    user_feedback: "user_feedback"
+    model_versions: "model_versions"
+  # TBD: temporary-only / reference / object storage / GridFS.
+  # Image binaries must not go into normal documents.
+  image_storage_strategy: null
+
+application:
+  framework: "streamlit"
+  modes:
+    - "text"
+    - "meme"
+  ocr_engine: null              # NOT YET SELECTED (later task)
+  max_upload_size_mb: null
+  persist_uploads: false        # privacy default: do not retain uploads

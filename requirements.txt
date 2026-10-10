@@ -1,0 +1,55 @@
+# ------------------------------------------------------------------
+# requirements.txt — initial (conservative) dependency list
+# ------------------------------------------------------------------
+# Version policy (Task 1):
+#   Only MINIMUM versions are set here, because exact pins cannot yet
+#   be justified (models, OCR engine and deployment target are not
+#   chosen). After the first working environment is set up, freeze the
+#   exact versions for reproducibility:
+#       python -m pip freeze > requirements-lock.txt
+#   and record that file / Python version in RESEARCH_LOG.md entries.
+#
+# Not included on purpose:
+#   - OCR libraries (engine not yet selected)
+#   - TensorFlow / other DL frameworks (PyTorch only)
+#   - SHAP / LIME (explainability is a later task)
+#
+# PyTorch note: on Windows, plain "pip install torch" installs the CPU
+# build. For an NVIDIA GPU, install torch first using the command from
+# https://pytorch.org/get-started/locally/ and then install the rest.
+# ------------------------------------------------------------------
+
+# Data handling
+numpy>=1.26
+pandas>=2.1
+
+# Traditional ML / evaluation
+scikit-learn>=1.4
+
+# Plotting (EDA, result figures)
+matplotlib>=3.8
+
+# Configuration & secrets
+PyYAML>=6.0
+python-dotenv>=1.0
+
+# Database driver (MongoDB Atlas)
+pymongo>=4.6
+
+# Image processing
+# opencv-python-headless = same OpenCV API without GUI windowing libs;
+# it avoids missing-libGL errors on servers (e.g. Hugging Face Spaces)
+# and we never need cv2.imshow because Streamlit renders images.
+Pillow>=10.2
+opencv-python-headless>=4.9
+
+# Deep learning / NLP
+torch>=2.2
+transformers>=4.40
+sentence-transformers>=3.0
+
+# Application
+streamlit>=1.35
+
+# Testing
+pytest>=8.0

@@ -1,0 +1,142 @@
+# ==================================================================
+# .gitignore — Hinglish Multimodal Meme Detection
+# ==================================================================
+# Pattern notes:
+#   "dir/**" ignores everything inside dir; "!dir/**/" then re-allows
+#   sub-directories so that "!dir/**/.gitkeep" can keep the empty
+#   folder structure in Git.
+# ==================================================================
+
+# ---------------- Secrets & credentials ----------------
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+*service_account*.json
+*service-account*.json
+
+# ---------------- Python ----------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# ---------------- Virtual environments ----------------
+.venv/
+venv/
+env/
+ENV/
+.conda/
+
+# ---------------- Jupyter ----------------
+.ipynb_checkpoints/
+
+# ---------------- IDE / editor ----------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.claude/settings.local.json
+
+# ---------------- OS-generated ----------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# ---------------- Logs ----------------
+logs/
+*.log
+
+# ---------------- Datasets ----------------
+# Raw data: never committed (size + licensing). Keep folder only.
+data/raw/**
+!data/raw/**/
+!data/raw/**/.gitkeep
+
+# Processed data: may be large / contain dataset content.
+data/processed/**
+!data/processed/**/
+!data/processed/**/.gitkeep
+
+# Generated splits: reproducible from raw data + seed + script.
+data/splits/**
+!data/splits/**/
+!data/splits/**/.gitkeep
+
+# Dataset archives anywhere in the repo
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar
+
+# ---------------- Models, checkpoints, weights ----------------
+# Everything under models/ is ignored except folder markers and small
+# Markdown model cards (e.g. models/text/README.md).
+models/**
+!models/**/
+!models/**/.gitkeep
+!models/**/*.md
+
+# Weight / checkpoint formats anywhere in the repo
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.onnx
+*.h5
+*.pkl
+*.pickle
+*.joblib
+
+# Training run directories
+runs/
+lightning_logs/
+mlruns/
+wandb/
+checkpoints/
+
+# ---------------- Caches ----------------
+# Hugging Face / generic caches if they end up inside the repo
+.cache/
+hf_cache/
+.huggingface/
+# Embedding caches
+embedding_cache/
+embeddings_cache/
+*.npy
+*.npz
+
+# ---------------- Results ----------------
+# results/ is intentionally NOT ignored as a whole: small CSV/JSON
+# metric tables, paper-ready figures and summaries should be versioned.
+# Per-sample prediction dumps can be large and contain dataset text.
+results/predictions/**
+!results/predictions/**/
+!results/predictions/**/.gitkeep
+
+# ---------------- Application temp files ----------------
+uploads/
+tmp/
+temp/
+ocr_tmp/
+ocr_output/
+*.tmp

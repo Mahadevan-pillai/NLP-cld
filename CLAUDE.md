@@ -1,0 +1,160 @@
+# CLAUDE.md — Operating Guide for Claude Code Sessions
+
+This file is permanent guidance for every Claude Code session in this
+repository. **Read this file first, in full, before doing anything.**
+
+Project: **Explainable Multimodal Hinglish Misogynistic Meme Detection
+Using Text and Vision-Language Models** (B.Tech final-year project +
+research paper). The developer is a beginner: explain important
+engineering decisions, keep code understandable, and never hide
+research decisions inside code.
+
+---
+
+## 1. Mandatory working rules
+
+1. **Read `CLAUDE.md` first** at the start of every session.
+2. **Read `PROJECT_CONTEXT.md` before any architectural change**
+   (new module, new data flow, new dependency, new storage decision).
+3. **Inspect the existing implementation before modifying code.** Read
+   the files you are about to change and the code that calls them.
+4. **Perform only the requested task.** Do not start future tasks, add
+   unrequested features, or "improve" unrelated code.
+5. **Do not rewrite working components unnecessarily.** Prefer small,
+   targeted edits.
+6. **Follow repository conventions** (directory layout below, naming,
+   config in `config.yaml`, secrets in environment variables).
+7. **Keep training and inference preprocessing identical.** The text
+   cleaning / Hinglish normalization used by the Streamlit app must be
+   the *same code* used to train the model — import it from
+   `src/preprocessing/`, never re-implement it in `app/`.
+8. **Protect against data leakage.** Split data before fitting anything
+   (vectorizers, scalers, normalizers with learned state). Detect and
+   remove duplicate / near-duplicate samples across splits where
+   reasonably possible.
+9. **Never tune on the test set.** Model selection and hyperparameter
+   tuning use the validation split only. The test split is used once
+   per finalized configuration.
+10. **Never fabricate results** — metrics, tables, figures, dataset
+    statistics, or "expected" numbers.
+11. **Never fabricate citations** — papers, authors, DOIs, venues, years.
+    If a reference cannot be verified, say so.
+12. **Never expose credentials** — do not print, log, echo, or commit
+    secrets, and do not put them in exception messages.
+13. **Use environment variables for secrets** (loaded from a local,
+    git-ignored `.env` during development). `.env.example` holds
+    variable *names* only.
+14. **Run appropriate tests after changes** (`python -m pytest`) and
+    report the real outcome, including failures.
+15. **Document meaningful architectural changes** in
+    `PROJECT_CONTEXT.md` (and `README.md` if user-facing).
+16. **Keep experiments reproducible** — fixed, configurable random seed
+    (`random_seed` in `config.yaml`), versioned configs, recorded
+    dataset versions and pretrained checkpoints.
+17. **Record research experiments** in `RESEARCH_LOG.md` using the
+    template there, with a unique experiment ID.
+18. **Prefer simple, understandable solutions.** Avoid premature
+    abstractions and frameworks the project does not need.
+19. **Report failures honestly** — failed commands, failed tests,
+    negative experiment results, and unverified assumptions.
+20. **Stop when the requested task is complete.** Summarize what was
+    done and what remains; do not continue into the next task.
+
+Additional research-integrity rules are listed in `PROJECT_CONTEXT.md`
+(Section 16). They are mandatory.
+
+---
+
+## 2. Project summary
+
+### Objective
+Classify English / Hinglish (Hindi-English code-mixed) text and memes as
+**Misogynistic vs Non-Misogynistic**, compare text-only, image-only and
+multimodal models, study the effect of Hinglish-specific normalization
+and OCR noise, and provide explanations where technically valid.
+
+### Two application modes (PLANNED)
+- **Analyze Text** — user text → validation → preprocessing → Hinglish
+  normalization → text model → prediction (+ confidence, explanation,
+  model version where valid).
+- **Analyze Meme** — uploaded image → (a) image encoder and
+  (b) OCR → preprocessing → normalization → text encoder → fusion →
+  classifier. The **multimodal prediction is the primary prediction**;
+  text-only and image-only predictions are shown for comparison.
+
+### Research pipeline (PLANNED)
+Dataset inspection → raw data preserved → reproducible preprocessing →
+leakage-safe train/validation/test splits → baselines (TF-IDF + LR /
+Linear SVM) → transformer text model → image model → simple multimodal
+fusion → validation-only tuning → single final test evaluation →
+error analysis → explainability → paper.
+
+Planned ablations E1–E5 and the OCR experiment are described in
+`PROJECT_CONTEXT.md`. No experiment has been run yet.
+
+---
+
+## 3. Security expectations
+- Secrets (MongoDB URI, HF token, any API key) come **only** from
+  environment variables, read via `os.environ` / `python-dotenv`.
+- Never hard-code, print, or log secrets. Never commit `.env`,
+  `.streamlit/secrets.toml`, keys, or credential files.
+- `config.yaml` stores the *names* of environment variables, never
+  their values.
+- Before finishing any task, check `git status` for files that should
+  not be tracked.
+
+## 4. Data handling expectations
+- `data/raw/` is **read-only**. Never modify, clean, or overwrite raw
+  data in place. Derived data goes to `data/processed/` / `data/splits/`.
+- Raw/processed datasets, model weights, checkpoints, embedding caches
+  and uploads are git-ignored. Do not force-add them.
+- Do not assume any dataset schema, filename, label name, or class
+  distribution — verify by inspection and document it.
+- Do not merge datasets until label/task compatibility is demonstrated.
+- Application: do not retain user uploads unnecessarily, do not store
+  image binaries in normal MongoDB documents, avoid logging raw user
+  input. The image storage strategy is **not yet decided**.
+
+## 5. Directory conventions
+
+| Path | Purpose |
+|---|---|
+| `data/raw/` | Original datasets, untouched (git-ignored) |
+| `data/processed/` | Derived/cleaned data (git-ignored) |
+| `data/splits/` | Train/validation/test split files (git-ignored) |
+| `notebooks/` | Exploration and EDA notebooks (logic that matters moves to `src/`) |
+| `src/data/` | Dataset loading |
+| `src/preprocessing/` | Text cleaning, Hinglish normalization (shared by training and app) |
+| `src/features/` | Feature extraction (TF-IDF, embeddings) |
+| `src/models/` | Model definitions |
+| `src/training/` | Training loops / fitting |
+| `src/evaluation/` | Metrics, confusion matrices, reports |
+| `src/database/` | MongoDB access layer |
+| `src/explainability/` | SHAP / LIME / attribution code |
+| `src/utils/` | Small shared helpers (e.g. config loading) |
+| `scripts/` | Command-line entry points that call `src/` |
+| `models/{text,image,multimodal}/` | Saved model artifacts (binaries git-ignored; small `.md` model cards allowed) |
+| `results/metrics/`, `results/tables/` | Small CSV/JSON result files (trackable) |
+| `results/figures/`, `results/paper/` | Plots and paper-ready assets (trackable) |
+| `results/predictions/` | Per-sample predictions (git-ignored: large, contain dataset text) |
+| `app/` | Streamlit application (UI only; logic lives in `src/`) |
+| `tests/` | pytest tests |
+| `docs/` | Additional documentation |
+
+Configuration lives in `config.yaml` (loaded by
+`src/utils/config.py`). Do not scatter hard-coded paths or
+hyperparameters across modules.
+
+## 6. Testing expectations
+- Run tests with: `python -m pytest` from the repository root.
+- Add or update tests for new non-trivial logic (preprocessing,
+  splitting, metrics, database layer with mocks).
+- Tests must **not** download models/datasets or connect to MongoDB
+  Atlas; mock external services.
+- Report test results honestly, including skipped or failing tests.
+
+## 7. Current stage
+Task 1 (repository foundation) only. No dataset has been inspected, no
+model trained, no database connected, no UI built. See
+`PROJECT_CONTEXT.md` Section 17 for the up-to-date stage.
