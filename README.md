@@ -116,12 +116,20 @@ Python · scikit-learn · PyTorch · Hugging Face Transformers
 Deployment target (e.g. Hugging Face Spaces) is to be evaluated.
 OCR engine is not yet selected.
 
-## 12. Database Strategy (PLANNED)
-MongoDB Atlas, likely collections `analysis_history`, `user_feedback`,
-`model_versions`. Stores analysis metadata, texts, predictions, model
-version, processing time and optional feedback. **Image binaries are
-not stored in normal documents**; the image storage approach is not
-yet decided. No authentication is planned for now.
+## 12. Database Strategy (foundation IMPLEMENTED)
+MongoDB Atlas stores **application data only** (never the training
+datasets) in three collections: `analysis_history`, `user_feedback`,
+`model_versions`. The database layer in `src/database/` (connection
+manager, validation, repositories, indexes) is implemented and unit
+tested; the app does not use it yet. **Image binaries are not stored in
+documents**; the image storage approach is not yet decided. No
+authentication. Full details: [docs/database.md](docs/database.md).
+
+```bash
+python scripts/check_mongodb.py
+```
+checks connectivity (needs `MONGODB_URI` in `.env`), and
+`python scripts/init_database.py` creates the indexes.
 
 ## 13. Repository Structure
 ```
@@ -141,16 +149,17 @@ yet decided. No authentication is planned for now.
 ├── notebooks/            # exploration / EDA
 ├── src/
 │   ├── data/  preprocessing/  features/  models/  training/
-│   ├── evaluation/  database/  explainability/
+│   ├── evaluation/  explainability/
+│   ├── database/         # MongoDB connection, schemas, repositories, indexes
 │   └── utils/            # config.py — config loader
-├── scripts/              # command-line entry points
+├── scripts/              # check_mongodb.py, init_database.py
 ├── models/{text,image,multimodal}/   # model artifacts (git-ignored)
 ├── results/
 │   ├── figures/  metrics/  tables/  paper/   # versioned small outputs
 │   └── predictions/      # per-sample outputs (git-ignored)
 ├── app/                  # Streamlit app (later)
 ├── tests/                # pytest tests
-└── docs/
+└── docs/                 # database.md
 ```
 
 ## 14. Setup Instructions
@@ -206,18 +215,21 @@ For an NVIDIA GPU, install PyTorch first with the command from
 
 ## 18. Current Project Status
 **Task 1 — Project Foundation: complete.**
+**Task 2 — MongoDB Atlas Foundation: complete** (database layer + unit
+tests; live Atlas connectivity depends on your `.env`).
 - ✅ Repository structure, documentation, configuration, ignore rules,
   dependency list, config loader with tests.
+- ✅ Database layer: connection manager, validation, repositories,
+  indexes, health-check/init scripts, unit tests.
 - ❌ Dataset inspection — not done.
 - ❌ Preprocessing / EDA — not done.
 - ❌ Model training — **not started**.
 - ❌ Experimental metrics — **none exist**.
-- ❌ Database layer, OCR, explainability, Streamlit UI, deployment —
-  not started.
+- ❌ OCR, explainability, Streamlit UI, deployment — not started.
 
 ## 19. Planned Development Roadmap
 1. ✅ Task 1 — Project foundation and repository initialization
-2. Task 2 — MongoDB Atlas foundation and secure database layer
+2. ✅ Task 2 — MongoDB Atlas foundation and secure database layer
 3. Dataset inspection and selection
 4. Preprocessing, Hinglish normalization, EDA, leakage-safe splits
 5. Text baselines (TF-IDF + LR / SVM)

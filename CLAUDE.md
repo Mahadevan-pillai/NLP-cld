@@ -151,10 +151,14 @@ hyperparameters across modules.
 - Add or update tests for new non-trivial logic (preprocessing,
   splitting, metrics, database layer with mocks).
 - Tests must **not** download models/datasets or connect to MongoDB
-  Atlas; mock external services.
+  Atlas; mock external services. Use the `fake_db` fixture in
+  `tests/conftest.py` for repository tests; an autouse fixture there
+  disables `.env` loading so a real `MONGODB_URI` is never used.
 - Report test results honestly, including skipped or failing tests.
 
 ## 7. Current stage
-Task 1 (repository foundation) only. No dataset has been inspected, no
-model trained, no database connected, no UI built. See
+Tasks 1–2 done: repository foundation and the MongoDB database layer
+(`src/database/`, see `docs/database.md`). Database access goes through
+the repository classes only — no PyMongo calls in `app/` or ML code.
+No dataset has been inspected, no model trained, no UI built. See
 `PROJECT_CONTEXT.md` Section 17 for the up-to-date stage.

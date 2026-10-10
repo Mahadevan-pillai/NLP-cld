@@ -114,7 +114,13 @@ database:
   # Names of environment variables — NOT their values.
   uri_env_var: "MONGODB_URI"
   database_name_env_var: "MONGODB_DATABASE"
-  collections:                  # PROPOSED names
+  default_database_name: "meme_detection_db"   # used if MONGODB_DATABASE is unset
+  # Connection timeouts (milliseconds). Short server selection timeout
+  # so a bad URI / blocked network fails fast instead of hanging.
+  server_selection_timeout_ms: 5000
+  connect_timeout_ms: 10000
+  socket_timeout_ms: 20000
+  collections:
     analysis_history: "analysis_history"
     user_feedback: "user_feedback"
     model_versions: "model_versions"
