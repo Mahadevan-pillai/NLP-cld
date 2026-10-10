@@ -166,17 +166,32 @@ def write_csv(path: Path, rows: list[dict]) -> None:
         writer.writerows(rows)
 
 
+def write_report(out: Path, report: dict) -> str:
+    """Write the JSON unless only the timestamp would change (keeps reruns clean)."""
+    if out.exists():
+        old = json.loads(out.read_text(encoding="utf-8"))
+        same = {k: v for k, v in old.items() if k != "generated_at"} == \
+               {k: v for k, v in report.items() if k != "generated_at"}
+        if same:
+            return "unchanged"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+    return "written"
+
+
 def main() -> int:
     reports = []
     for key, spec in DATASETS.items():
         print(f"Inspecting {spec.name} ...")
         report = inspect(spec)
-        METRICS.mkdir(parents=True, exist_ok=True)
+        if report["status"] != "INSPECTED":
+            # Never overwrite an existing report with a "missing data" stub
+            # (e.g. on a machine where the dataset is not downloaded).
+            print(f"  status: {report['status']} (no report written)")
+            continue
         out = METRICS / f"dataset_inspection_{key}.json"
-        out.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-        print(f"  status: {report['status']} -> {out.relative_to(REPO_ROOT)}")
-        if report["status"] == "INSPECTED":
-            reports.append(report)
+        print(f"  status: INSPECTED -> {out.relative_to(REPO_ROOT)} ({write_report(out, report)})")
+        reports.append(report)
 
     extra = unregistered_items()
     if extra:

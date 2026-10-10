@@ -130,3 +130,44 @@ def test_mimic_spec_points_inside_data_raw():
     assert spec.annotation_path.parts[-3:] == ("raw", "mimic", "MIMIC2024.csv")
     assert spec.documented["license"] == "TO_BE_VERIFIED"
     assert spec.documented["label_value_meaning"] == "TO_BE_VERIFIED"
+
+
+# ---------------- scripts/inspect_datasets.py ----------------
+
+def _load_script():
+    import importlib.util
+    from src.utils.config import REPO_ROOT
+
+    spec = importlib.util.spec_from_file_location(
+        "inspect_datasets", REPO_ROOT / "scripts" / "inspect_datasets.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_missing_dataset_never_overwrites_existing_report(tmp_path, monkeypatch):
+    from src.data.datasets import DatasetSpec
+
+    script = _load_script()
+    missing = DatasetSpec(name="X", directory="does_not_exist", annotation_file="a.csv",
+                          id_column="id", text_column=None, image_column=None, primary_label="y")
+    monkeypatch.setattr(script, "DATASETS", {"x": missing})
+    monkeypatch.setattr(script, "RAW_DIR", tmp_path)
+    monkeypatch.setattr(script, "METRICS", tmp_path / "metrics")
+    monkeypatch.setattr(script, "TABLES", tmp_path / "tables")
+    existing = tmp_path / "metrics" / "dataset_inspection_x.json"
+    existing.parent.mkdir()
+    existing.write_text('{"real": "measurements"}', encoding="utf-8")
+
+    assert script.main() == 1
+    assert existing.read_text(encoding="utf-8") == '{"real": "measurements"}'
+    assert not (tmp_path / "tables").exists()
+
+
+def test_write_report_skips_timestamp_only_changes(tmp_path):
+    script = _load_script()
+    out = tmp_path / "r.json"
+    assert script.write_report(out, {"generated_at": "t1", "rows": 5}) == "written"
+    assert script.write_report(out, {"generated_at": "t2", "rows": 5}) == "unchanged"
+    assert '"t1"' in out.read_text(encoding="utf-8")
+    assert script.write_report(out, {"generated_at": "t3", "rows": 6}) == "written"
