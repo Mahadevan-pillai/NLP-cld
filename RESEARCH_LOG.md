@@ -94,4 +94,67 @@ Next Experiment:
 
 ## Experiment Entries
 
-_No experiments have been run yet._
+_No ML experiments have been run yet. Data-inspection records use the
+prefix `INS-` instead of `EXP-` because they train/evaluate nothing._
+
+### Experiment ID: INS-20261010-01
+
+Date: 2026-10-10
+
+Status: COMPLETED
+
+Research Question: Not an experiment. Task 3 dataset inventory: verify what the available data contains before choosing a dataset strategy (supports RQ1–RQ3).
+
+Dataset: MIMIC
+
+Dataset Version: local file `MIMIC2024.csv`, SHA-256 prefix `98dd8843ef81` (no official version string found)
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; download source TO_BE_VERIFIED
+
+Train Split: NOT_APPLICABLE (no split created; file has no split column)
+
+Validation Split: NOT_APPLICABLE
+
+Test Split: NOT_APPLICABLE
+
+Input Modality: Inspection of text + images (no modelling)
+
+Preprocessing: None (raw files read only; `data/raw` fingerprint identical before/after)
+
+Feature Representation: NOT_APPLICABLE
+
+Model: NOT_APPLICABLE
+
+Model Version / Pretrained Checkpoint: NOT_APPLICABLE
+
+Hyperparameters: NOT_APPLICABLE
+
+Random Seed: NOT_APPLICABLE (inspection is deterministic)
+
+Training Environment: Windows 11, Python 3.10.0, pandas 2.3.3, Pillow 12.3.0
+
+Training Details: `python scripts/inspect_datasets.py`
+
+Validation Metrics: NOT_APPLICABLE
+
+Test Metrics: NOT_APPLICABLE
+
+Runtime / Resource Notes: ~12 s for 5,054 records + 5,054 images (438 MB)
+
+Artifacts: `results/metrics/dataset_inspection_mimic.json`, `results/tables/dataset_inventory.csv`, `results/tables/dataset_compatibility.csv`, `docs/DATASET_REPORT.md`
+
+Observations (measured):
+- 5,054 records, 5,054 readable JPEG images, 0 missing.
+- `Misogyny` 0: 2,539 (50.24%), 1: 2,515 (49.76%).
+- 148 empty texts (106 in label 1, 42 in label 0).
+- 18 duplicate-text groups (37 rows), 4 with conflicting labels.
+- 8 byte-identical image groups, 2 with conflicting primary labels.
+- File names perfectly encode the label (`_M_` / `_NM_`).
+
+Error Analysis Notes: NOT_APPLICABLE
+
+Limitations: language profile is heuristic; only exact duplicates detected; label meaning, text origin, licence and official split TO_BE_VERIFIED.
+
+Conclusion: MIMIC is recommended as the single primary dataset for text-only, image-only and multimodal models on the same samples. No merge with other datasets.
+
+Next Experiment: TASK 4: Dataset Cleaning and Final Dataset Strategy (duplicate/conflict policy, empty-text policy, split).

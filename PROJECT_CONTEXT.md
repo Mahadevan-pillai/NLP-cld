@@ -124,24 +124,28 @@ interpretability.
 Key principle: the app imports the same preprocessing and model code
 used in training, so training and inference stay consistent.
 
-## 7. Planned datasets
+## 7. Datasets (inspected in Task 3)
 
-- **Primary candidate: MIMIC** — *Misogyny Identification in Multimodal
-  Internet Content in Hindi-English Code-Mixed Language.* Provided by
-  the developer. Schema, size, labels, splits and license are
-  **TO BE VERIFIED**.
-- Other datasets may be available locally. None has been inspected.
+- **MIMIC** — *Misogyny Identification in Multimodal Internet Content in
+  Hindi-English Code-Mixed Language* (Singh, Sharma & Singh, 2024,
+  ACM TALLIP, https://doi.org/10.1145/3656169). INSPECTED: 5,054 memes
+  (image + `ExtractedText`), binary `Misogyny` label (0: 2,539 /
+  1: 2,515) plus sub-labels Objectification / Prejudice / Humiliation.
+  All images present and readable. **RECOMMENDED as the single primary
+  dataset** (final strategy confirmed in Task 4).
+- No other dataset is part of the project. No external-validation
+  dataset is available yet.
+- Full measurements and recommendation: `docs/DATASET_REPORT.md`.
 
-## 8. Dataset uncertainty / inspection requirement
+## 8. Remaining dataset uncertainty
 
-No assumption is made about: schema, sample counts, label names,
-class distribution, file names, image paths, text column names,
-secondary labels, or licenses.
+TO BE VERIFIED: licence; meaning of label values (whether `Misogyny=1`
+means misogynistic); origin of `ExtractedText` (OCR or manual — affects
+RQ3); official 4,044 / 1,010 split membership (not in the local file).
 
-A dedicated future task will inspect each dataset for structure, task,
-modalities, languages, labels, sample count, missing data, duplicates,
-licensing and compatibility, and then assign roles:
-PRIMARY / SECONDARY / EXTERNAL VALIDATION / MUST REMAIN SEPARATE.
+Known data issues (measured, not yet handled): file names encode the
+label (never use as features); 4 duplicate-text groups and 2
+identical-image pairs with conflicting labels; 148 empty texts.
 
 Datasets will **not** be combined until label/task compatibility has
 been demonstrated.
@@ -277,7 +281,7 @@ data, document what is persisted, avoid logging raw user input.
 
 ## 17. Current project stage
 
-**Task 2 — MongoDB Atlas Foundation and Secure Database Layer
+**Task 3 — Dataset Inventory, Verification and Compatibility Analysis
 (complete).**
 
 IMPLEMENTED in Task 1: directory structure, documentation
@@ -291,12 +295,18 @@ health-check and init scripts, unit tests with a mocked client and an
 in-memory fake database, `docs/database.md`. Live Atlas connectivity is
 verified separately with `scripts/check_mongodb.py`.
 
-NOT STARTED: dataset inspection, preprocessing, EDA, splitting, model
+IMPLEMENTED in Task 3: read-only dataset inspection (`src/data/`,
+`scripts/inspect_datasets.py`), inventory and compatibility tables in
+`results/tables/`, `docs/DATASET_REPORT.md`, verified column names in
+`config.yaml`, log entry `INS-20261010-01`. MIMIC recommended as the
+single primary dataset.
+
+NOT STARTED: dataset cleaning, preprocessing, EDA, splitting, model
 training, tuning, OCR, explainability, Streamlit UI, deployment, paper
 writing. No experimental results exist.
 
-Next planned task: **Task 3 — Dataset Inventory, Verification and
-Compatibility Analysis.**
+Next planned task: **Task 4 — Dataset Cleaning and Final Dataset
+Strategy.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

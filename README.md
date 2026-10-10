@@ -101,11 +101,15 @@ Planned metrics: Accuracy, Precision, Recall, F1, Macro-F1,
 Weighted-F1, per-class metrics, confusion matrix.
 
 ## 10. Dataset Strategy
-- Primary candidate: **MIMIC** (Misogyny Identification in Multimodal
-  Internet Content in Hindi-English Code-Mixed Language).
-- Schema, size, labels, class balance, splits and license are **TO BE
-  VERIFIED** by a dedicated inspection task.
+- **MIMIC** (Misogyny Identification in Multimodal Internet Content in
+  Hindi-English Code-Mixed Language) was inspected in Task 3: 5,054
+  memes with image + text and a balanced binary misogyny label. It is
+  the recommended single primary dataset. See
+  [docs/DATASET_REPORT.md](docs/DATASET_REPORT.md).
+- Licence, label-value meaning, text origin and official split are
+  still **TO BE VERIFIED**.
 - Datasets are not combined until label/task compatibility is shown.
+- Re-run the read-only inspection with `python scripts/inspect_datasets.py`.
 - Raw datasets live in `data/raw/`, are never modified, and are never
   committed to Git.
 
@@ -152,14 +156,14 @@ checks connectivity (needs `MONGODB_URI` in `.env`), and
 │   ├── evaluation/  explainability/
 │   ├── database/         # MongoDB connection, schemas, repositories, indexes
 │   └── utils/            # config.py — config loader
-├── scripts/              # check_mongodb.py, init_database.py
+├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py
 ├── models/{text,image,multimodal}/   # model artifacts (git-ignored)
 ├── results/
 │   ├── figures/  metrics/  tables/  paper/   # versioned small outputs
 │   └── predictions/      # per-sample outputs (git-ignored)
 ├── app/                  # Streamlit app (later)
 ├── tests/                # pytest tests
-└── docs/                 # database.md
+└── docs/                 # database.md, DATASET_REPORT.md
 ```
 
 ## 14. Setup Instructions
@@ -217,11 +221,14 @@ For an NVIDIA GPU, install PyTorch first with the command from
 **Task 1 — Project Foundation: complete.**
 **Task 2 — MongoDB Atlas Foundation: complete** (database layer + unit
 tests; live Atlas connectivity depends on your `.env`).
+**Task 3 — Dataset Inventory & Compatibility: complete.**
 - ✅ Repository structure, documentation, configuration, ignore rules,
   dependency list, config loader with tests.
 - ✅ Database layer: connection manager, validation, repositories,
   indexes, health-check/init scripts, unit tests.
-- ❌ Dataset inspection — not done.
+- ✅ Dataset inspection (read-only): MIMIC inventoried, report in
+  `docs/DATASET_REPORT.md`. No data cleaned, split or modified.
+- ❌ Dataset cleaning / splitting — not done.
 - ❌ Preprocessing / EDA — not done.
 - ❌ Model training — **not started**.
 - ❌ Experimental metrics — **none exist**.
@@ -230,7 +237,7 @@ tests; live Atlas connectivity depends on your `.env`).
 ## 19. Planned Development Roadmap
 1. ✅ Task 1 — Project foundation and repository initialization
 2. ✅ Task 2 — MongoDB Atlas foundation and secure database layer
-3. Dataset inspection and selection
+3. ✅ Task 3 — Dataset inventory, verification and compatibility analysis
 4. Preprocessing, Hinglish normalization, EDA, leakage-safe splits
 5. Text baselines (TF-IDF + LR / SVM)
 6. Transformer text model, image model, multimodal fusion

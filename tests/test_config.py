@@ -31,11 +31,26 @@ def test_tuning_never_on_test_set(config):
     assert config["evaluation"]["tune_on"] == "validation"
 
 
-def test_dataset_schema_not_assumed(config):
-    # Dataset details must stay undecided until the inspection task.
+def test_label_meaning_not_assumed(config):
+    # Which raw value means "misogynistic" must come from documentation.
     ds = config["dataset"]
-    for key in ("text_column", "image_column", "label_column", "labels", "positive_label"):
+    for key in ("labels", "positive_label", "license"):
         assert ds[key] is None, f"dataset.{key} should be null until verified"
+
+
+def test_configured_columns_exist_in_dataset_file(config):
+    # Verified schema must match the real file header (skipped if absent).
+    from src.data.inspection import read_table
+    from src.utils.config import REPO_ROOT
+
+    ds = config["dataset"]
+    path = REPO_ROOT / ds["annotation_file"]
+    if not path.exists():
+        pytest.skip("dataset file not present on this machine")
+    header = read_table(path).columns.tolist()
+    for key in ("id_column", "text_column", "image_column", "label_column"):
+        assert ds[key] in header, f"dataset.{key}={ds[key]!r} not in file header"
+    assert set(ds["secondary_label_columns"]) <= set(header)
 
 
 def test_database_config_holds_only_env_var_names(config):

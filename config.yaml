@@ -32,21 +32,29 @@ paths:
   results_paper: "results/paper"
   research_log: "RESEARCH_LOG.md"
 
-# Everything below is TO BE VERIFIED by the dataset inspection task.
-# Do not fill these in by assumption.
+# Column names and raw label values below were VERIFIED by reading the
+# actual file (Task 3, see docs/DATASET_REPORT.md). Anything not yet
+# verified stays null. Do not fill values in by assumption.
 dataset:
-  primary: null                 # TBD after inspection (candidate: MIMIC)
+  # Task 3 RECOMMENDS "mimic" as primary; confirmed in Task 4.
+  primary: null
   candidates:
     - name: "MIMIC"
-      status: "to_be_verified"
-  version: null
-  source: null
-  license: null
-  text_column: null
-  image_column: null
-  label_column: null
-  labels: null                  # list of label names, TBD
-  positive_label: null          # which label means "misogynistic", TBD
+      key: "mimic"
+      status: "inspected"       # Task 3
+  annotation_file: "data/raw/mimic/MIMIC2024.csv"
+  image_dir: "data/raw/mimic/Files"
+  version: "MIMIC2024.csv (sha256 98dd8843ef81...)"   # file fingerprint, not an official version
+  source: "Paper: https://doi.org/10.1145/3656169 (download source TO_BE_VERIFIED)"
+  license: null                 # TO_BE_VERIFIED
+  id_column: "FileName"         # also the image reference; never use as a feature
+  text_column: "ExtractedText"
+  image_column: "FileName"
+  label_column: "Misogyny"
+  secondary_label_columns: ["Objectification", "Prejudice", "Humiliation"]
+  label_values: ["0", "1"]      # raw values as stored in the file
+  labels: null                  # human-readable names: TBD until value meaning is documented
+  positive_label: null          # which raw value means "misogynistic": TO_BE_VERIFIED
 
 splitting:
   # "official" if the dataset ships its own split, otherwise

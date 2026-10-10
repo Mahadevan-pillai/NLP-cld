@@ -1,0 +1,478 @@
+{
+  "dataset": "MIMIC",
+  "status": "INSPECTED",
+  "generated_at": "2026-10-10T10:12:49+00:00",
+  "annotation_file": "data/raw/mimic/MIMIC2024.csv",
+  "annotation_sha256": "98dd8843ef8189e44f7acbd2b61b5a2d263146700b838a93127c427f109c7f26",
+  "documented": {
+    "full_name": "MIMIC: Misogyny Identification in Multimodal Internet Content in Hindi-English Code-Mixed Language",
+    "citation": "Singh, A., Sharma, D., & Singh, V. K. (2024). ACM Transactions on Asian and Low-Resource Language Information Processing. https://doi.org/10.1145/3656169",
+    "tasks": "Binary misogyny identification; multi-label categorisation of misogynistic memes (Objectification, Prejudice, Humiliation)",
+    "task_scope": "misogyny specifically (not general offensiveness, hate, abuse, sarcasm or sentiment)",
+    "language": "Hindi-English code-mixed",
+    "modalities": "meme image + text",
+    "reported_split": "4,044 train / 1,010 test (as reported in 'M3Hop-CoT: Misogynous Meme Identification with Multimodal Multi-hop Chain-of-Thought', arXiv:2410.09220, Table 1); split membership is not present in the local file",
+    "license": "TO_BE_VERIFIED",
+    "label_value_meaning": "TO_BE_VERIFIED",
+    "text_origin": "TO_BE_VERIFIED (column name 'ExtractedText' suggests text extracted from the meme)"
+  },
+  "recommended_role": "PRIMARY TRAINING DATASET",
+  "files": {
+    "file_count": 5055,
+    "total_bytes": 438172926,
+    "extensions": {
+      ".jpg": 5054,
+      ".csv": 1
+    },
+    "non_image_files": [
+      "MIMIC2024.csv"
+    ],
+    "image_directories": [
+      "Files"
+    ]
+  },
+  "schema": {
+    "rows": 5054,
+    "column_count": 6,
+    "columns": {
+      "FileName": {
+        "inferred_type": "text",
+        "missing": 0,
+        "unique_values": 5054
+      },
+      "ExtractedText": {
+        "inferred_type": "text",
+        "missing": 148,
+        "unique_values": 4888
+      },
+      "Misogyny": {
+        "inferred_type": "numeric-like",
+        "missing": 0,
+        "unique_values": 2
+      },
+      "Objectification": {
+        "inferred_type": "numeric-like",
+        "missing": 0,
+        "unique_values": 2
+      },
+      "Prejudice": {
+        "inferred_type": "numeric-like",
+        "missing": 0,
+        "unique_values": 2
+      },
+      "Humiliation": {
+        "inferred_type": "numeric-like",
+        "missing": 0,
+        "unique_values": 2
+      }
+    }
+  },
+  "column_roles": {
+    "id": "FileName",
+    "text": "ExtractedText",
+    "image_reference": "FileName",
+    "primary_label": "Misogyny",
+    "secondary_labels": [
+      "Objectification",
+      "Prejudice",
+      "Humiliation"
+    ]
+  },
+  "labels": {
+    "Misogyny": {
+      "unique_values": [
+        "0",
+        "1"
+      ],
+      "counts": {
+        "0": 2539,
+        "1": 2515
+      },
+      "percentages": {
+        "0": 50.24,
+        "1": 49.76
+      },
+      "missing": 0,
+      "type": "binary"
+    },
+    "Objectification": {
+      "unique_values": [
+        "0",
+        "1"
+      ],
+      "counts": {
+        "0": 3561,
+        "1": 1493
+      },
+      "percentages": {
+        "0": 70.46,
+        "1": 29.54
+      },
+      "missing": 0,
+      "type": "binary"
+    },
+    "Prejudice": {
+      "unique_values": [
+        "0",
+        "1"
+      ],
+      "counts": {
+        "0": 4135,
+        "1": 919
+      },
+      "percentages": {
+        "0": 81.82,
+        "1": 18.18
+      },
+      "missing": 0,
+      "type": "binary"
+    },
+    "Humiliation": {
+      "unique_values": [
+        "0",
+        "1"
+      ],
+      "counts": {
+        "0": 4661,
+        "1": 393
+      },
+      "percentages": {
+        "0": 92.22,
+        "1": 7.78
+      },
+      "missing": 0,
+      "type": "binary"
+    }
+  },
+  "sublabel_consistency": {
+    "rows_primary_not_positive_but_sublabel_positive": 0,
+    "ids_primary_not_positive_but_sublabel_positive": [],
+    "rows_primary_positive_with_no_sublabel": 1,
+    "ids_primary_positive_with_no_sublabel": [
+      "704_M_pic_0.jpg"
+    ],
+    "rows_with_multiple_sublabels": 288,
+    "sublabel_combinations_when_primary_positive": {
+      "Objectification": 1280,
+      "Prejudice": 678,
+      "Humiliation": 268,
+      "Objectification+Prejudice": 163,
+      "Prejudice+Humiliation": 75,
+      "Objectification+Humiliation": 47,
+      "Objectification+Prejudice+Humiliation": 3,
+      "(none)": 1
+    }
+  },
+  "text": {
+    "non_empty": 4906,
+    "missing_or_empty": 148,
+    "char_length": {
+      "min": 1.0,
+      "p25": 37.25,
+      "median": 55.0,
+      "mean": 59.584,
+      "p75": 77.0,
+      "p95": 117.0,
+      "max": 283.0
+    },
+    "word_count": {
+      "min": 1.0,
+      "p25": 7.0,
+      "median": 11.0,
+      "mean": 11.594,
+      "p75": 15.0,
+      "p95": 23.0,
+      "max": 64.0
+    },
+    "samples_with_url": 0,
+    "samples_with_mention": 448,
+    "samples_with_hashtag": 30,
+    "samples_with_emoji": 0,
+    "samples_with_newline": 0,
+    "language_indicator_heuristic": {
+      "latin_hindi_markers_only": 1101,
+      "mixed_script": 1008,
+      "latin_english_markers_only": 942,
+      "latin_hindi_and_english_markers": 778,
+      "latin_no_markers": 616,
+      "devanagari_only": 452,
+      "no_letters": 9
+    },
+    "missing_or_empty_by_primary_label": {
+      "0": 42,
+      "1": 106
+    },
+    "ids_missing_or_empty": [
+      "1003_M_pic_23.jpg",
+      "1010_M_pic_2.jpg",
+      "1011_NM_pic.jpg",
+      "1019_M_pic_3.jpg",
+      "102_M_pic_123.jpg",
+      "1030_M_pic_2.jpg",
+      "1032_M_pic_2.jpg",
+      "1035_M_pic_2.jpg",
+      "1036_M_pic_3.jpg",
+      "1048_M_pic_2.jpg",
+      "1078_M_pic_2.jpg",
+      "1081_M_pic_2.jpg",
+      "1086_M_pic_12.jpg",
+      "108_NM_pic.jpg",
+      "1099_NM_pic.jpg",
+      "1136_M_pic_2.jpg",
+      "1138_M_pic_2.jpg",
+      "1142_M_pic_1.jpg",
+      "1145_M_pic_2.jpg",
+      "1146_M_pic_2.jpg",
+      "1147_M_pic_3.jpg",
+      "1149_M_pic_3.jpg",
+      "1150_M_pic_2.jpg",
+      "1151_M_pic_2.jpg",
+      "1153_M_pic_2.jpg",
+      "1154_M_pic_2.jpg",
+      "115_M_pic_30.jpg",
+      "1162_M_pic_2.jpg",
+      "1169_M_pic_2.jpg",
+      "1175_M_pic_2.jpg",
+      "1184_NM_pic.jpg",
+      "1187_M_pic_3.jpg",
+      "1187_NM_pic.jpg",
+      "1188_M_pic_1.jpg",
+      "1190_M_pic_3.jpg",
+      "1192_M_pic_3.jpg",
+      "1198_M_pic_12.jpg",
+      "1212_NM_pic.jpg",
+      "1247_M_pic_1.jpg",
+      "124_NM_pic.jpg",
+      "1253_M_pic_2.jpg",
+      "1254_NM_pic.jpg",
+      "1255_M_pic_1.jpg",
+      "1310_M_pic_1.jpg",
+      "1360_NM_pic.jpg",
+      "1365_NM_pic.jpg",
+      "1411_NM_pic.jpg",
+      "1421_M_pic_1.jpg",
+      "1436_M_pic_2.jpg",
+      "1444_M_pic_12.jpg",
+      "1446_M_pic_1.jpg",
+      "1447_M_pic_23.jpg",
+      "1450_M_pic_1.jpg",
+      "1482_M_pic_2.jpg",
+      "1490_NM_pic.jpg",
+      "1560_M_pic_2.jpg",
+      "1598_M_pic_3.jpg",
+      "1606_M_pic_1.jpg",
+      "1637_NM_pic.jpg",
+      "1644_NM_pic.jpg",
+      "1651_M_pic_1.jpg",
+      "1668_NM_pic.jpg",
+      "1670_M_pic_1.jpg",
+      "1682_M_pic_30.jpg",
+      "1703_M_pic_1.jpg",
+      "170_NM_pic.jpg",
+      "1737_M_pic_23.jpg",
+      "1751_NM_pic.jpg",
+      "178_M_pic_1.jpg",
+      "1793_M_pic_10.jpg",
+      "180_M_pic_2.jpg",
+      "1818_M_pic_3.jpg",
+      "1825_NM_pic.jpg",
+      "1833_NM_pic.jpg",
+      "1838_M_pic_23.jpg",
+      "1843_NM_pic.jpg",
+      "1856_NM_pic.jpg",
+      "1888_NM_pic.jpg",
+      "1899_NM_pic.jpg",
+      "1939_NM_pic.jpg",
+      "1980_NM_pic.jpg",
+      "2003_M_pic_1.jpg",
+      "2035_M_pic_20.jpg",
+      "2058_M_pic_300.jpg",
+      "2067_M_pic_1.jpg",
+      "2097_M_pic_1.jpg",
+      "2099_M_pic_1.jpg",
+      "20_M_pic_10.jpg",
+      "2101_M_pic_1.jpg",
+      "2115_M_pic_1.jpg",
+      "2115_NM_pic.jpg",
+      "2126_NM_pic.jpg",
+      "2136_M_pic_3.jpg",
+      "2141_M_pic_2.jpg",
+      "2159_M_pic_3.jpg",
+      "2169_M_pic_1.jpg",
+      "2203_M_pic_2.jpg",
+      "2208_NM_pic.jpg",
+      "2216_M_pic_10.jpg",
+      "2327_NM_pic.jpg",
+      "2369_M_pic_1.jpg",
+      "2397_NM_pic.jpg",
+      "2421_NM_pic.jpg",
+      "2429_M_pic_1.jpg",
+      "2431_M_pic_1.jpg",
+      "2433_M_pic_10.jpg",
+      "2446_M_pic_10.jpg",
+      "2461_M_pic_20.jpg",
+      "2469_M_pic_1.jpg",
+      "2487_M_pic_1.jpg",
+      "2490_NM_pic.jpg",
+      "2498_M_pic_12.jpg",
+      "2504_NM_pic.jpg",
+      "250_M_pic_20.jpg",
+      "2521_M_pic_1.jpg",
+      "2527_NM_pic.jpg",
+      "2531_M_pic_3.jpg",
+      "2555_M_pic_1.jpg",
+      "2573_M_pic_1.jpg",
+      "266_NM_pic.jpg",
+      "2_NM_pic.jpg",
+      "302_M_pic_1.jpg",
+      "316_NM_pic.jpg",
+      "322_NM_pic.jpg",
+      "324_NM_pic.jpg",
+      "329_NM_pic.jpg",
+      "361_M_pic_1.jpg",
+      "388_M_pic_1.jpg",
+      "38_M_pic_1.jpg",
+      "40_M_pic_1.jpg",
+      "416_M_pic_2.jpg",
+      "51_M_pic_3.jpg",
+      "530_M_pic_2.jpg",
+      "553_M_pic_3.jpg",
+      "612_M_pic_1.jpg",
+      "61_M_pic_130.jpg",
+      "643_M_pic_1.jpg",
+      "654_M_pic_12.jpg",
+      "759_M_pic_2.jpg",
+      "766_M_pic_1.jpg",
+      "776_M_pic_2.jpg",
+      "781_M_pic_2.jpg",
+      "794_NM_pic.jpg",
+      "84_M_pic_1.jpg",
+      "84_NM_pic.jpg",
+      "91_M_pic_20.jpg",
+      "950_M_pic_30.jpg",
+      "957_M_pic_2.jpg"
+    ]
+  },
+  "duplicates": {
+    "duplicate_full_rows": 0,
+    "missing_ids": 0,
+    "duplicate_ids": 0,
+    "duplicate_id_values": [],
+    "rows_in_exact_duplicate_text_groups": 35,
+    "exact_duplicate_text_groups": 17,
+    "rows_in_case_whitespace_duplicate_groups": 37,
+    "case_whitespace_duplicate_groups": 18,
+    "duplicate_text_groups_with_conflicting_labels": 4,
+    "rows_in_conflicting_label_groups": 9,
+    "conflicting_label_group_ids": [
+      [
+        "1438_NM_pic.jpg",
+        "1574_M_pic_2.jpg"
+      ],
+      [
+        "1443_M_pic_1.jpg",
+        "1785_NM_pic.jpg",
+        "2127_M_pic_1.jpg"
+      ],
+      [
+        "2402_NM_pic.jpg",
+        "282_M_pic_12.jpg"
+      ],
+      [
+        "1827_NM_pic.jpg",
+        "938_M_pic_2.jpg"
+      ]
+    ]
+  },
+  "filename_label_association": {
+    "pattern_label_counts": {
+      "#_M_pic_#.jpg": {
+        "1": 2515
+      },
+      "#_NM_pic.jpg": {
+        "0": 2539
+      }
+    },
+    "pattern_perfectly_predicts_label": true
+  },
+  "images": {
+    "referenced_rows": 5054,
+    "unique_referenced_names": 5054,
+    "image_files_on_disk": 5054,
+    "same_filename_in_multiple_folders": [],
+    "found": 5054,
+    "missing": 0,
+    "unreferenced_files_on_disk": 0,
+    "status": "INSPECTED",
+    "corrupt_or_unreadable": 0,
+    "corrupt_files": [],
+    "formats": {
+      "JPEG": 5054
+    },
+    "extension_format_mismatch": 0,
+    "width": {
+      "min": 107.0,
+      "p25": 720.0,
+      "median": 768.0,
+      "mean": 875.154,
+      "p75": 1080.0,
+      "p95": 1101.35,
+      "max": 2048.0
+    },
+    "height": {
+      "min": 108.0,
+      "p25": 720.0,
+      "median": 899.0,
+      "mean": 922.02,
+      "p75": 1079.0,
+      "p95": 1361.0,
+      "max": 2048.0
+    },
+    "aspect_ratio_w_over_h": {
+      "min": 0.44,
+      "p25": 0.836,
+      "median": 1.0,
+      "mean": 0.975,
+      "p75": 1.03,
+      "p95": 1.33,
+      "max": 3.0
+    },
+    "exact_duplicate_image_groups": 8,
+    "images_in_exact_duplicate_groups": 16,
+    "exact_duplicate_image_names": [
+      [
+        "1304_M_pic_2.jpg",
+        "44_M_pic_2.jpg"
+      ],
+      [
+        "1472_M_pic_1.jpg",
+        "2422_M_pic_1.jpg"
+      ],
+      [
+        "1475_M_pic_1.jpg",
+        "2423_M_pic_1.jpg"
+      ],
+      [
+        "1530_M_pic_1.jpg",
+        "2437_M_pic_2.jpg"
+      ],
+      [
+        "1561_M_pic_3.jpg",
+        "935_M_pic_3.jpg"
+      ],
+      [
+        "1827_NM_pic.jpg",
+        "938_M_pic_2.jpg"
+      ],
+      [
+        "2402_NM_pic.jpg",
+        "282_M_pic_12.jpg"
+      ],
+      [
+        "2550_M_pic_1.jpg",
+        "303_M_pic_1.jpg"
+      ]
+    ],
+    "duplicate_image_groups_with_conflicting_labels": 2
+  }
+}

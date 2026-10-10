@@ -157,8 +157,11 @@ hyperparameters across modules.
 - Report test results honestly, including skipped or failing tests.
 
 ## 7. Current stage
-Tasks 1–2 done: repository foundation and the MongoDB database layer
-(`src/database/`, see `docs/database.md`). Database access goes through
-the repository classes only — no PyMongo calls in `app/` or ML code.
-No dataset has been inspected, no model trained, no UI built. See
+Tasks 1–3 done: repository foundation, the MongoDB database layer
+(`src/database/`, see `docs/database.md`), and the read-only dataset
+inventory (`src/data/`, see `docs/DATASET_REPORT.md`). Database access
+goes through the repository classes only — no PyMongo calls in `app/`
+or ML code. **MIMIC file names (`_M_`/`_NM_`) encode the label: never
+use them as model input or derive features from them.** No data has
+been cleaned or split, no model trained, no UI built. See
 `PROJECT_CONTEXT.md` Section 17 for the up-to-date stage.
