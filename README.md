@@ -162,14 +162,14 @@ checks connectivity (needs `MONGODB_URI` in `.env`), and
 │   ├── evaluation/  explainability/
 │   ├── database/         # MongoDB connection, schemas, repositories, indexes
 │   └── utils/            # config.py — config loader
-├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py, create_splits.py
+├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py, create_splits.py, train_text_baselines.py
 ├── models/{text,image,multimodal}/   # model artifacts (git-ignored)
 ├── results/
 │   ├── figures/  metrics/  tables/  paper/   # versioned small outputs
 │   └── predictions/      # per-sample outputs (git-ignored)
 ├── app/                  # Streamlit app (later)
 ├── tests/                # pytest tests
-└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md
+└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md, TEXT_BASELINE_REPORT.md
 ```
 
 ## 14. Setup Instructions
@@ -232,6 +232,7 @@ tests; live Atlas connectivity depends on your `.env`).
 **Task 5 — Exploratory Data Analysis: complete.**
 **Task 6 — Text Preprocessing & Hinglish Normalization: complete.**
 **Task 7 — Leakage-Safe Train/Validation/Test Split: complete.**
+**Task 8 — Traditional Text Baselines: complete** (validation only).
 - ✅ Repository structure, documentation, configuration, ignore rules,
   dependency list, config loader with tests.
 - ✅ Database layer: connection manager, validation, repositories,
@@ -247,8 +248,10 @@ tests; live Atlas connectivity depends on your `.env`).
   `preprocess()` function (`docs/TEXT_PREPROCESSING_REPORT.md`). Their effect on models is not yet measured.
 - ✅ Canonical leakage-safe split: train 3,532 / validation 754 / test 758 (seed 42); test set locked
   (`docs/DATA_SPLIT_REPORT.md`).
-- ❌ Model training — **not started**.
-- ❌ Experimental metrics — **none exist**.
+- ✅ TF-IDF text baselines (B01–B06): best **validation** macro-F1 0.6671 (LR + HINGLISH_NORMALIZED);
+  `docs/TEXT_BASELINE_REPORT.md`. These are development results, not final test results.
+- ❌ Transformer, image and multimodal models — not started.
+- ❌ Final test-set results — **none exist** (test set locked).
 - ❌ OCR, explainability, Streamlit UI, deployment — not started.
 
 ## 19. Planned Development Roadmap
@@ -259,7 +262,7 @@ tests; live Atlas connectivity depends on your `.env`).
 5. ✅ Task 5 — Exploratory data analysis
 6. ✅ Task 6 — Text preprocessing and Hinglish normalization
 7. ✅ Task 7 — Leakage-safe train/validation/test split
-8. Text baselines (TF-IDF + LR / SVM)
+8. ✅ Task 8 — Text baselines (TF-IDF + LR / SVM), validation only
 9. Transformer text model, image model, multimodal fusion
 10. Hyperparameter tuning (validation only) and final test evaluation
 11. OCR evaluation and OCR-noise experiment (to be reframed: dataset text is already OCR output)
@@ -268,7 +271,7 @@ tests; live Atlas connectivity depends on your `.env`).
 14. Deployment
 15. Research paper (IEEE format)
 
-The order after Task 7 is indicative and may change.
+The order after Task 8 is indicative and may change.
 
 ## 20. Disclaimer
 This repository is an academic research project in progress.

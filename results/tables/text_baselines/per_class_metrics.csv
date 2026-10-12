@@ -1,0 +1,13 @@
+experiment_id,class,precision,recall,f1,support
+B01,non_misogynistic,0.6536,0.6623,0.6579,379
+B01,misogynistic,0.6541,0.6453,0.6497,375
+B02,non_misogynistic,0.6571,0.6623,0.6597,379
+B02,misogynistic,0.6559,0.6507,0.6533,375
+B03,non_misogynistic,0.6667,0.6755,0.671,379
+B03,misogynistic,0.6676,0.6587,0.6631,375
+B04,non_misogynistic,0.6526,0.6544,0.6535,379
+B04,misogynistic,0.6497,0.648,0.6489,375
+B05,non_misogynistic,0.6544,0.6544,0.6544,379
+B05,misogynistic,0.6507,0.6507,0.6507,375
+B06,non_misogynistic,0.6517,0.6517,0.6517,379
+B06,misogynistic,0.648,0.648,0.648,375

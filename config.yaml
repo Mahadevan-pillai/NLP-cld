@@ -105,10 +105,42 @@ text_preprocessing:
   output_file: "data/processed/mimic_text_preprocessed_v1.0.csv"   # git-ignored
 
 text_model:
-  baselines:                    # PROPOSED, not finalized
-    - "tfidf_logistic_regression"
-    - "tfidf_linear_svm"
-  tfidf: {}                     # ngram_range, max_features, min_df ... TBD
+  # Task 8: fixed, untuned baseline settings (NOT validation-optimised).
+  # Tuning is a later task; do not overwrite these with tuned values.
+  baselines:
+    version: "1.0"
+    tfidf:
+      lowercase: true           # case kept in preprocessing; vectorizer lowercases (same for all variants)
+      # sklearn's default pattern splits Devanagari words at vowel signs
+      # ('नहीं' -> 'नह'); this pattern keeps whole words in both scripts.
+      token_pattern: '(?u)[\w\u0900-\u0963\u0971-\u097F]+'   # single quotes: backslashes kept literally
+      ngram_range: [1, 2]
+      min_df: 2
+      max_df: 1.0
+      sublinear_tf: true
+      strip_accents: null       # never strip: would damage Devanagari
+    logistic_regression:
+      C: 1.0
+      solver: "lbfgs"
+      max_iter: 2000
+      class_weight: null        # classes are balanced (50.3 / 49.7), no weighting
+    linear_svm:
+      C: 1.0
+      loss: "squared_hinge"
+      dual: "auto"
+      max_iter: 10000
+      class_weight: null
+    experiments:                # id: [classifier, preprocessing mode]
+      B01: ["logistic_regression", "raw"]
+      B02: ["logistic_regression", "basic"]
+      B03: ["logistic_regression", "hinglish_normalized"]
+      B04: ["linear_svm", "raw"]
+      B05: ["linear_svm", "basic"]
+      B06: ["linear_svm", "hinglish_normalized"]
+    artifact_dir: "models/text"            # *.joblib git-ignored
+    results_dir: "results/tables/text_baselines"
+    figures_dir: "results/figures/text_baselines"
+    bootstrap_resamples: 1000   # uncertainty of validation macro-F1 (descriptive, not a test)
   transformer:
     checkpoint: null            # TBD: multilingual/Hinglish-capable encoder
     max_length: null
@@ -143,7 +175,7 @@ evaluation:
     - "weighted_f1"
     - "per_class"
     - "confusion_matrix"
-  primary_metric: null          # TBD (accuracy alone is not sufficient)
+  primary_metric: "macro_f1"    # development metric (Task 8); accuracy alone is not sufficient
   tune_on: "validation"         # never "test"
 
 database:

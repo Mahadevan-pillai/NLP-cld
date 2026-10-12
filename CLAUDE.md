@@ -168,7 +168,20 @@ Tasks 1–5 done:
 - text preprocessing v1.0 (`src/preprocessing/`, see
   `docs/TEXT_PREPROCESSING_REPORT.md`);
 - the canonical leakage-safe split (`src/data/splits.py`, see
-  `docs/DATA_SPLIT_REPORT.md`).
+  `docs/DATA_SPLIT_REPORT.md`);
+- TF-IDF text baselines B01–B06 (`src/models/text_baselines.py`,
+  `src/training/text_baselines.py`, see `docs/TEXT_BASELINE_REPORT.md`),
+  validation only.
+
+**Model pipelines:**
+- Models take RAW text and apply `TextPreprocessor(mode)` (the Task 6
+  `preprocess()`) inside the saved pipeline; the app must not
+  preprocess separately.
+- For TF-IDF, use the Devanagari-safe `token_pattern` from `config.yaml`.
+  sklearn's default splits Hindi words.
+- Evaluate with `src/evaluation/metrics.py` (macro-F1 is the development
+  metric).
+- Joblib artifacts are pickles: only load files this project created.
 
 **Splits (mandatory for every experiment):**
 - Use only `data/splits/split_assignments.csv` via
@@ -211,5 +224,5 @@ Rules for later tasks:
 - `original_text` is raw OCR text; preprocessing writes new columns and
   never overwrites it.
 
-No model has been trained and no UI built. See
+No test-set evaluation has been done and no UI built. See
 `PROJECT_CONTEXT.md` Section 17 for the up-to-date stage.

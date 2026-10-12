@@ -376,11 +376,23 @@ IMPLEMENTED in Task 7:
   `docs/DATA_SPLIT_REPORT.md`; log entry `INS-20261012-02`.
 - **Test set locked**: `load_split("test")` requires `allow_test=True`.
 
-NOT STARTED: model training, tuning, OCR, explainability, Streamlit UI,
-deployment, paper writing. No experimental results exist.
+IMPLEMENTED in Task 8:
+- TF-IDF baselines B01–B06 (LR / Linear SVM × RAW / BASIC /
+  HINGLISH_NORMALIZED), trained on train and compared on VALIDATION only.
+- Best development baseline: **B03, LR + HINGLISH_NORMALIZED, macro-F1
+  0.6671** (95% CI 0.633–0.701). All six are 0.650–0.667 with
+  overlapping CIs. Normalization helped LR (+1.06 pp vs BASIC) but not the
+  SVM (−0.26 pp); no significance is claimed.
+- Shortcuts confirmed in model weights:
+  - the watermark pattern survives mention masking (`user user`);
+  - empty text is predicted misogynistic;
+  - the OCR token `meः`.
+- **Test set NOT evaluated.** `docs/TEXT_BASELINE_REPORT.md`.
 
-Next planned task: **Task 8 — Traditional Text Baselines (TF-IDF +
-Logistic Regression + SVM).**
+NOT STARTED: transformer/image/multimodal models, tuning, final test
+evaluation, OCR, explainability, Streamlit UI, deployment, paper writing.
+
+Next planned task: **Task 9 — Transformer / Pretrained Text Model.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model
