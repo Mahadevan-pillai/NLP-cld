@@ -1,0 +1,155 @@
+# ==================================================================
+# Hinglish (Romanized Hindi) normalization rules
+# ==================================================================
+# Used ONLY by preprocessing mode "hinglish_normalized"
+# (src/preprocessing/hinglish.py). Edit this file to change rules;
+# bump `version` whenever a rule is added, removed or changed.
+#
+# How rules were chosen (Task 6, 2026-10-12):
+#   * Evidence = whole-word, case-insensitive counts of Latin-script
+#     tokens in data/processed/mimic_cleaned.csv (Task 4 output,
+#     SHA-256 1ff17281346f..., 5,044 samples).
+#   * A variant is included only if it occurs >= 2 times AND has no
+#     plausible second meaning (English word, abbreviation, other
+#     Hindi word). Ambiguous variants are listed under `excluded`.
+#   * Each canonical form is a common romanized spelling that also
+#     occurs in the corpus.
+#   * Rules replace whole words only, case-insensitively, and keep the
+#     original casing pattern (NHI -> NAHI, Nhi -> Nahi, nhi -> nahi).
+#   * Negation: a variant of a negation word may only map to a negation
+#     word (checked when the file is loaded). Nothing is ever deleted.
+# ==================================================================
+
+version: "1.0"
+evidence_source: "data/processed/mimic_cleaned.csv (Task 4, sha256 1ff17281346f)"
+min_variant_count: 2
+
+rules:
+  # --- negation (protected) ---
+  - canonical: nahi
+    variants: [nhi, nahin]
+    negation: true
+    evidence: {nahi: 301, nhi: 137, nahin: 11}
+
+  # --- karna (to do) family: dropped vowel after k ---
+  - canonical: kar
+    variants: [kr]
+    evidence: {kar: 167, kr: 39}
+  - canonical: karna
+    variants: [krna]
+    evidence: {karna: 30, krna: 6}
+  - canonical: karo
+    variants: [kro]
+    evidence: {karo: 41, kro: 17}
+  - canonical: karte
+    variants: [krte]
+    evidence: {karte: 34, krte: 12}
+  - canonical: karke
+    variants: [krke]
+    evidence: {karke: 25, krke: 6}
+  - canonical: karta
+    variants: [krta]
+    evidence: {karta: 30, krta: 6}
+  - canonical: karti
+    variants: [krti]
+    evidence: {karti: 10, krti: 11}
+
+  # --- rehna (progressive) family ---
+  - canonical: raha
+    variants: [rha]
+    evidence: {raha: 106, rha: 37}
+  - canonical: rahi
+    variants: [rhi]
+    evidence: {rahi: 54, rhi: 21}
+  - canonical: rahe
+    variants: [rhe]
+    evidence: {rahe: 47, rhe: 15}
+
+  # --- jana (go) past tense ---
+  - canonical: gaya
+    variants: [gya]
+    evidence: {gaya: 60, gya: 31}
+  - canonical: gayi
+    variants: [gyi]
+    evidence: {gayi: 39, gyi: 17}
+
+  # --- hona (be) ---
+  - canonical: hoon
+    variants: [hu]
+    evidence: {hoon: 42, hu: 152}
+
+  # --- frequent function / content words ---
+  - canonical: kyun
+    variants: [kyu]
+    evidence: {kyun: 31, kyu: 52}
+  - canonical: bahut
+    variants: [bohot, bahot, bhot, bht]
+    evidence: {bahut: 24, bohot: 22, bahot: 11, bhot: 7, bht: 4}
+  - canonical: accha
+    variants: [acha, achha]
+    evidence: {accha: 9, acha: 20, achha: 10}
+  - canonical: kaise
+    variants: [kese]
+    evidence: {kaise: 42, kese: 13}
+  - canonical: mujhe
+    variants: [muje]
+    evidence: {mujhe: 116, muje: 6}
+  - canonical: kuch
+    variants: [kuchh]
+    evidence: {kuch: 86, kuchh: 2}
+  - canonical: pata
+    variants: [pta]
+    evidence: {pata: 43, pta: 14}
+  - canonical: theek
+    variants: [thik]
+    evidence: {theek: 6, thik: 14}
+  - canonical: matlab
+    variants: [mtlb]
+    evidence: {matlab: 18, mtlb: 3}
+  - canonical: jab
+    variants: [jb]
+    evidence: {jab: 44, jb: 4}
+  - canonical: sath
+    variants: [saath]
+    evidence: {sath: 25, saath: 15}
+  - canonical: yaar
+    variants: [yar, yarr]
+    evidence: {yaar: 29, yar: 6, yarr: 2}
+  - canonical: please
+    variants: [plz]
+    evidence: {please: 23, plz: 4}
+
+  # --- gendered nouns / suffixes (relevant to the task domain) ---
+  - canonical: ladki
+    variants: [larki]
+    evidence: {ladki: 48, larki: 4}
+  - canonical: ladka
+    variants: [larka]
+    evidence: {ladka: 21, larka: 2}
+  - canonical: ladkiyan
+    variants: [ladkiya, ladkiyaan]
+    evidence: {ladkiyan: 7, ladkiya: 17, ladkiyaan: 3}
+  - canonical: wala
+    variants: [vala]
+    evidence: {wala: 43, vala: 4}
+  - canonical: wali
+    variants: [vali, waali]
+    evidence: {wali: 53, vali: 3, waali: 3}
+
+# Considered and deliberately NOT applied (documented for review).
+excluded:
+  - {variants: [h], would_map_to: hai, count: 74, reason: "also the letter h, initials and OCR fragments"}
+  - {variants: [hy], would_map_to: hai, count: 5, reason: "also 'hey'/'hi'"}
+  - {variants: [he], would_map_to: hai, count: 107, reason: "English pronoun 'he'"}
+  - {variants: [ni], would_map_to: nahi, count: 23, reason: "also Punjabi particle and name fragments"}
+  - {variants: [nai], would_map_to: nahi, count: 11, reason: "also Hindi 'nai' (new)"}
+  - {variants: [nahii, nhii, kyon, kyo, kyaa, fhir, smjh, ktna, aor, mjhe], count: 1, reason: "below min_variant_count (each occurs once)"}
+  - {variants: [fir], would_map_to: phir, count: 22, reason: "also 'FIR' (police report), common in Indian memes"}
+  - {variants: [bhut], would_map_to: bahut, count: 8, reason: "also 'bhoot' (ghost)"}
+  - {variants: [gai], would_map_to: gayi, count: 12, reason: "also 'gai' (cow)"}
+  - {variants: [samaj], would_map_to: samajh, count: 4, reason: "also 'samaj' (society)"}
+  - {variants: [kha], would_map_to: kaha, count: 14, reason: "also 'kha' (eat)"}
+  - {variants: [kia, ky], would_map_to: "kya/kiya/ki", count: "2/6", reason: "maps to several different words"}
+  - {variants: [hun, hoo], would_map_to: hoon, count: "52/4", reason: "'hun' is an English endearment; 'hoo' interjection"}
+  - {variants: [mai, main, mein, me, mei, m], would_map_to: "?", count: "-", reason: "'main/mai' (I) vs 'mein/me' (in) vs English 'me': meaning differs"}
+  - {variants: [or, to, tho, bi, k, sb, yr, tm, hm, tb, bt, bat, sth, dia, lia, abi], count: "-", reason: "English words, abbreviations or names"}

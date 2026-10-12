@@ -164,7 +164,16 @@ Tasks 1–5 done:
 - deterministic cleaning (`src/data/cleaning.py`, see
   `docs/DATA_CLEANING_REPORT.md`);
 - EDA (`src/data/eda.py`, `notebooks/02_eda.ipynb`, see
-  `docs/EDA_REPORT.md`).
+  `docs/EDA_REPORT.md`);
+- text preprocessing v1.0 (`src/preprocessing/`, see
+  `docs/TEXT_PREPROCESSING_REPORT.md`).
+
+Text for models comes from `data/processed/mimic_text_preprocessed_v1.0.csv`
+(`text_raw` / `text_basic` / `text_hinglish_normalized`). Any new text
+input (e.g. the app or OCR output) must go through
+`src.preprocessing.preprocess()` with the same mode and version the
+model was trained on. Changing the rules file or the preprocessing code
+requires bumping `text_preprocessing.version`.
 
 The single primary dataset is MIMIC. All later tasks read
 `data/processed/mimic_cleaned.csv` (from `config.yaml`

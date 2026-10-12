@@ -1,0 +1,11 @@
+mode,operation,occurrences,samples_affected
+basic,hashtag,35,30
+basic,mention,523,448
+basic,unicode_nfc,159,159
+basic,whitespace,74,74
+hinglish_normalized,elongation,81,69
+hinglish_normalized,hashtag,35,30
+hinglish_normalized,mention,523,448
+hinglish_normalized,unicode_nfc,159,159
+hinglish_normalized,whitespace,74,74
+hinglish_normalized,hinglish_rules_total,761,597

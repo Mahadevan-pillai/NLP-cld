@@ -77,11 +77,24 @@ splitting:
   deduplicate_before_split: true   # research rule 9: avoid duplicate leakage
 
 text_preprocessing:
-  # Steps are designed in a later task. E1/E4 vs E2/E5 differ only in
-  # whether Hinglish normalization is applied.
-  hinglish_normalization: null  # true/false per experiment, TBD
-  lowercase: null
-  steps: []
+  # Task 6. Implemented in src/preprocessing/ and used by BOTH training
+  # and the app. See docs/TEXT_PREPROCESSING_REPORT.md.
+  version: "1.0"                # bump on any behaviour change; recorded with every model
+  # Modes: raw | basic | hinglish_normalized. All three variants are
+  # generated; which one a model uses is decided by experiments
+  # (E1 vs E2, E4 vs E5), so no single mode is fixed here yet.
+  mode: null
+  lowercase: false              # keep case; vectorizers/tokenizers decide (EDA: casing differs by class)
+  url_handling: "placeholder"   # placeholder | keep | remove
+  url_placeholder: "<URL>"
+  mention_handling: "placeholder"   # placeholder | keep | remove
+  mention_placeholder: "<USER>"
+  hashtag_handling: "strip_symbol"  # strip_symbol (#Word -> Word) | keep
+  emoji_handling: "keep"        # keep only: emojis carry meaning (0 in MIMIC)
+  repeated_char_normalization: true   # 3+ same letter -> 2; hinglish_normalized mode only
+  remove_stopwords: false       # disabled by design (negations are stopwords)
+  normalization_rules: "src/preprocessing/resources/hinglish_normalization.yaml"
+  output_file: "data/processed/mimic_text_preprocessed_v1.0.csv"   # git-ignored
 
 text_model:
   baselines:                    # PROPOSED, not finalized

@@ -140,3 +140,6 @@ temp/
 ocr_tmp/
 ocr_output/
 *.tmp
+
+# Preprocessing before/after examples contain dataset text (Task 6)
+results/tables/preprocessing/preprocessing_examples.csv

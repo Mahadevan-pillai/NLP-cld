@@ -192,6 +192,10 @@ the developer.
 
 ## 11. Planned experiments (PLANNED — no results exist)
 
+Text variants for these experiments exist (Task 6): `text_raw`,
+`text_basic` and `text_hinglish_normalized`. "Without" normalization
+means `text_basic`; "With" means `text_hinglish_normalized`.
+
 | ID | Modality | Hinglish normalization |
 |---|---|---|
 | E1 | Text only | Without |
@@ -348,12 +352,22 @@ Key EDA findings for later tasks:
   together.
 - Handle masking should be tested in preprocessing ablations.
 
-NOT STARTED: text preprocessing, Hinglish normalization, splitting,
-model training, tuning, OCR, explainability, Streamlit UI, deployment,
-paper writing. No experimental results exist.
+IMPLEMENTED in Task 6:
+- Text preprocessing v1.0 (`src/preprocessing/`), shared by training
+  and the future app: modes `raw`, `basic`, `hinglish_normalized`.
+- Rule file `src/preprocessing/resources/hinglish_normalization.yaml`
+  (32 rules / 40 variants, all evidence-based).
+- Variants in `data/processed/mimic_text_preprocessed_v1.0.csv`
+  (git-ignored).
+- Statistics and audit in `results/tables/preprocessing/`;
+  `docs/TEXT_PREPROCESSING_REPORT.md`; log entry `INS-20261012-01`.
+- Preprocessing effectiveness is NOT yet measured.
 
-Next planned task: **Task 6 — Text Preprocessing and Hinglish
-Normalization.**
+NOT STARTED: splitting, model training, tuning, OCR, explainability,
+Streamlit UI, deployment, paper writing. No experimental results exist.
+
+Next planned task: **Task 7 — Leakage-Safe Train/Validation/Test
+Splitting.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

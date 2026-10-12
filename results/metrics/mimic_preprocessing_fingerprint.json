@@ -1,0 +1,121 @@
+{
+  "dataset": "MIMIC",
+  "generated_at": "2026-10-12T04:56:41+00:00",
+  "preprocessing_version": "1.0",
+  "rules_version": "1.0",
+  "rules_sha256": "d57d474f5cab4157b2acf6d1e11f180fa6d39e0ba7b37c375303ae2e8ac24f5e",
+  "code_sha256": {
+    "src/preprocessing/text.py": "dcb7b65856fc83b673e436572e3b78115dcd8f7b4dd504af6d9508d894a03eb5",
+    "src/preprocessing/hinglish.py": "7731bc7a9bf0075e88ec0aa0f4bf74b4e3772b5fcb1d33890fe120019bfd7821"
+  },
+  "config": {
+    "version": "1.0",
+    "mode": null,
+    "lowercase": false,
+    "url_handling": "placeholder",
+    "url_placeholder": "<URL>",
+    "mention_handling": "placeholder",
+    "mention_placeholder": "<USER>",
+    "hashtag_handling": "strip_symbol",
+    "emoji_handling": "keep",
+    "repeated_char_normalization": true,
+    "remove_stopwords": false,
+    "normalization_rules": "src/preprocessing/resources/hinglish_normalization.yaml",
+    "output_file": "data/processed/mimic_text_preprocessed_v1.0.csv"
+  },
+  "input": {
+    "file": "data/processed/mimic_cleaned.csv",
+    "sha256": "1ff17281346f0332163efdfb6aacfe0408d657e93d2748afe826e0ee268340f2",
+    "rows": 5044
+  },
+  "output": {
+    "file": "data/processed/mimic_text_preprocessed_v1.0.csv",
+    "sha256": "51faa312cd1bb4ff701d1da7ab8156f289090e3eb31f28e0455d90611307111f",
+    "rows": 5044,
+    "columns": [
+      "sample_id",
+      "source_row",
+      "image_reference",
+      "image_path",
+      "has_text",
+      "original_label",
+      "target_label",
+      "duplicate_group",
+      "review_flags",
+      "Objectification",
+      "Prejudice",
+      "Humiliation",
+      "text_raw",
+      "text_basic",
+      "text_hinglish_normalized",
+      "preprocessing_version"
+    ]
+  },
+  "summary": [
+    {
+      "mode": "raw",
+      "samples": 5044,
+      "changed_vs_raw": 0,
+      "percent_changed_vs_raw": 0.0,
+      "changed_vs_previous_mode": 0,
+      "mean_chars": 57.857,
+      "mean_whitespace_tokens": 11.258,
+      "vocabulary_eda_tokens": 14244,
+      "vocabulary_whitespace_tokens_case_sensitive": 20235,
+      "empty_texts": 148,
+      "newly_empty_vs_raw": 0
+    },
+    {
+      "mode": "basic",
+      "samples": 5044,
+      "changed_vs_raw": 671,
+      "percent_changed_vs_raw": 13.3,
+      "changed_vs_previous_mode": 671,
+      "mean_chars": 57.477,
+      "mean_whitespace_tokens": 11.258,
+      "vocabulary_eda_tokens": 14022,
+      "vocabulary_whitespace_tokens_case_sensitive": 19919,
+      "empty_texts": 148,
+      "newly_empty_vs_raw": 0
+    },
+    {
+      "mode": "hinglish_normalized",
+      "samples": 5044,
+      "changed_vs_raw": 1255,
+      "percent_changed_vs_raw": 24.88,
+      "changed_vs_previous_mode": 655,
+      "mean_chars": 57.615,
+      "mean_whitespace_tokens": 11.258,
+      "vocabulary_eda_tokens": 13962,
+      "vocabulary_whitespace_tokens_case_sensitive": 19810,
+      "empty_texts": 148,
+      "newly_empty_vs_raw": 0
+    }
+  ],
+  "rule_variants": 40,
+  "rule_occurrences": 761,
+  "rules_never_triggered": [],
+  "audit": {
+    "flagged_samples": 48,
+    "by_flag": {
+      "negation_count_changed": 1,
+      "became_empty": 0,
+      "large_length_change": 12,
+      "many_rule_replacements": 25,
+      "high_replacement_share": 12,
+      "token_count_changed": 0
+    }
+  },
+  "validation": {
+    "cleaned_input_unchanged": true,
+    "sample_count_preserved": true,
+    "sample_ids_preserved": true,
+    "labels_preserved": true,
+    "image_references_preserved": true,
+    "raw_equals_original_text": true,
+    "no_unexpected_empty_text": true,
+    "deterministic_rerun": true,
+    "single_preprocessing_version": true
+  },
+  "random_seed": "NOT_USED (deterministic)"
+}

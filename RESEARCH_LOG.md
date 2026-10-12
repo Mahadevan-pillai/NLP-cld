@@ -286,3 +286,72 @@ Limitations: heuristic language indicators; crude EDA tokenization; near-duplica
 Conclusion: Classes are balanced; the main risks are shortcut/leakage features (handles, file names, resolutions, near-duplicate images). These must be addressed in splitting and tested in preprocessing ablations.
 
 Next Experiment: TASK 6: Text Preprocessing and Hinglish Normalization.
+
+### Experiment ID: INS-20261012-01
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: Not an experiment. Task 6: build the three controlled text variants for RQ1 (RAW vs BASIC vs HINGLISH_NORMALIZED). Effectiveness NOT measured.
+
+Dataset: MIMIC, cleaned (5,044 samples)
+
+Dataset Version: input `data/processed/mimic_cleaned.csv` SHA-256 `1ff17281346f…` (verified against the Task 4 fingerprint); output `data/processed/mimic_text_preprocessed_v1.0.csv` SHA-256 `51faa312cd1b…` (git-ignored)
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: NOT_APPLICABLE (no split created)
+
+Validation Split: NOT_APPLICABLE
+
+Test Split: NOT_APPLICABLE
+
+Input Modality: Text
+
+Preprocessing: text_preprocessing version 1.0, three modes.
+- RAW: unchanged.
+- BASIC: NFC, HTML unescape, zero-width/NBSP cleanup, URL → `<URL>`, @mention → `<USER>`, hashtag `#` removed, whitespace collapsed; lowercase off.
+- HINGLISH_NORMALIZED: BASIC + elongation 3+ → 2 + rules file `src/preprocessing/resources/hinglish_normalization.yaml` v1.0 (32 rules / 40 variants, each with ≥ 2 corpus occurrences and no ambiguity; rules file SHA-256 `d57d474f5cab…`).
+
+Feature Representation: NOT_APPLICABLE
+
+Model: NOT_APPLICABLE
+
+Model Version / Pretrained Checkpoint: NOT_APPLICABLE
+
+Hyperparameters: NOT_APPLICABLE
+
+Random Seed: NOT_USED (deterministic)
+
+Training Environment: Windows 11, Python 3.10.0, pandas 2.3.3, PyYAML 6.0.3
+
+Training Details: `python scripts/preprocess_text.py`; 9/9 validation checks passed (IDs, labels and image references preserved; `text_raw` == `original_text`; no new empty texts; deterministic)
+
+Validation Metrics: NOT_APPLICABLE
+
+Test Metrics: NOT_APPLICABLE
+
+Runtime / Resource Notes: ~3 s
+
+Artifacts: `results/tables/preprocessing/` (preprocessing_summary, operation_counts, hinglish_rule_frequencies, normalization_audit; preprocessing_examples is git-ignored), `results/metrics/mimic_preprocessing_fingerprint.json`, `docs/TEXT_PREPROCESSING_REPORT.md`
+
+Observations (measured):
+- **Samples changed vs RAW:** BASIC 671 (13.30%), HINGLISH_NORMALIZED 1,255 (24.88%); 655 differ between BASIC and HINGLISH.
+- **Operations:** 761 rule replacements in 597 samples; 523 mentions masked; 81 elongations shortened.
+- **Vocabulary (case-sensitive words):** 20,235 → 19,919 → 19,810.
+- **Safety:** 0 texts newly empty.
+- **Audit:** 48 samples flagged for review (1 negation-count change caused by masking the handle `@ni`).
+
+Error Analysis Notes: NOT_APPLICABLE
+
+Limitations:
+- Rules are derived from the whole corpus (all future splits).
+- Rules are context-free.
+- No Devanagari↔Latin transliteration.
+- OCR artefacts (e.g. `ः`) are not repaired.
+- 18 watermark names without "@" remain.
+
+Conclusion: The three variants are ready for E1/E2 and E4/E5. BASIC vs HINGLISH_NORMALIZED is the clean comparison for RQ1, because RAW vs BASIC also includes mention (watermark) masking.
+
+Next Experiment: TASK 7: Leakage-Safe Train/Validation/Test Splitting.
