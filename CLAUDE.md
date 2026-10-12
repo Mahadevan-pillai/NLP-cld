@@ -189,6 +189,17 @@ Tasks 1–5 done:
   metric).
 - Joblib artifacts are pickles: only load files this project created.
 
+**Categories (Task 8.5):**
+- Only MIMIC `Misogyny` and its sub-labels (`Objectification`,
+  `Prejudice`, `Humiliation`; multilabel, nested under misogyny) are
+  annotated.
+- Never train or display SAFE, HATE, ABUSE, THREAT, OBSCENE or SARCASM
+  predictions, and never create them by relabelling.
+- `Misogyny = 0` means "non-misogynistic", **not** "safe".
+- Enabled tasks are defined in `config/categories.yaml`.
+- Moderation outputs are limited to ALLOW / WARNING / HUMAN REVIEW (no
+  automatic BLOCK).
+
 **Splits (mandatory for every experiment):**
 - Use only `data/splits/split_assignments.csv` via
   `src.data.splits.load_split()` / `load_split_assignments()`.

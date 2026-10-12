@@ -1,0 +1,11 @@
+category,task,population,positives,negatives,percent_positive_in_population,percent_positive_all_samples,imbalance_ratio_neg_to_pos,positives_train,positives_validation,positives_test,feasibility
+MISOGYNY,binary (all samples),5044,2507,2537,49.7,49.7,1.01,1756,375,376,STRONG
+OBJECTIFICATION,"multilabel, conditional on misogyny",2507,1488,1019,59.35,29.5,0.68,1049,214,225,STRONG
+PREJUDICE,"multilabel, conditional on misogyny",2507,916,1591,36.54,18.16,1.74,642,152,122,MODERATE
+HUMILIATION,"multilabel, conditional on misogyny",2507,392,2115,15.64,7.77,5.4,262,55,75,WEAK
+SAFE,not annotated,0,0,,,,,,,,INSUFFICIENT (no annotation)
+HATE,not annotated,0,0,,,,,,,,INSUFFICIENT (no annotation)
+ABUSE,not annotated,0,0,,,,,,,,INSUFFICIENT (no annotation)
+THREAT,not annotated,0,0,,,,,,,,INSUFFICIENT (no annotation)
+OBSCENE,not annotated,0,0,,,,,,,,INSUFFICIENT (no annotation)
+SARCASM,not annotated,0,0,,,,,,,,INSUFFICIENT (no annotation)

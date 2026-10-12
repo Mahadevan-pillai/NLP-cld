@@ -252,6 +252,9 @@ tests; live Atlas connectivity depends on your `.env`).
 **Task 6 — Text Preprocessing & Hinglish Normalization: complete.**
 **Task 7 — Leakage-Safe Train/Validation/Test Split: complete.**
 **Task 8 — Traditional Text Baselines: complete** (validation only).
+**Task 8.5 — Multi-category feasibility study: complete** (`docs/MULTICATEGORY_FEASIBILITY_REPORT.md`).
+Only misogyny and its sub-categories are annotated, so the app will report *misogyny detected / not
+detected*, never "safe".
 - ✅ Repository structure, documentation, configuration, ignore rules,
   dependency list, config loader with tests.
 - ✅ Database layer: connection manager, validation, repositories,

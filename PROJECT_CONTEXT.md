@@ -180,6 +180,12 @@ Listing a model here does not finalize it.
 These may be refined after dataset inspection and literature review.
 Novelty must not be claimed until relevant literature is reviewed.
 
+**RQ4 (PROPOSED in Task 8.5, not adopted):** how effectively can
+hierarchical multilabel models identify misogyny sub-categories
+(objectification, prejudice, humiliation)? It is supported by MIMIC
+sub-task 2; Humiliation has weak sample support. RQ1–RQ3 stay specific
+to misogyny: the data cannot support a broader "harmful content" claim.
+
 **RQ3 / OCR experiment: TO BE REFRAMED (finding from Task 4).** The
 dataset text is itself OCR output (EasyOCR per the dataset card), so
 there is no human "reference text". Options to decide before the OCR
@@ -389,10 +395,22 @@ IMPLEMENTED in Task 8:
   - the OCR token `meः`.
 - **Test set NOT evaluated.** `docs/TEXT_BASELINE_REPORT.md`.
 
+DONE in Task 8.5 (feasibility study; nothing trained):
+- The only content annotations are MIMIC `Misogyny` plus the sub-labels
+  `Objectification`, `Prejudice` and `Humiliation`. These are
+  multilabel and nested under misogyny.
+- A general safe/harmful or multi-harm system (hate, abuse, threat,
+  obscene, sarcasm) is **NOT supported** by any available annotation.
+- PROPOSED, awaiting decision: a stage-2 multilabel misogyny
+  sub-category task, and a narrowed RQ4.
+- See `docs/MULTICATEGORY_FEASIBILITY_REPORT.md` and
+  `config/categories.yaml`.
+
 NOT STARTED: transformer/image/multimodal models, tuning, final test
 evaluation, OCR, explainability, Streamlit UI, deployment, paper writing.
 
-Next planned task: **Task 9 — Transformer / Pretrained Text Model.**
+Next planned task: **TO BE DECIDED after review of
+`docs/MULTICATEGORY_FEASIBILITY_REPORT.md`.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

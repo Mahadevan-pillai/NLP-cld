@@ -763,3 +763,70 @@ Limitations: untuned; small validation set (CI about ±3.4 pp); shortcut feature
 Conclusion: Within the uncertainty of the best baseline.
 
 Next Experiment: TASK 9: Transformer / Pretrained Text Model.
+
+### Experiment ID: INS-20261012-03
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: Not an experiment. Task 8.5: can the available annotations support multi-category / hierarchical harmful-content classification? (Feasibility and design only.)
+
+Dataset: MIMIC (cleaned, 5,044). Three other local files (`Downloads/DATASET 00.csv`, `DATASET 01.csv`, `DATASET 02.xlsx`) inspected read-only with the developer's approval: agriculture, mortality statistics and football data. They are not content datasets.
+
+Dataset Version: cleaned SHA-256 `1ff17281346f…`; canonical split `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: label counts only (no training)
+
+Validation Split: label counts only
+
+Test Split: label counts only (descriptive). NO EVALUATION.
+
+Input Modality: Annotations only
+
+Preprocessing: NOT_APPLICABLE
+
+Feature Representation: NOT_APPLICABLE
+
+Model: NOT_APPLICABLE (nothing trained; Task 8 B01–B06 untouched)
+
+Model Version / Pretrained Checkpoint: NOT_APPLICABLE
+
+Hyperparameters: NOT_APPLICABLE
+
+Random Seed: NOT_USED
+
+Training Environment: Windows 11, Python 3.10.0, pandas 2.3.3
+
+Training Details: `python scripts/analyze_category_feasibility.py`
+
+Validation Metrics: NOT_APPLICABLE
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: < 5 s
+
+Artifacts: `results/tables/category_feasibility/` (`all_dataset_labels`, `label_mapping_analysis`, `category_sufficiency`, `subcategory_structure`, `modality_support`), `config/categories.yaml` (proposed), `docs/MULTICATEGORY_FEASIBILITY_REPORT.md`
+
+Observations (measured):
+- **Verified labels:** only `Misogyny` (binary) plus `Objectification`, `Prejudice` and `Humiliation`.
+- **Nesting:** the sub-labels are strictly nested (0 positives among non-misogynistic memes).
+- **Co-occurrence:** 11.45% of misogynistic memes have more than one sub-label, so the formulation is MULTILABEL.
+- **Positives (train/validation):** Misogyny 1,756/375 (STRONG); Objectification 1,049/214 (STRONG); Prejudice 642/152 (MODERATE); Humiliation 262/55 (WEAK).
+- **Unsupported:** SAFE, HATE, ABUSE, THREAT, OBSCENE and SARCASM have no annotation.
+
+Error Analysis Notes: NOT_APPLICABLE
+
+Limitations:
+- Single dataset.
+- The meaning of sub-label values is inferred (1 = present) from the dataset card and the nesting.
+- Sufficiency tiers are a project judgment.
+
+Conclusion:
+- A general safe/harmful or multi-harm hierarchy is NOT supported.
+- A two-stage misogyny hierarchy is supported: binary detection, then a conditional multilabel sub-category stage.
+- Stage 2 and a narrowed RQ4 await the developer's decision.
+
+Next Experiment: TO BE DECIDED AFTER REVIEW OF MULTICATEGORY_FEASIBILITY_REPORT.md
