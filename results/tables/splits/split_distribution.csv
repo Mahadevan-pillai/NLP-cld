@@ -1,0 +1,5 @@
+split,samples,percent_of_total,count_non_misogynistic,percent_non_misogynistic,count_misogynistic,percent_misogynistic,samples_with_text
+all,5044,100.0,2537,50.3,2507,49.7,4896
+train,3532,70.02,1776,50.28,1756,49.72,3427
+validation,754,14.95,379,50.27,375,49.73,732
+test,758,15.03,382,50.4,376,49.6,737

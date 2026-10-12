@@ -65,16 +65,24 @@ dataset:
   cleaned_file: "data/processed/mimic_cleaned.csv"   # Task 4 output (git-ignored)
 
 splitting:
-  # "official" if the dataset ships its own split, otherwise
-  # "stratified_random" is the likely choice. TBD after inspection.
-  strategy: null
-  # PROPOSED ratios, used only if we create our own split.
-  # Must sum to 1.0. Can be changed if the dataset requires.
+  # Task 7 (FINAL). MIMIC has no official split, so one canonical,
+  # leakage-safe split is created and used by ALL experiments.
+  # See docs/DATA_SPLIT_REPORT.md.
+  strategy: "stratified_group_kfold"   # sklearn StratifiedGroupKFold, folds mapped to splits
   train: 0.70
   validation: 0.15
   test: 0.15
-  stratify: null                # TBD once label distribution is known
-  deduplicate_before_split: true   # research rule 9: avoid duplicate leakage
+  n_folds: 20                   # 5% folds: 14 train / 3 validation / 3 test
+  stratify: "target_label"      # primary label only (secondary labels not used)
+  # Leakage groups (union of): identical image SHA-256, Task 5 near-duplicate
+  # image pairs, Task 4 identical-caption groups with >= 3 words.
+  near_duplicate_pairs_file: "results/tables/eda/near_duplicate_images.csv"
+  min_caption_words_for_grouping: 3
+  deduplicate_before_split: true   # done in Task 4 (identical memes removed)
+  input_file: "data/processed/mimic_text_preprocessed_v1.0.csv"
+  output_dir: "data/splits"
+  assignments_file: "data/splits/split_assignments.csv"   # tracked: canonical split (IDs only)
+  manifest_file: "data/splits/split_manifest.json"        # tracked: reproducibility record
 
 text_preprocessing:
   # Task 6. Implemented in src/preprocessing/ and used by BOTH training

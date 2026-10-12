@@ -355,3 +355,75 @@ Limitations:
 Conclusion: The three variants are ready for E1/E2 and E4/E5. BASIC vs HINGLISH_NORMALIZED is the clean comparison for RQ1, because RAW vs BASIC also includes mention (watermark) masking.
 
 Next Experiment: TASK 7: Leakage-Safe Train/Validation/Test Splitting.
+
+### Experiment ID: INS-20261012-02
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: Not an experiment. Task 7: create the single canonical, leakage-safe split used by all later experiments (text-only, image-only, multimodal, preprocessing ablations).
+
+Dataset: MIMIC, cleaned + preprocessed (5,044 samples)
+
+Dataset Version: `data/processed/mimic_text_preprocessed_v1.0.csv` SHA-256 `51faa312cd1b…` (preprocessing v1.0; raw `MIMIC2024.csv` `98dd8843ef81…`)
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (70.02%): 1,776 non-misogynistic / 1,756 misogynistic
+
+Validation Split: 754 (14.95%): 379 / 375
+
+Test Split: 758 (15.03%): 382 / 376. LOCKED for final evaluation only.
+
+Input Modality: Split by sample_id (applies to text, image and multimodal)
+
+Preprocessing: None (splitting only)
+
+Feature Representation: NOT_APPLICABLE
+
+Model: NOT_APPLICABLE
+
+Model Version / Pretrained Checkpoint: NOT_APPLICABLE
+
+Hyperparameters: sklearn `StratifiedGroupKFold(n_splits=20, shuffle=True, random_state=42)`, stratified by target_label; folds 0–2 → test, 3–5 → validation, 6–19 → train
+
+Random Seed: 42
+
+Training Environment: Windows 11, Python 3.10.0, scikit-learn 1.7.2, pandas 2.3.3
+
+Training Details: `python scripts/create_splits.py`.
+- Leakage groups formed by union-find over: identical image SHA-256 (none remain), Task 5 near-duplicate pairs (dHash ≤ 4; 55 pairs), and Task 4 identical-caption groups with ≥ 3 words (7 of 10; 3 trivial captions not grouped).
+- Result: 43 multi-sample groups (93 samples; largest 7; 4 mixed-label).
+
+Validation Metrics: NOT_APPLICABLE
+
+Test Metrics: NOT_APPLICABLE
+
+Runtime / Resource Notes: ~10 s
+
+Artifacts:
+- `data/splits/split_assignments.csv` (canonical, tracked, SHA-256 `47fb02a87b36…`)
+- `data/splits/split_manifest.json` (tracked)
+- `data/splits/{train,validation,test}.csv` (git-ignored)
+- `results/tables/splits/` (`split_distribution.csv`, `leakage_audit.csv`, `leakage_groups.csv`)
+- `docs/DATA_SPLIT_REPORT.md`
+
+Observations (measured):
+- **Leakage audit:** all 11 blocking checks pass. 0 groups, identical images, near-duplicate pairs or identical records cross splits.
+- **Class balance:** every split within 0.13 pp of the overall class balance.
+- **Reproducibility:** the in-script re-run is identical, and full regeneration is byte-identical.
+- **Watermark samples:** spread 70 / 6 / 14 across train / validation / test (a shortcut, not leakage).
+
+Error Analysis Notes: NOT_APPLICABLE
+
+Limitations:
+- Near-duplicate grouping is not manually confirmed.
+- The 3-word caption cut-off is a judgment call.
+- Shortcut features are present in all splits.
+- A single split and seed (no variance estimate).
+- The test set is small (758).
+
+Conclusion: The canonical split is ready. All learned preprocessing must be fitted on train only; the test set is locked.
+
+Next Experiment: TASK 8: Traditional Text Baselines (TF-IDF + Logistic Regression + SVM).

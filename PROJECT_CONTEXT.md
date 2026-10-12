@@ -219,9 +219,11 @@ Every run is recorded in `RESEARCH_LOG.md`.
   class distribution.
 - Train / validation / test are kept separate. Tuning uses validation
   only; the test set is not used repeatedly during development.
-- Proposed default split if the dataset has no official split:
-  70 / 15 / 15 with seed 42 (configurable in `config.yaml`). If an
-  official split exists, using it is likely preferable (TO BE DECIDED).
+- IMPLEMENTED (Task 7): one canonical stratified-group split,
+  70 / 15 / 15 with seed 42 (MIMIC has no official split). It is shared
+  by all experiments, and the test set is locked for final evaluation.
+  Learned preprocessing (TF-IDF, scaling, class weights) is fitted on
+  train only. See `docs/DATA_SPLIT_REPORT.md`.
 - Statistical significance is only claimed if a suitable test is
   actually performed.
 
@@ -363,11 +365,22 @@ IMPLEMENTED in Task 6:
   `docs/TEXT_PREPROCESSING_REPORT.md`; log entry `INS-20261012-01`.
 - Preprocessing effectiveness is NOT yet measured.
 
-NOT STARTED: splitting, model training, tuning, OCR, explainability,
-Streamlit UI, deployment, paper writing. No experimental results exist.
+IMPLEMENTED in Task 7:
+- One canonical, leakage-safe split (`src/data/splits.py`,
+  `scripts/create_splits.py`): train 3,532 / validation 754 / test 758
+  (70.02 / 14.95 / 15.03%), seed 42.
+- Method: stratified-group (`StratifiedGroupKFold`) with near-duplicate,
+  identical-image and identical-caption groups kept together; 11/11
+  leakage checks pass.
+- Canonical assignment `data/splits/split_assignments.csv` (tracked);
+  `docs/DATA_SPLIT_REPORT.md`; log entry `INS-20261012-02`.
+- **Test set locked**: `load_split("test")` requires `allow_test=True`.
 
-Next planned task: **Task 7 — Leakage-Safe Train/Validation/Test
-Splitting.**
+NOT STARTED: model training, tuning, OCR, explainability, Streamlit UI,
+deployment, paper writing. No experimental results exist.
+
+Next planned task: **Task 8 — Traditional Text Baselines (TF-IDF +
+Logistic Regression + SVM).**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

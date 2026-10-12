@@ -155,21 +155,21 @@ checks connectivity (needs `MONGODB_URI` in `.env`), and
 ├── data/
 │   ├── raw/              # original datasets (git-ignored)
 │   ├── processed/        # derived data (git-ignored)
-│   └── splits/           # train/val/test splits (git-ignored)
+│   └── splits/           # canonical split_assignments.csv + manifest (tracked); per-split CSVs (git-ignored)
 ├── notebooks/            # 02_eda.ipynb (reproduces the EDA)
 ├── src/
 │   ├── data/  preprocessing/  features/  models/  training/
 │   ├── evaluation/  explainability/
 │   ├── database/         # MongoDB connection, schemas, repositories, indexes
 │   └── utils/            # config.py — config loader
-├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py
+├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py, create_splits.py
 ├── models/{text,image,multimodal}/   # model artifacts (git-ignored)
 ├── results/
 │   ├── figures/  metrics/  tables/  paper/   # versioned small outputs
 │   └── predictions/      # per-sample outputs (git-ignored)
 ├── app/                  # Streamlit app (later)
 ├── tests/                # pytest tests
-└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md
+└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md
 ```
 
 ## 14. Setup Instructions
@@ -231,6 +231,7 @@ tests; live Atlas connectivity depends on your `.env`).
 **Task 4 — Dataset Cleaning & Final Dataset Strategy: complete.**
 **Task 5 — Exploratory Data Analysis: complete.**
 **Task 6 — Text Preprocessing & Hinglish Normalization: complete.**
+**Task 7 — Leakage-Safe Train/Validation/Test Split: complete.**
 - ✅ Repository structure, documentation, configuration, ignore rules,
   dependency list, config loader with tests.
 - ✅ Database layer: connection manager, validation, repositories,
@@ -244,6 +245,8 @@ tests; live Atlas connectivity depends on your `.env`).
   handles, image resolutions, near-duplicate images) that later tasks must handle.
 - ✅ Text preprocessing v1.0: three variants (RAW / BASIC / HINGLISH_NORMALIZED) via one shared
   `preprocess()` function (`docs/TEXT_PREPROCESSING_REPORT.md`). Their effect on models is not yet measured.
+- ✅ Canonical leakage-safe split: train 3,532 / validation 754 / test 758 (seed 42); test set locked
+  (`docs/DATA_SPLIT_REPORT.md`).
 - ❌ Model training — **not started**.
 - ❌ Experimental metrics — **none exist**.
 - ❌ OCR, explainability, Streamlit UI, deployment — not started.
@@ -255,7 +258,7 @@ tests; live Atlas connectivity depends on your `.env`).
 4. ✅ Task 4 — Dataset cleaning and final dataset strategy
 5. ✅ Task 5 — Exploratory data analysis
 6. ✅ Task 6 — Text preprocessing and Hinglish normalization
-7. Leakage-safe train/validation/test splits
+7. ✅ Task 7 — Leakage-safe train/validation/test split
 8. Text baselines (TF-IDF + LR / SVM)
 9. Transformer text model, image model, multimodal fusion
 10. Hyperparameter tuning (validation only) and final test evaluation
@@ -265,7 +268,7 @@ tests; live Atlas connectivity depends on your `.env`).
 14. Deployment
 15. Research paper (IEEE format)
 
-The order after Task 6 is indicative and may change.
+The order after Task 7 is indicative and may change.
 
 ## 20. Disclaimer
 This repository is an academic research project in progress.
