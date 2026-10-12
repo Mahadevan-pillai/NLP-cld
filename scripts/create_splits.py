@@ -14,6 +14,11 @@ Outputs:
 
 The split is generated twice and compared before anything is written.
 Exit code 1 on any failed blocking check.
+
+SAFETY: if data/splits/split_assignments.csv already exists and the newly
+generated split differs (e.g. a different scikit-learn version shuffles
+differently), NOTHING is written unless you pass --regenerate on purpose.
+Changing the canonical split invalidates comparisons with earlier results.
 """
 
 import hashlib
@@ -99,6 +104,17 @@ def main() -> int:
     reasons = links.assign(group_id=links["sample_id_a"].map(dict(zip(df["sample_id"], groups))))
     group_table["link_reasons"] = group_table["group_id"].map(
         reasons.groupby("group_id")["reason"].agg(lambda s: ";".join(sorted(set(s)))))
+
+    # ---- never silently replace the canonical split ----
+    canonical = sp.compare_with_canonical(pd.DataFrame({"sample_id": df["sample_id"], "split": split}),
+                                          REPO_ROOT / cfg["assignments_file"])
+    if canonical["exists"] and not canonical["identical"] and "--regenerate" not in sys.argv:
+        print(f"ABORTED: the regenerated split differs from the canonical {cfg['assignments_file']} "
+              f"({canonical['samples_moved']} samples would move; scikit-learn {sklearn.__version__}). "
+              "Nothing was written. The canonical split must stay fixed; load it with "
+              "src.data.splits.load_split(). Re-run with --regenerate only if you deliberately want "
+              "a NEW canonical split (all earlier results then become incomparable).")
+        return 1
 
     TABLES.mkdir(parents=True, exist_ok=True)
     dist.to_csv(TABLES / "split_distribution.csv", index=False, lineterminator="\n")

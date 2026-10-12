@@ -155,6 +155,12 @@ hyperparameters across modules.
   `tests/conftest.py` for repository tests; an autouse fixture there
   disables `.env` loading so a real `MONGODB_URI` is never used.
 - Report test results honestly, including skipped or failing tests.
+- **CI** (`.github/workflows/ci.yml`) runs the suite on Python 3.10 and
+  3.14 for every PR, using `requirements-ci.txt`, with no dataset, `.env`
+  or MongoDB.
+  - Tests must keep passing in that environment: skip only genuinely
+    data-dependent checks.
+  - Add new test dependencies to `requirements-ci.txt`.
 
 ## 7. Current stage
 Tasks 1–5 done:
@@ -188,6 +194,10 @@ Tasks 1–5 done:
   `src.data.splits.load_split()` / `load_split_assignments()`.
 - Never create a new random split, and never regenerate the canonical one
   without explicit instruction.
+  - Newer scikit-learn versions shuffle differently: with 1.9.1, 2,279
+    samples would move.
+  - `scripts/create_splits.py` therefore aborts unless `--regenerate` is
+    passed.
 - Fit anything learned (TF-IDF, scalers, class weights, calibration) on
   **train only**.
 - Tune and select on **validation**.
