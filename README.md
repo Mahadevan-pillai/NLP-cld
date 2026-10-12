@@ -159,17 +159,18 @@ checks connectivity (needs `MONGODB_URI` in `.env`), and
 ├── notebooks/            # 02_eda.ipynb (reproduces the EDA)
 ├── src/
 │   ├── data/  preprocessing/  features/  models/  training/
+│   ├── inference/        # predict_text(text, model_version): shared text-model interface
 │   ├── evaluation/  explainability/
 │   ├── database/         # MongoDB connection, schemas, repositories, indexes
 │   └── utils/            # config.py — config loader
-├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py, create_splits.py, train_text_baselines.py
+├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py, create_splits.py, train_text_baselines.py, train_text_transformers.py, report_text_models.py
 ├── models/{text,image,multimodal}/   # model artifacts (git-ignored)
 ├── results/
 │   ├── figures/  metrics/  tables/  paper/   # versioned small outputs
 │   └── predictions/      # per-sample outputs (git-ignored)
 ├── app/                  # Streamlit app (later)
 ├── tests/                # pytest tests
-└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md, TEXT_BASELINE_REPORT.md
+└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md, TEXT_BASELINE_REPORT.md, MULTICATEGORY_FEASIBILITY_REPORT.md, TRANSFORMER_TEXT_MODEL_REPORT.md
 ```
 
 ## 14. Setup Instructions
@@ -208,8 +209,9 @@ For an NVIDIA GPU, install PyTorch first with the command from
    version) and **3.14** (newest).
 
 How it works:
-- CI uses the small `requirements-ci.txt`, which has no PyTorch or
-  Transformers.
+- CI uses the small `requirements-ci.txt`. CPU-only PyTorch is installed
+  separately, and the Transformers tests use a tiny randomly initialised
+  BERT (`HF_HUB_OFFLINE=1`: no model is ever downloaded).
 - It has **no dataset, `.env` or MongoDB access**, by design: tests use
   synthetic data and mocks. The one dataset-dependent check is skipped.
 - When a test needs a new third-party package, add it to
@@ -219,6 +221,9 @@ How it works:
 1. Copy `.env.example` to `.env` in the repository root.
 2. Fill in your own values (`MONGODB_URI`, `MONGODB_DATABASE`,
    `HF_TOKEN`) in `.env` only.
+   - `NLP_CLD_MODEL_DIR` (optional, not a secret) is the folder for
+     large fine-tuned checkpoints, ideally outside OneDrive and the
+     repository. Without it, `models/text/` is used.
 3. `.env` is git-ignored — never commit it, paste it into chats, or
    share screenshots of it.
 4. Code reads these values from environment variables (via
@@ -253,6 +258,7 @@ tests; live Atlas connectivity depends on your `.env`).
 **Task 7 — Leakage-Safe Train/Validation/Test Split: complete.**
 **Task 8 — Traditional Text Baselines: complete** (validation only).
 **Task 8.5 — Multi-category feasibility study: complete** (`docs/MULTICATEGORY_FEASIBILITY_REPORT.md`).
+**Task 9 — Pretrained / transformer text models: complete** (validation only; `docs/TRANSFORMER_TEXT_MODEL_REPORT.md`).
 Only misogyny and its sub-categories are annotated, so the app will report *misogyny detected / not
 detected*, never "safe".
 - ✅ Repository structure, documentation, configuration, ignore rules,
@@ -263,7 +269,6 @@ detected*, never "safe".
   `docs/DATASET_REPORT.md`. No data cleaned, split or modified.
 - ✅ Dataset cleaning: 5,044 cleaned samples, every exclusion logged
   (`docs/DATA_CLEANING_REPORT.md`). Text left exactly as provided.
-- ❌ Train/validation/test splitting — not done.
 - ✅ EDA: 17 tables, 13 figures, notebook, `docs/EDA_REPORT.md`. It found shortcut risks (watermark
   handles, image resolutions, near-duplicate images) that later tasks must handle.
 - ✅ Text preprocessing v1.0: three variants (RAW / BASIC / HINGLISH_NORMALIZED) via one shared
@@ -272,7 +277,10 @@ detected*, never "safe".
   (`docs/DATA_SPLIT_REPORT.md`).
 - ✅ TF-IDF text baselines (B01–B06): best **validation** macro-F1 0.6671 (LR + HINGLISH_NORMALIZED);
   `docs/TEXT_BASELINE_REPORT.md`. These are development results, not final test results.
-- ❌ Transformer, image and multimodal models — not started.
+- ✅ MuRIL text models (T01–T05): frozen embeddings + LR (0.615–0.630) are below TF-IDF; fine-tuned
+  MuRIL on HINGLISH_NORMALIZED text is the best **validation** text model so far (macro-F1 0.6869,
+  95% CI 0.654–0.719, overlapping B03). Scores are uncalibrated. `predict_text()` serves all text models.
+- ❌ Image and multimodal models — not started.
 - ❌ Final test-set results — **none exist** (test set locked).
 - ❌ OCR, explainability, Streamlit UI, deployment — not started.
 
@@ -285,20 +293,21 @@ detected*, never "safe".
 6. ✅ Task 6 — Text preprocessing and Hinglish normalization
 7. ✅ Task 7 — Leakage-safe train/validation/test split
 8. ✅ Task 8 — Text baselines (TF-IDF + LR / SVM), validation only
-9. Transformer text model, image model, multimodal fusion
-10. Hyperparameter tuning (validation only) and final test evaluation
-11. OCR evaluation and OCR-noise experiment (to be reframed: dataset text is already OCR output)
-12. Explainability
-13. Streamlit application, history, dashboard, feedback
-14. Deployment
-15. Research paper (IEEE format)
+9. ✅ Task 9 — Pretrained / transformer text models (MuRIL), validation only
+10. Image model, multimodal fusion
+11. Hyperparameter tuning (validation only) and final test evaluation
+12. OCR evaluation and OCR-noise experiment (to be reframed: dataset text is already OCR output)
+13. Explainability
+14. Streamlit application, history, dashboard, feedback
+15. Deployment
+16. Research paper (IEEE format)
 
-The order after Task 8 is indicative and may change.
+The order after Task 9 is indicative and may change.
 
 ## 20. Disclaimer
 This repository is an academic research project in progress.
-**No model has been trained, the datasets have not yet been inspected,
-and no experimental metrics exist.** Any future predictions will be
+**Only validation (development) results exist; no final test-set
+results exist.** Any future predictions will be
 outputs of statistical models, which can be wrong and are not
 definitive judgements about people or content. Explanations, when
 added, are model attributions and not proof of how a model "reasons".

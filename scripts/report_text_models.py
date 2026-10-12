@@ -85,9 +85,10 @@ def training_curves(exp: str) -> Path | None:
     axes[0].legend(fontsize=8)
     axes[1].plot(h["epoch"], h["val_macro_f1"], marker="o", color=SINGLE, linewidth=2)
     best = h["val_macro_f1"].idxmax()
-    axes[1].annotate(f"best: epoch {int(h.loc[best, 'epoch'])}\n{h.loc[best, 'val_macro_f1']:.4f}",
-                     (h.loc[best, "epoch"], h.loc[best, "val_macro_f1"]), xytext=(8, -24), textcoords="offset points",
-                     fontsize=8, color=INK_2)
+    axes[1].scatter([h.loc[best, "epoch"]], [h.loc[best, "val_macro_f1"]], s=160, facecolors="none",
+                    edgecolors=INK_2, linewidths=1.5, zorder=3)          # ring marks the selected checkpoint
+    axes[1].text(0.97, 0.05, f"selected: epoch {int(h.loc[best, 'epoch'])} ({h.loc[best, 'val_macro_f1']:.4f})",
+                 transform=axes[1].transAxes, ha="right", va="bottom", fontsize=8, color=INK_2)
     axes[1].set_xlabel("Epoch")
     axes[1].set_ylabel("Validation macro-F1")
     axes[1].set_title("Validation macro-F1")
@@ -113,6 +114,33 @@ def error_analysis(val: pd.DataFrame, best: str) -> pd.DataFrame:
         "text_label_conflict_group": val["review_flags"].str.contains("text_label_conflict").values,
     })
     return table[table["error_type"] != "correct"].reset_index(drop=True)
+
+
+SUBLABELS = ("Objectification", "Prejudice", "Humiliation")
+
+
+def subcategory_recall(val: pd.DataFrame, t9: dict) -> pd.DataFrame:
+    """Recall of the BINARY misogyny prediction within each annotated sub-label group.
+
+    Descriptive only: no sub-label model is trained (stage 2 is disabled in
+    config/categories.yaml). Sub-labels exist only for misogynistic memes,
+    so only recall (not precision) is defined per group.
+    """
+    preds = {e: pd.read_csv(METRICS / f"{e}_validation_predictions.csv").set_index("sample_id")
+             .loc[val["sample_id"], "pred"].to_numpy() for e in t9}
+    b03_wrong = set(pd.read_csv(REPO_ROOT / "results/tables/text_baselines/validation_errors.csv")["sample_id"])
+    y = val["target_label"].astype(int).to_numpy()
+    preds["B03"] = [t if s not in b03_wrong else 1 - t for s, t in zip(val["sample_id"], y)]
+    groups = {s: val[s].astype(int).to_numpy() == 1 for s in SUBLABELS}
+    groups["any misogynistic"] = y == 1
+    groups["multiple sub-labels"] = val[list(SUBLABELS)].astype(int).sum(axis=1).to_numpy() > 1
+    rows = []
+    for name, mask in groups.items():
+        row = {"group": name, "validation_samples": int(mask.sum())}
+        for e, p in preds.items():
+            row[f"recall_{e}"] = round(float((pd.Series(p)[mask] == 1).mean()), 4)
+        rows.append(row)
+    return pd.DataFrame(rows)
 
 
 def registry(t9: dict, config: dict) -> dict:
@@ -160,6 +188,7 @@ def main() -> int:
         TABLES / "validation_errors_with_text.csv", index=False, lineterminator="\n")       # git-ignored
     error_category_rates(val, errors, len(val)).to_csv(TABLES / "error_category_rates.csv", index=False,
                                                        lineterminator="\n")
+    subcategory_recall(val, t9).to_csv(TABLES / "subcategory_recall.csv", index=False, lineterminator="\n")
     REGISTRY.write_text(json.dumps(registry(t9, config), indent=2), encoding="utf-8")
     print(comp[["experiment_id", "model", "preprocessing", "macro_f1", "macro_f1_ci95_low", "macro_f1_ci95_high"]]
           .to_string(index=False))

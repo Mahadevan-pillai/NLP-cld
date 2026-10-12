@@ -196,3 +196,30 @@ def test_task9_scripts_never_touch_test_split():
                 "src/models/transformer_text.py", "src/inference/text.py"):
         source = (REPO_ROOT / rel).read_text(encoding="utf-8")
         assert 'load_split("test"' not in source and "allow_test=True" not in source, rel
+
+
+# ---------------- report helper: descriptive sub-label recall ----------------
+
+def test_subcategory_recall(tmp_path, monkeypatch):
+    import importlib.util
+
+    import pandas as pd
+
+    spec = importlib.util.spec_from_file_location("report_text_models", REPO_ROOT / "scripts/report_text_models.py")
+    report = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(report)
+    (tmp_path / "metrics").mkdir()
+    (tmp_path / "results/tables/text_baselines").mkdir(parents=True)
+    monkeypatch.setattr(report, "METRICS", tmp_path / "metrics")
+    monkeypatch.setattr(report, "REPO_ROOT", tmp_path)
+    val = pd.DataFrame({"sample_id": ["a", "b", "c", "d"], "target_label": [1, 1, 1, 0],
+                        "Objectification": [1, 1, 0, 0], "Prejudice": [0, 1, 1, 0], "Humiliation": [0, 0, 0, 0]})
+    pd.DataFrame({"sample_id": ["d", "c", "b", "a"], "pred": [0, 1, 0, 1]}).to_csv(tmp_path / "metrics/T05_validation_predictions.csv")
+    pd.DataFrame({"sample_id": ["b"]}).to_csv(tmp_path / "results/tables/text_baselines/validation_errors.csv")
+    table = report.subcategory_recall(val, {"T05": {}}).set_index("group")
+    assert table.loc["Objectification", "recall_T05"] == 0.5          # a found, b missed
+    assert table.loc["Prejudice", "recall_T05"] == 0.5                # c found, b missed
+    assert table.loc["any misogynistic", "validation_samples"] == 3
+    assert table.loc["multiple sub-labels", "validation_samples"] == 1
+    assert table.loc["Objectification", "recall_B03"] == 0.5          # B03 wrong only on b
+    assert table.loc["any misogynistic", "recall_B03"] == round(2 / 3, 4)

@@ -195,7 +195,7 @@ def cmd_benchmark(args):
     epoch_min = (per_batch * steps + infer_per_sample * len(val)) / 60
     print(f"train step (batch {cfg.batch_size}, max_len {cfg.max_length}): {per_batch:.2f}s (includes a small validation pass)")
     print(f"inference: {1000 * infer_per_sample:.1f} ms/sample")
-    print(f"estimated epoch: {epoch_min:.1f} min; {cfg.max_epochs} max epochs per run: about {epoch_min * tcfg['fine_tune']['max_epochs']:.0f} min")
+    print(f"estimated epoch: {epoch_min:.1f} min; {tcfg['fine_tune']['max_epochs']} max epochs per run: about {epoch_min * tcfg['fine_tune']['max_epochs']:.0f} min")
     (METRICS / "finetune_benchmark.json").write_text(json.dumps({
         "seconds_per_train_step": round(per_batch, 3), "ms_per_inference_sample": round(1000 * infer_per_sample, 2),
         "estimated_minutes_per_epoch": round(epoch_min, 1), "torch_threads": torch.get_num_threads(),

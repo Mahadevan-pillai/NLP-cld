@@ -312,7 +312,7 @@ data, document what is persisted, avoid logging raw user input.
 
 ## 17. Current project stage
 
-**Task 4 — Dataset Cleaning and Final Dataset Strategy (complete).**
+**Task 9 — Pretrained / Transformer Text Models (complete, validation only).**
 
 IMPLEMENTED in Task 1: directory structure, documentation
 (`CLAUDE.md`, `PROJECT_CONTEXT.md`, `RESEARCH_LOG.md`, `README.md`),
@@ -406,11 +406,40 @@ DONE in Task 8.5 (feasibility study; nothing trained):
 - See `docs/MULTICATEGORY_FEASIBILITY_REPORT.md` and
   `config/categories.yaml`.
 
-NOT STARTED: transformer/image/multimodal models, tuning, final test
-evaluation, OCR, explainability, Streamlit UI, deployment, paper writing.
+IMPLEMENTED in Task 9 (binary misogyny task only, developer's choice):
+- One encoder: **MuRIL** (`google/muril-base-cased`, pinned revision
+  `afd9f36c…`), max length 64 (≤ 1% of train texts truncated).
+- Frozen embeddings + LR (T01–T03): **0.615–0.630**, below every TF-IDF
+  baseline.
+- Fine-tuned MuRIL: **T04 BASIC 0.6751**, **T05 HINGLISH_NORMALIZED
+  0.6869** (95% CI 0.654–0.719). T05 is the best validation text model
+  so far, +0.020 over B03 with overlapping CIs; no significance claimed.
+  - Plain PyTorch loop; word embeddings frozen to fit CPU RAM; untuned
+    settings.
+- Normalization (RQ1): +1.2 pp when fine-tuned, −1.1 pp when frozen.
+  The effect is **not established** (single seed, within CIs).
+- Findings that matter later:
+  - **softmax scores are compressed (0.33–0.68) and uncalibrated**: never
+    display them as confidence;
+  - empty text is still predicted misogynistic;
+  - most false negatives look image-dependent;
+  - possible gender-topic false positives.
+- **New architecture pieces:**
+  - `src/inference/text.py` `predict_text(text, model_version)` with the
+    model registry `results/metrics/text_model_registry.json` (B01–B06,
+    T01–T05). It uses the Task 6 `preprocess()` with each model's
+    recorded mode.
+  - Large checkpoints live outside the repo/OneDrive in
+    `$NLP_CLD_MODEL_DIR` (registry prefix `{MODEL_DIR}`).
+  - CI installs CPU-only torch + transformers; tests use a tiny random
+    BERT, offline.
+- **Test set NOT evaluated.** `docs/TRANSFORMER_TEXT_MODEL_REPORT.md`;
+  log entries T01–T05.
 
-Next planned task: **TO BE DECIDED after review of
-`docs/MULTICATEGORY_FEASIBILITY_REPORT.md`.**
+NOT STARTED: image/multimodal models, tuning, final test evaluation,
+OCR, explainability, Streamlit UI, deployment, paper writing.
+
+Next planned task: **TASK 10 — Image-Only Vision Model.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model
