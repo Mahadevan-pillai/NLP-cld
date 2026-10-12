@@ -2,8 +2,9 @@
 # requirements-ci.txt: packages needed to run the test suite in CI
 # ------------------------------------------------------------------
 # A subset of requirements.txt (same minimum versions). It leaves out
-# torch / transformers / sentence-transformers / streamlit / notebook
-# tooling, which the tests do not import, so CI stays fast and small.
+# sentence-transformers / streamlit / notebook tooling, which the tests
+# do not import, so CI stays fast and small. torch (CPU-only) is
+# installed separately by the workflow.
 #
 # When a new test imports another third-party package, add it here
 # too (CI will fail with ModuleNotFoundError otherwise).
@@ -18,3 +19,8 @@ python-dotenv>=1.0
 pymongo>=4.6
 Pillow>=10.2
 pytest>=8.0
+
+# Task 9 transformer tests (tiny random BERT, no model download).
+# torch itself is installed by the workflow from the CPU-only PyTorch index
+# (the default Linux wheel pulls in GBs of CUDA libraries).
+transformers>=4.40

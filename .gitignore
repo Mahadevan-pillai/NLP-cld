@@ -150,3 +150,6 @@ results/tables/preprocessing/preprocessing_examples.csv
 
 # Text-baseline validation errors with dataset text (Task 8)
 results/tables/text_baselines/*_with_text.csv
+
+# Task 9 validation errors with dataset text
+results/tables/text_models/*_with_text.csv

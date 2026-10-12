@@ -142,8 +142,39 @@ text_model:
     figures_dir: "results/figures/text_baselines"
     bootstrap_resamples: 1000   # uncertainty of validation macro-F1 (descriptive, not a test)
   transformer:
-    checkpoint: null            # TBD: multilingual/Hinglish-capable encoder
-    max_length: null
+    # Task 9. One pretrained architecture for frozen and fine-tuned runs.
+    checkpoint: "google/muril-base-cased"   # Apache-2.0; Indian languages + transliterated text
+    revision: "afd9f36c7923d54e97903922ff1b260d091d202f"   # pinned commit (weights sha256 e65e3b7aaa3c...)
+    max_length: 64              # smallest candidate truncating <= 1% of TRAIN texts (0.28%; validation 0.40%)
+    truncation: "longest_first"
+    padding: "dynamic"          # pad to longest in batch
+    # Large checkpoints are stored OUTSIDE the repo/OneDrive. The folder is
+    # read from this environment variable (set in the local .env);
+    # fallback: models/text inside the repo.
+    artifact_dir_env: "NLP_CLD_MODEL_DIR"
+    artifact_dir_default: "models/text"
+    frozen:
+      pooling: "mean"           # attention-mask mean of last hidden layer
+      batch_size: 32
+      classifier: "logistic_regression"   # StandardScaler + LR, fitted on train only
+      logistic_regression: {C: 1.0, max_iter: 2000, class_weight: null}
+    fine_tune:                  # baseline settings, NOT tuned (Task 12 tunes)
+      learning_rate: 2.0e-5
+      weight_decay: 0.01
+      batch_size: 16
+      max_epochs: 4
+      warmup_ratio: 0.1
+      gradient_clip_norm: 1.0
+      early_stopping_patience: 1          # epochs without validation macro-F1 improvement
+      selection_metric: "macro_f1"        # best checkpoint chosen on VALIDATION
+      freeze_word_embeddings: true        # 197k-token embedding matrix frozen: fits CPU RAM, faster
+      class_weight: null                  # classes balanced (50.3 / 49.7)
+    experiments:                # id: [level, preprocessing mode]
+      T01: ["frozen", "raw"]
+      T02: ["frozen", "basic"]
+      T03: ["frozen", "hinglish_normalized"]
+      T04: ["fine_tune", "best_non_normalized"]   # raw or basic, whichever frozen run scores higher on validation
+      T05: ["fine_tune", "hinglish_normalized"]
 
 image_model:
   checkpoint: null              # TBD: vision or vision-language encoder
