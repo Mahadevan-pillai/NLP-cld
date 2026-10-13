@@ -1,0 +1,2 @@
+study,year,dataset,task,model,metric,reported_result,our_comparable_result,comparison_valid,notes
+MIMIC dataset paper (DOI 10.1145/3656169),TO_BE_VERIFIED,MIMIC,binary misogyny (multimodal),BiT + MuRIL (as named in the paper abstract),macro-F1,TO_BE_VERIFIED,0.8031,NO (different split / protocol unless verified),value not recorded in this repository; verify from the paper before use

@@ -1,0 +1,7 @@
+category,samples,share_of_validation,mm_correct_when_disagree,mm_follows_text,mm_follows_image
+A_text_correct_image_wrong_mm_correct,59,0.0782,,,
+B_image_correct_text_wrong_mm_correct,132,0.1751,,,
+C_text_wrong_image_wrong_mm_correct,15,0.0199,,,
+D_text_correct_image_correct_mm_wrong,10,0.0133,,,
+E_text_and_image_predictions_disagree,264,0.3501,191.0,86.0,178.0
+F_all_three_wrong,62,0.0822,,,

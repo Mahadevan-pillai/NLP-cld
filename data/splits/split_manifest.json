@@ -1,0 +1,92 @@
+{
+  "dataset": "MIMIC",
+  "dataset_version": "MIMIC2024.csv (sha256 98dd8843ef81...)",
+  "processed_dataset": {
+    "file": "data/processed/mimic_text_preprocessed_v1.0.csv",
+    "sha256": "51faa312cd1bb4ff701d1da7ab8156f289090e3eb31f28e0455d90611307111f",
+    "preprocessing_version": "1.0"
+  },
+  "generated_at": "2026-10-12T05:15:49+00:00",
+  "total_samples": 5044,
+  "counts": {
+    "train": 3532,
+    "validation": 754,
+    "test": 758
+  },
+  "ratios_target": {
+    "train": 0.7,
+    "validation": 0.15,
+    "test": 0.15
+  },
+  "ratios_actual": {
+    "train": 0.7002,
+    "validation": 0.1495,
+    "test": 0.1503
+  },
+  "random_seed": 42,
+  "stratification": "target_label via sklearn StratifiedGroupKFold(n_splits=20, shuffle=True, random_state=42); folds 0-2 test, 3-5 validation, 6-19 train",
+  "grouping": {
+    "method": "union-find over identical image SHA-256, Task 5 near-duplicate pairs (dHash <= 4), Task 4 identical-caption groups with >= 3 words",
+    "groups_total": 4994,
+    "multi_sample_groups": 43,
+    "samples_in_multi_sample_groups": 93,
+    "largest_group": 7,
+    "mixed_label_groups": 4
+  },
+  "class_distribution": [
+    {
+      "split": "all",
+      "samples": 5044,
+      "percent_of_total": 100.0,
+      "count_non_misogynistic": 2537,
+      "percent_non_misogynistic": 50.3,
+      "count_misogynistic": 2507,
+      "percent_misogynistic": 49.7,
+      "samples_with_text": 4896
+    },
+    {
+      "split": "train",
+      "samples": 3532,
+      "percent_of_total": 70.02,
+      "count_non_misogynistic": 1776,
+      "percent_non_misogynistic": 50.28,
+      "count_misogynistic": 1756,
+      "percent_misogynistic": 49.72,
+      "samples_with_text": 3427
+    },
+    {
+      "split": "validation",
+      "samples": 754,
+      "percent_of_total": 14.95,
+      "count_non_misogynistic": 379,
+      "percent_non_misogynistic": 50.27,
+      "count_misogynistic": 375,
+      "percent_misogynistic": 49.73,
+      "samples_with_text": 732
+    },
+    {
+      "split": "test",
+      "samples": 758,
+      "percent_of_total": 15.03,
+      "count_non_misogynistic": 382,
+      "percent_non_misogynistic": 50.4,
+      "count_misogynistic": 376,
+      "percent_misogynistic": 49.6,
+      "samples_with_text": 737
+    }
+  ],
+  "assignments_file": "data/splits/split_assignments.csv",
+  "assignments_sha256": "47fb02a87b36a22d20b9fd8bbb023fb1efa05361739211933a259caa9ff24894",
+  "split_files_sha256": {
+    "train": "5ce82062c6b7cd44da442d28535c09ca375568b6d796dbce3f5193974282a072",
+    "validation": "6f71320b3edd4a9befcd553d01947a5f2e4a83f799281119c02bdf5be3024b8a",
+    "test": "84eff72e73f39b02f950a06fac8e420f3c3814d4bb8e1e720b9abe9ea45288af"
+  },
+  "reproducible_rerun_identical": true,
+  "environment": {
+    "python": "3.10.0",
+    "scikit_learn": "1.7.2",
+    "pandas": "2.3.3"
+  },
+  "test_set_policy": "LOCKED: final evaluation of frozen configurations only; load_split('test') requires allow_test=True"
+}

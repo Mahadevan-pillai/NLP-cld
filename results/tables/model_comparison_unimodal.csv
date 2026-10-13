@@ -1,0 +1,4 @@
+model,modality,preprocessing_or_encoder,validation_macro_f1,macro_f1_ci95,validation_accuracy,training_time_s,validation_inference_time_s,model_size_bytes
+B03 TF-IDF + Logistic Regression,text (OCR caption),HINGLISH_NORMALIZED text; TF-IDF word 1-2-grams,0.6671,0.6332-0.7013,0.6671,0.246,0.03,181860
+T05 fine-tuned MuRIL,text (OCR caption),HINGLISH_NORMALIZED text; google/muril-base-cased@afd9f36c,0.6869,0.6539-0.7187,0.687,1984.2,24.09,956664899
+I01 frozen SigLIP + Logistic Regression,image,google/siglip-base-patch16-224@7fd15f06; 224x224 stretch,0.7586,0.7306-0.7890,0.7586,713.6,embedding ~0.16 s/image + classifier,25937

@@ -1,0 +1,10 @@
+flag,samples,M04_errors,error_rate
+ALL,758,149,0.1966
+no_text,21,6,0.2857
+very_short_1_3_words,47,14,0.2979
+long_20plus_words,82,17,0.2073
+has_negation,141,26,0.1844
+has_devanagari,212,44,0.2075
+has_hinglish_rule_variant,98,15,0.1531
+has_watermark,14,0,0.0
+has_mention,68,13,0.1912

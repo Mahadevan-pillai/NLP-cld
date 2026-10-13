@@ -101,11 +101,21 @@ Planned metrics: Accuracy, Precision, Recall, F1, Macro-F1,
 Weighted-F1, per-class metrics, confusion matrix.
 
 ## 10. Dataset Strategy
-- Primary candidate: **MIMIC** (Misogyny Identification in Multimodal
-  Internet Content in Hindi-English Code-Mixed Language).
-- Schema, size, labels, class balance, splits and license are **TO BE
-  VERIFIED** by a dedicated inspection task.
-- Datasets are not combined until label/task compatibility is shown.
+- **MIMIC** (Misogyny Identification in Multimodal Internet Content in
+  Hindi-English Code-Mixed Language) is the **single primary dataset**:
+  5,054 memes (image + OCR text), a balanced binary label
+  (1 = misogynistic), licence CC-BY-4.0 (per its
+  [dataset card](https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset)).
+- **Cleaned metadata:** 5,044 samples. 10 duplicate or contradictory
+  memes were excluded, with every decision logged. Raw files are never
+  modified.
+- No datasets are merged.
+- Reports: [docs/DATASET_REPORT.md](docs/DATASET_REPORT.md) (inspection)
+  and [docs/DATA_CLEANING_REPORT.md](docs/DATA_CLEANING_REPORT.md)
+  (cleaning).
+- Re-run with `python scripts/inspect_datasets.py` (read-only
+  inspection) and `python scripts/clean_dataset.py` (deterministic
+  cleaning).
 - Raw datasets live in `data/raw/`, are never modified, and are never
   committed to Git.
 
@@ -116,12 +126,20 @@ Python · scikit-learn · PyTorch · Hugging Face Transformers
 Deployment target (e.g. Hugging Face Spaces) is to be evaluated.
 OCR engine is not yet selected.
 
-## 12. Database Strategy (PLANNED)
-MongoDB Atlas, likely collections `analysis_history`, `user_feedback`,
-`model_versions`. Stores analysis metadata, texts, predictions, model
-version, processing time and optional feedback. **Image binaries are
-not stored in normal documents**; the image storage approach is not
-yet decided. No authentication is planned for now.
+## 12. Database Strategy (foundation IMPLEMENTED)
+MongoDB Atlas stores **application data only** (never the training
+datasets) in three collections: `analysis_history`, `user_feedback`,
+`model_versions`. The database layer in `src/database/` (connection
+manager, validation, repositories, indexes) is implemented and unit
+tested; the app does not use it yet. **Image binaries are not stored in
+documents**; the image storage approach is not yet decided. No
+authentication. Full details: [docs/database.md](docs/database.md).
+
+```bash
+python scripts/check_mongodb.py
+```
+checks connectivity (needs `MONGODB_URI` in `.env`), and
+`python scripts/init_database.py` creates the indexes.
 
 ## 13. Repository Structure
 ```
@@ -137,20 +155,22 @@ yet decided. No authentication is planned for now.
 ├── data/
 │   ├── raw/              # original datasets (git-ignored)
 │   ├── processed/        # derived data (git-ignored)
-│   └── splits/           # train/val/test splits (git-ignored)
-├── notebooks/            # exploration / EDA
+│   └── splits/           # canonical split_assignments.csv + manifest (tracked); per-split CSVs (git-ignored)
+├── notebooks/            # 02_eda.ipynb (reproduces the EDA)
 ├── src/
 │   ├── data/  preprocessing/  features/  models/  training/
-│   ├── evaluation/  database/  explainability/
+│   ├── inference/        # predict_text, predict_image, predict_multimodal: shared model interfaces
+│   ├── evaluation/  explainability/
+│   ├── database/         # MongoDB connection, schemas, repositories, indexes
 │   └── utils/            # config.py — config loader
-├── scripts/              # command-line entry points
+├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py, create_splits.py, train_text_baselines.py, train_text_transformers.py, report_text_models.py, train_image_models.py, report_image_models.py, train_multimodal.py, report_multimodal.py, tune_models.py, report_tuning.py, final_evaluation.py, report_final_evaluation.py
 ├── models/{text,image,multimodal}/   # model artifacts (git-ignored)
 ├── results/
 │   ├── figures/  metrics/  tables/  paper/   # versioned small outputs
 │   └── predictions/      # per-sample outputs (git-ignored)
 ├── app/                  # Streamlit app (later)
 ├── tests/                # pytest tests
-└── docs/
+└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md, TEXT_BASELINE_REPORT.md, MULTICATEGORY_FEASIBILITY_REPORT.md, TRANSFORMER_TEXT_MODEL_REPORT.md, IMAGE_MODEL_REPORT.md, MULTIMODAL_MODEL_REPORT.md, HYPERPARAMETER_TUNING_REPORT.md, FINAL_EVALUATION_REPORT.md
 ```
 
 ## 14. Setup Instructions
@@ -188,10 +208,33 @@ python -m venv C:\Users\<you>\venvs\nlp-cld
 and activate it with `C:\Users\<you>\venvs\nlp-cld\Scripts\Activate.ps1`.
 (The primary developer machine uses this layout.)
 
+### Continuous integration (GitHub Actions)
+`.github/workflows/ci.yml` runs on every pull request and on pushes to
+`main`:
+
+1. **Repository safety.** It fails if dataset files, per-split text
+   files, model weights, `.env` or a MongoDB connection string with
+   credentials are committed.
+2. **Syntax.** All Python files must compile.
+3. **Tests.** It runs `pytest` on **Python 3.10** (the development
+   version) and **3.14** (newest).
+
+How it works:
+- CI uses the small `requirements-ci.txt`. CPU-only PyTorch is installed
+  separately, and the Transformers tests use a tiny randomly initialised
+  BERT (`HF_HUB_OFFLINE=1`: no model is ever downloaded).
+- It has **no dataset, `.env` or MongoDB access**, by design: tests use
+  synthetic data and mocks. The one dataset-dependent check is skipped.
+- When a test needs a new third-party package, add it to
+  `requirements-ci.txt` as well.
+
 ## 15. Environment Variable Instructions
 1. Copy `.env.example` to `.env` in the repository root.
 2. Fill in your own values (`MONGODB_URI`, `MONGODB_DATABASE`,
    `HF_TOKEN`) in `.env` only.
+   - `NLP_CLD_MODEL_DIR` (optional, not a secret) is the folder for
+     large fine-tuned checkpoints, ideally outside OneDrive and the
+     repository. Without it, `models/text/` is used.
 3. `.env` is git-ignored — never commit it, paste it into chats, or
    share screenshots of it.
 4. Code reads these values from environment variables (via
@@ -217,35 +260,81 @@ and activate it with `C:\Users\<you>\venvs\nlp-cld\Scripts\Activate.ps1`.
 
 ## 18. Current Project Status
 **Task 1 — Project Foundation: complete.**
+**Task 2 — MongoDB Atlas Foundation: complete** (database layer + unit
+tests; live Atlas connectivity depends on your `.env`).
+**Task 3 — Dataset Inventory & Compatibility: complete.**
+**Task 4 — Dataset Cleaning & Final Dataset Strategy: complete.**
+**Task 5 — Exploratory Data Analysis: complete.**
+**Task 6 — Text Preprocessing & Hinglish Normalization: complete.**
+**Task 7 — Leakage-Safe Train/Validation/Test Split: complete.**
+**Task 8 — Traditional Text Baselines: complete** (validation only).
+**Task 8.5 — Multi-category feasibility study: complete** (`docs/MULTICATEGORY_FEASIBILITY_REPORT.md`).
+**Task 9 — Pretrained / transformer text models: complete** (validation only; `docs/TRANSFORMER_TEXT_MODEL_REPORT.md`).
+**Task 10 — Image-only vision model: complete** (validation only; `docs/IMAGE_MODEL_REPORT.md`).
+**Task 11 — Multimodal image + text fusion: complete** (validation only; `docs/MULTIMODAL_MODEL_REPORT.md`).
+**Task 12 — Hyperparameter tuning: complete** (validation only; `docs/HYPERPARAMETER_TUNING_REPORT.md`).
+**Task 13 — Final evaluation: complete** (TEST evaluated once after a committed model freeze; `docs/FINAL_EVALUATION_REPORT.md`).
+Only misogyny and its sub-categories are annotated, so the app will report *misogyny detected / not
+detected*, never "safe".
 - ✅ Repository structure, documentation, configuration, ignore rules,
   dependency list, config loader with tests.
-- ❌ Dataset inspection — not done.
-- ❌ Preprocessing / EDA — not done.
-- ❌ Model training — **not started**.
-- ❌ Experimental metrics — **none exist**.
-- ❌ Database layer, OCR, explainability, Streamlit UI, deployment —
-  not started.
+- ✅ Database layer: connection manager, validation, repositories,
+  indexes, health-check/init scripts, unit tests.
+- ✅ Dataset inspection (read-only): MIMIC inventoried, report in
+  `docs/DATASET_REPORT.md`. No data cleaned, split or modified.
+- ✅ Dataset cleaning: 5,044 cleaned samples, every exclusion logged
+  (`docs/DATA_CLEANING_REPORT.md`). Text left exactly as provided.
+- ✅ EDA: 17 tables, 13 figures, notebook, `docs/EDA_REPORT.md`. It found shortcut risks (watermark
+  handles, image resolutions, near-duplicate images) that later tasks must handle.
+- ✅ Text preprocessing v1.0: three variants (RAW / BASIC / HINGLISH_NORMALIZED) via one shared
+  `preprocess()` function (`docs/TEXT_PREPROCESSING_REPORT.md`). Their effect on models is not yet measured.
+- ✅ Canonical leakage-safe split: train 3,532 / validation 754 / test 758 (seed 42); test set locked
+  (`docs/DATA_SPLIT_REPORT.md`).
+- ✅ TF-IDF text baselines (B01–B06): best **validation** macro-F1 0.6671 (LR + HINGLISH_NORMALIZED);
+  `docs/TEXT_BASELINE_REPORT.md`. These are development results, not final test results.
+- ✅ MuRIL text models (T01–T05): frozen embeddings + LR (0.615–0.630) are below TF-IDF; fine-tuned
+  MuRIL on HINGLISH_NORMALIZED text is the best **validation** text model so far (macro-F1 0.6869,
+  95% CI 0.654–0.719, overlapping B03). Scores are uncalibrated. `predict_text()` serves all text models.
+- ✅ Image-only model (frozen SigLIP + LR, I01): best **validation** macro-F1 so far, 0.7586 (95% CI 0.731–0.789),
+  above the text models. It may partly rely on a "woman pictured" shortcut; its scores are overconfident and
+  must not be shown as confidence. `predict_image()` serves it. Vision fine-tuning is deferred to a GPU.
+- ✅ Multimodal fusion (M02: T05 text + SigLIP image features, small MLP): best **validation** macro-F1 so far,
+  0.8076, vs image-only 0.7586 and text-only 0.6869 on the same samples. Not yet tuned or test-evaluated;
+  scores are uncalibrated. `predict_multimodal()` needs both the image and its caption (no OCR yet).
+- ✅ Hyperparameter tuning (validation only): tuned image model I03 0.7997 (+0.041); tuned fusion M04 0.8183
+  (seed 42; 3-seed mean 0.8081, not meaningfully above the baseline); TF-IDF and MuRIL did not improve.
+  Final development models: text T05, image I03, multimodal M04 (`config.yaml` `final_models`).
+- ✅ Final TEST results (758 memes, frozen models): image-only I03 macro-F1 **0.8047**, multimodal M04 **0.8031**
+  (statistically indistinguishable), text T05 0.6476, TF-IDF B07 0.6359. Multimodal beats text-only but **not**
+  image-only; Hinglish normalization did not help. See `docs/FINAL_EVALUATION_REPORT.md`.
+- ❌ OCR, explainability, Streamlit UI, deployment — not started.
 
 ## 19. Planned Development Roadmap
 1. ✅ Task 1 — Project foundation and repository initialization
-2. Task 2 — MongoDB Atlas foundation and secure database layer
-3. Dataset inspection and selection
-4. Preprocessing, Hinglish normalization, EDA, leakage-safe splits
-5. Text baselines (TF-IDF + LR / SVM)
-6. Transformer text model, image model, multimodal fusion
-7. Hyperparameter tuning (validation only) and final test evaluation
-8. OCR evaluation and OCR-noise experiment
-9. Explainability
-10. Streamlit application, history, dashboard, feedback
-11. Deployment
-12. Research paper (IEEE format)
+2. ✅ Task 2 — MongoDB Atlas foundation and secure database layer
+3. ✅ Task 3 — Dataset inventory, verification and compatibility analysis
+4. ✅ Task 4 — Dataset cleaning and final dataset strategy
+5. ✅ Task 5 — Exploratory data analysis
+6. ✅ Task 6 — Text preprocessing and Hinglish normalization
+7. ✅ Task 7 — Leakage-safe train/validation/test split
+8. ✅ Task 8 — Text baselines (TF-IDF + LR / SVM), validation only
+9. ✅ Task 9 — Pretrained / transformer text models (MuRIL), validation only
+10. ✅ Task 10 — Image-only vision model (frozen SigLIP), validation only
+11. ✅ Task 11 — Multimodal image + text fusion, validation only
+12. ✅ Task 12 — Hyperparameter tuning (validation only)
+13. ✅ Task 13 — Final test evaluation, ablation study and result analysis
+13. OCR evaluation and OCR-noise experiment (to be reframed: dataset text is already OCR output)
+14. Explainability
+15. Streamlit application, history, dashboard, feedback
+16. Deployment
+17. Research paper (IEEE format)
 
-The order after Task 2 is indicative and may change.
+The order after Task 13 is indicative and may change.
 
 ## 20. Disclaimer
 This repository is an academic research project in progress.
-**No model has been trained, the datasets have not yet been inspected,
-and no experimental metrics exist.** Any future predictions will be
+**Final test results exist for the frozen models (Task 13); they are
+research measurements on one dataset, not guarantees.** Any future predictions will be
 outputs of statistical models, which can be wrong and are not
 definitive judgements about people or content. Explanations, when
 added, are model attributions and not proof of how a model "reasons".

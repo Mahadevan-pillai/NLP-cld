@@ -1,0 +1,6 @@
+category,samples,rule
+aspect_ratio_extreme,22,w/h < 0.5 or > 2.0
+image_file_large,55,"> 266,713 bytes (Q3 + 3 IQR)"
+image_small,9,shorter side < 200 px
+text_very_long,107,> 135.875 chars (Q3 + 1.5 IQR)
+text_very_short,20,<= 3 chars (non-empty)

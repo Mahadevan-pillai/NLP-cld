@@ -1,0 +1,12 @@
+check,passed,detail
+canonical split unchanged (manifest SHA-256) and sizes,True,"{'train': 3532, 'test': 758, 'validation': 754}"
+train and validation do not overlap,True,
+no identical image (SHA-256) in both train and validation,True,
+no near-duplicate image pair crosses splits,True,
+Task 9 T05 checkpoint exists (weights + metadata),True,{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1
+Task 9 T03 frozen classifier exists,True,
+Task 10 I01/I02 classifiers exist,True,
+train: image cache covers exactly the canonical samples (ids + image hashes),True,"3532 rows, dim 768"
+validation: image cache covers exactly the canonical samples (ids + image hashes),True,"754 rows, dim 768"
+"validation labels identical to the T05 predictions file (same ids, same labels)",True,
+"validation labels identical to the I01 predictions file (same ids, same labels)",True,

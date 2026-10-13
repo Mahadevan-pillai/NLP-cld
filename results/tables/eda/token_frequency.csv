@@ -1,0 +1,241 @@
+group,ngram,rank,term,script,count,per_1000_tokens,samples_containing
+all,1,1,hai,latin,970,17.508,808
+all,1,2,me,latin,832,15.017,702
+all,1,3,to,latin,458,8.267,424
+all,1,4,ho,latin,353,6.371,315
+all,1,5,in,latin,341,6.155,305
+all,1,6,ki,latin,326,5.884,291
+all,1,7,se,latin,322,5.812,296
+all,1,8,ke,latin,310,5.595,283
+all,1,9,nahi,latin,301,5.433,281
+all,1,10,kya,latin,298,5.379,278
+all,1,11,the,latin,289,5.216,245
+all,1,12,है,devanagari,284,5.126,220
+all,1,13,my,latin,275,4.964,250
+all,1,14,ka,latin,268,4.837,249
+all,1,15,bhi,latin,248,4.476,234
+all,1,16,when,latin,247,4.458,237
+all,1,17,you,latin,237,4.278,206
+all,1,18,ko,latin,219,3.953,201
+all,1,19,hi,latin,210,3.79,198
+all,1,20,a,latin,202,3.646,179
+all,1,21,she,latin,191,3.447,151
+all,1,22,ye,latin,187,3.375,176
+all,1,23,के,devanagari,182,3.285,149
+all,1,24,mai,latin,176,3.177,158
+all,1,25,की,devanagari,173,3.123,146
+all,1,26,of,latin,170,3.068,158
+all,1,27,kar,latin,167,3.014,154
+all,1,28,तो,devanagari,158,2.852,146
+all,1,29,is,latin,157,2.834,143
+all,1,30,toh,latin,157,2.834,146
+all,1,31,na,latin,156,2.816,143
+all,1,32,bhai,latin,154,2.78,138
+all,1,33,after,latin,153,2.762,142
+all,1,34,में,devanagari,152,2.744,136
+all,1,35,hu,latin,152,2.744,142
+all,1,36,girls,latin,150,2.707,134
+all,1,37,le,latin,147,2.653,144
+all,1,38,tum,latin,145,2.617,127
+all,1,39,nhi,latin,137,2.473,127
+all,1,40,aur,latin,135,2.437,129
+all,1,41,से,devanagari,134,2.419,121
+all,1,42,ek,latin,132,2.383,127
+all,1,43,for,latin,131,2.364,112
+all,1,44,and,latin,129,2.328,124
+all,1,45,your,latin,124,2.238,108
+all,1,46,को,devanagari,122,2.202,115
+all,1,47,का,devanagari,118,2.13,106
+all,1,48,mujhe,latin,116,2.094,107
+all,1,49,main,latin,114,2.058,101
+all,1,50,भी,devanagari,109,1.967,98
+non_misogynistic,1,1,me,latin,571,19.589,479
+non_misogynistic,1,2,hai,latin,506,17.359,428
+non_misogynistic,1,3,to,latin,233,7.993,217
+non_misogynistic,1,4,my,latin,193,6.621,175
+non_misogynistic,1,5,in,latin,177,6.072,159
+non_misogynistic,1,6,ho,latin,175,6.004,152
+non_misogynistic,1,7,ke,latin,173,5.935,158
+non_misogynistic,1,8,nahi,latin,173,5.935,165
+non_misogynistic,1,9,the,latin,159,5.455,141
+non_misogynistic,1,10,ka,latin,157,5.386,142
+non_misogynistic,1,11,se,latin,156,5.352,145
+non_misogynistic,1,12,kya,latin,150,5.146,140
+non_misogynistic,1,13,ki,latin,148,5.077,136
+non_misogynistic,1,14,when,latin,140,4.803,135
+non_misogynistic,1,15,है,devanagari,134,4.597,108
+non_misogynistic,1,16,ko,latin,127,4.357,119
+non_misogynistic,1,17,bhai,latin,122,4.185,107
+non_misogynistic,1,18,bhi,latin,118,4.048,112
+non_misogynistic,1,19,you,latin,118,4.048,103
+non_misogynistic,1,20,hi,latin,118,4.048,109
+non_misogynistic,1,21,a,latin,115,3.945,103
+non_misogynistic,1,22,ye,latin,107,3.671,99
+non_misogynistic,1,23,hu,latin,107,3.671,99
+non_misogynistic,1,24,mai,latin,101,3.465,89
+non_misogynistic,1,25,kar,latin,93,3.191,85
+non_misogynistic,1,26,is,latin,90,3.088,80
+non_misogynistic,1,27,nhi,latin,89,3.053,80
+non_misogynistic,1,28,after,latin,88,3.019,85
+non_misogynistic,1,29,of,latin,88,3.019,84
+non_misogynistic,1,30,toh,latin,87,2.985,81
+non_misogynistic,1,31,le,latin,83,2.847,82
+non_misogynistic,1,32,and,latin,81,2.779,77
+non_misogynistic,1,33,aur,latin,76,2.607,72
+non_misogynistic,1,34,के,devanagari,74,2.539,63
+non_misogynistic,1,35,ek,latin,73,2.504,70
+non_misogynistic,1,36,na,latin,73,2.504,71
+non_misogynistic,1,37,for,latin,70,2.401,61
+non_misogynistic,1,38,की,devanagari,70,2.401,57
+non_misogynistic,1,39,में,devanagari,70,2.401,65
+non_misogynistic,1,40,ः,devanagari,70,2.401,59
+non_misogynistic,1,41,tum,latin,69,2.367,62
+non_misogynistic,1,42,तो,devanagari,69,2.367,65
+non_misogynistic,1,43,friend,latin,66,2.264,63
+non_misogynistic,1,44,से,devanagari,66,2.264,56
+non_misogynistic,1,45,your,latin,64,2.196,54
+non_misogynistic,1,46,raha,latin,62,2.127,56
+non_misogynistic,1,47,main,latin,61,2.093,56
+non_misogynistic,1,48,mom,latin,61,2.093,54
+non_misogynistic,1,49,tha,latin,60,2.058,56
+non_misogynistic,1,50,teacher,latin,57,1.955,52
+misogynistic,1,1,hai,latin,464,17.673,380
+misogynistic,1,2,me,latin,261,9.941,223
+misogynistic,1,3,to,latin,225,8.57,207
+misogynistic,1,4,ki,latin,178,6.78,155
+misogynistic,1,5,ho,latin,178,6.78,163
+misogynistic,1,6,se,latin,166,6.323,151
+misogynistic,1,7,in,latin,164,6.247,146
+misogynistic,1,8,है,devanagari,150,5.713,112
+misogynistic,1,9,kya,latin,148,5.637,138
+misogynistic,1,10,she,latin,148,5.637,115
+misogynistic,1,11,ke,latin,137,5.218,125
+misogynistic,1,12,bhi,latin,130,4.952,122
+misogynistic,1,13,the,latin,130,4.952,104
+misogynistic,1,14,nahi,latin,128,4.875,116
+misogynistic,1,15,you,latin,119,4.533,103
+misogynistic,1,16,ka,latin,111,4.228,107
+misogynistic,1,17,के,devanagari,108,4.114,86
+misogynistic,1,18,when,latin,107,4.076,102
+misogynistic,1,19,girls,latin,107,4.076,91
+misogynistic,1,20,की,devanagari,103,3.923,89
+misogynistic,1,21,hi,latin,92,3.504,89
+misogynistic,1,22,ko,latin,92,3.504,82
+misogynistic,1,23,तो,devanagari,89,3.39,81
+misogynistic,1,24,a,latin,87,3.314,76
+misogynistic,1,25,na,latin,83,3.161,72
+misogynistic,1,26,में,devanagari,82,3.123,71
+misogynistic,1,27,of,latin,82,3.123,74
+misogynistic,1,28,my,latin,82,3.123,75
+misogynistic,1,29,ye,latin,80,3.047,77
+misogynistic,1,30,doublemean,latin,77,2.933,77
+misogynistic,1,31,tum,latin,76,2.895,65
+misogynistic,1,32,mai,latin,75,2.857,69
+misogynistic,1,33,kar,latin,74,2.819,69
+misogynistic,1,34,her,latin,73,2.781,64
+misogynistic,1,35,toh,latin,70,2.666,65
+misogynistic,1,36,doublemeaning,latin,70,2.666,69
+misogynistic,1,37,को,devanagari,70,2.666,66
+misogynistic,1,38,से,devanagari,68,2.59,65
+misogynistic,1,39,mujhe,latin,67,2.552,61
+misogynistic,1,40,is,latin,67,2.552,63
+misogynistic,1,41,he,latin,66,2.514,55
+misogynistic,1,42,का,devanagari,65,2.476,59
+misogynistic,1,43,after,latin,65,2.476,57
+misogynistic,1,44,le,latin,64,2.438,62
+misogynistic,1,45,for,latin,61,2.323,51
+misogynistic,1,46,भी,devanagari,60,2.285,51
+misogynistic,1,47,your,latin,60,2.285,54
+misogynistic,1,48,aur,latin,59,2.247,57
+misogynistic,1,49,ek,latin,59,2.247,57
+misogynistic,1,50,main,latin,53,2.019,45
+all,2,1,doublemean doublemeaning,latin,62,1.227,62
+all,2,2,doublemeaning in,latin,58,1.148,57
+all,2,3,when you,latin,48,0.95,48
+all,2,4,raha hai,latin,41,0.812,38
+all,2,5,ke liye,latin,39,0.772,36
+all,2,6,के बाद,devanagari,32,0.633,30
+all,2,7,me ः,devanagari,30,0.594,28
+all,2,8,don t,latin,29,0.574,29
+all,2,9,fun funny,latin,28,0.554,25
+all,2,10,ke baad,latin,27,0.534,27
+all,2,11,hai kya,latin,24,0.475,24
+all,2,12,when she,latin,24,0.475,22
+all,2,13,hota hai,latin,24,0.475,22
+all,2,14,nahi hai,latin,23,0.455,23
+all,2,15,in the,latin,23,0.455,23
+all,2,16,lagta hai,latin,22,0.435,22
+all,2,17,love you,latin,22,0.435,20
+all,2,18,she is,latin,22,0.435,20
+all,2,19,hai me,latin,21,0.416,20
+all,2,20,be like,latin,21,0.416,21
+all,2,21,me to,latin,21,0.416,21
+all,2,22,fatima kyahogyafatima,latin,20,0.396,20
+all,2,23,this is,latin,19,0.376,17
+all,2,24,के लिए,devanagari,19,0.376,18
+all,2,25,me after,latin,18,0.356,18
+all,2,26,rha hai,latin,18,0.356,18
+all,2,27,papa ki,latin,18,0.356,17
+all,2,28,रहा है,devanagari,17,0.337,15
+all,2,29,ho gaya,latin,17,0.337,13
+all,2,30,hai na,latin,17,0.337,15
+non_misogynistic,2,1,ke liye,latin,27,1.013,24
+non_misogynistic,2,2,me ः,devanagari,25,0.938,24
+non_misogynistic,2,3,when you,latin,19,0.713,19
+non_misogynistic,2,4,me after,latin,17,0.638,17
+non_misogynistic,2,5,in the,latin,17,0.638,17
+non_misogynistic,2,6,me to,latin,17,0.638,17
+non_misogynistic,2,7,fatima kyahogyafatima,latin,17,0.638,17
+non_misogynistic,2,8,raha hai,latin,16,0.6,14
+non_misogynistic,2,9,don t,latin,16,0.6,16
+non_misogynistic,2,10,hai me,latin,15,0.563,15
+non_misogynistic,2,11,ke baad,latin,15,0.563,15
+non_misogynistic,2,12,old me,latin,15,0.563,15
+non_misogynistic,2,13,hai kya,latin,14,0.525,14
+non_misogynistic,2,14,nahi hai,latin,14,0.525,14
+non_misogynistic,2,15,love you,latin,14,0.525,13
+non_misogynistic,2,16,lagta hai,latin,13,0.488,13
+non_misogynistic,2,17,rha hai,latin,13,0.488,13
+non_misogynistic,2,18,my friend,latin,12,0.45,11
+non_misogynistic,2,19,when your,latin,12,0.45,12
+non_misogynistic,2,20,best friend,latin,12,0.45,12
+non_misogynistic,2,21,be like,latin,12,0.45,12
+non_misogynistic,2,22,me and,latin,12,0.45,11
+non_misogynistic,2,23,and my,latin,12,0.45,11
+non_misogynistic,2,24,ho gaya,latin,11,0.413,7
+non_misogynistic,2,25,के बाद,devanagari,11,0.413,10
+non_misogynistic,2,26,hai bhai,latin,11,0.413,11
+non_misogynistic,2,27,no one,latin,11,0.413,11
+non_misogynistic,2,28,रहा है,devanagari,11,0.413,10
+non_misogynistic,2,29,fun funny,latin,10,0.375,9
+non_misogynistic,2,30,hai na,latin,10,0.375,10
+misogynistic,2,1,doublemean doublemeaning,latin,62,2.598,62
+misogynistic,2,2,doublemeaning in,latin,58,2.431,57
+misogynistic,2,3,when you,latin,29,1.215,29
+misogynistic,2,4,raha hai,latin,25,1.048,24
+misogynistic,2,5,when she,latin,22,0.922,20
+misogynistic,2,6,के बाद,devanagari,21,0.88,20
+misogynistic,2,7,papa ki,latin,18,0.754,17
+misogynistic,2,8,fun funny,latin,18,0.754,16
+misogynistic,2,9,f doublemean,latin,16,0.671,16
+misogynistic,2,10,पापा की,devanagari,14,0.587,14
+misogynistic,2,11,ho to,latin,14,0.587,14
+misogynistic,2,12,hota hai,latin,14,0.587,14
+misogynistic,2,13,adult book,latin,13,0.545,13
+misogynistic,2,14,girls in,latin,13,0.545,8
+misogynistic,2,15,she is,latin,13,0.545,13
+misogynistic,2,16,don t,latin,13,0.545,13
+misogynistic,2,17,ke baad,latin,12,0.503,12
+misogynistic,2,18,ke liye,latin,12,0.503,12
+misogynistic,2,19,ki pari,latin,12,0.503,11
+misogynistic,2,20,this is,latin,11,0.461,10
+misogynistic,2,21,bhi nahi,latin,11,0.461,9
+misogynistic,2,22,की परी,devanagari,11,0.461,11
+misogynistic,2,23,girls after,latin,10,0.419,10
+misogynistic,2,24,of memex,latin,10,0.419,8
+misogynistic,2,25,rahi hai,latin,10,0.419,9
+misogynistic,2,26,meri beti,latin,10,0.419,7
+misogynistic,2,27,hoti hai,latin,10,0.419,10
+misogynistic,2,28,kuch bhi,latin,10,0.419,10
+misogynistic,2,29,hai kya,latin,10,0.419,10
+misogynistic,2,30,hai ki,latin,9,0.377,9

@@ -32,60 +32,287 @@ paths:
   results_paper: "results/paper"
   research_log: "RESEARCH_LOG.md"
 
-# Everything below is TO BE VERIFIED by the dataset inspection task.
-# Do not fill these in by assumption.
+# Column names and raw label values were VERIFIED from the actual file
+# (Task 3); label meaning, licence and text origin come from the
+# dataset card (Task 4). See docs/DATASET_REPORT.md and
+# docs/DATA_CLEANING_REPORT.md. Do not fill values in by assumption.
 dataset:
-  primary: null                 # TBD after inspection (candidate: MIMIC)
+  primary: "mimic"              # FINAL (Task 4): single primary dataset
   candidates:
     - name: "MIMIC"
-      status: "to_be_verified"
-  version: null
-  source: null
-  license: null
-  text_column: null
-  image_column: null
-  label_column: null
-  labels: null                  # list of label names, TBD
-  positive_label: null          # which label means "misogynistic", TBD
+      key: "mimic"
+      status: "inspected"       # Task 3
+      role: "PRIMARY TRAINING DATASET"
+  annotation_file: "data/raw/mimic/MIMIC2024.csv"
+  image_dir: "data/raw/mimic/Files"
+  version: "MIMIC2024.csv (sha256 98dd8843ef81...)"   # file fingerprint, not an official version
+  source: "Paper https://doi.org/10.1145/3656169; card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset"
+  license: "CC-BY-4.0"          # per dataset card licence tag
+  text_origin: "OCR (dataset card: 'EasyORC', presumably EasyOCR)"
+  id_column: "FileName"         # also the image reference; never use as a feature
+  text_column: "ExtractedText"
+  image_column: "FileName"
+  label_column: "Misogyny"
+  secondary_label_columns: ["Objectification", "Prejudice", "Humiliation"]
+  label_values: ["0", "1"]      # raw values as stored in the file
+  labels:                       # documented meaning (dataset card)
+    "0": "non_misogynistic"
+    "1": "misogynistic"
+  positive_label: "1"           # raw value meaning "misogynistic"
+  label_mapping:                # raw value -> internal target_label (identity, kept explicit)
+    "0": 0
+    "1": 1
+  cleaned_file: "data/processed/mimic_cleaned.csv"   # Task 4 output (git-ignored)
 
 splitting:
-  # "official" if the dataset ships its own split, otherwise
-  # "stratified_random" is the likely choice. TBD after inspection.
-  strategy: null
-  # PROPOSED ratios, used only if we create our own split.
-  # Must sum to 1.0. Can be changed if the dataset requires.
+  # Task 7 (FINAL). MIMIC has no official split, so one canonical,
+  # leakage-safe split is created and used by ALL experiments.
+  # See docs/DATA_SPLIT_REPORT.md.
+  strategy: "stratified_group_kfold"   # sklearn StratifiedGroupKFold, folds mapped to splits
   train: 0.70
   validation: 0.15
   test: 0.15
-  stratify: null                # TBD once label distribution is known
-  deduplicate_before_split: true   # research rule 9: avoid duplicate leakage
+  n_folds: 20                   # 5% folds: 14 train / 3 validation / 3 test
+  stratify: "target_label"      # primary label only (secondary labels not used)
+  # Leakage groups (union of): identical image SHA-256, Task 5 near-duplicate
+  # image pairs, Task 4 identical-caption groups with >= 3 words.
+  near_duplicate_pairs_file: "results/tables/eda/near_duplicate_images.csv"
+  min_caption_words_for_grouping: 3
+  deduplicate_before_split: true   # done in Task 4 (identical memes removed)
+  input_file: "data/processed/mimic_text_preprocessed_v1.0.csv"
+  output_dir: "data/splits"
+  assignments_file: "data/splits/split_assignments.csv"   # tracked: canonical split (IDs only)
+  manifest_file: "data/splits/split_manifest.json"        # tracked: reproducibility record
 
 text_preprocessing:
-  # Steps are designed in a later task. E1/E4 vs E2/E5 differ only in
-  # whether Hinglish normalization is applied.
-  hinglish_normalization: null  # true/false per experiment, TBD
-  lowercase: null
-  steps: []
+  # Task 6. Implemented in src/preprocessing/ and used by BOTH training
+  # and the app. See docs/TEXT_PREPROCESSING_REPORT.md.
+  version: "1.0"                # bump on any behaviour change; recorded with every model
+  # Modes: raw | basic | hinglish_normalized. All three variants are
+  # generated; which one a model uses is decided by experiments
+  # (E1 vs E2, E4 vs E5), so no single mode is fixed here yet.
+  mode: null
+  lowercase: false              # keep case; vectorizers/tokenizers decide (EDA: casing differs by class)
+  url_handling: "placeholder"   # placeholder | keep | remove
+  url_placeholder: "<URL>"
+  mention_handling: "placeholder"   # placeholder | keep | remove
+  mention_placeholder: "<USER>"
+  hashtag_handling: "strip_symbol"  # strip_symbol (#Word -> Word) | keep
+  emoji_handling: "keep"        # keep only: emojis carry meaning (0 in MIMIC)
+  repeated_char_normalization: true   # 3+ same letter -> 2; hinglish_normalized mode only
+  remove_stopwords: false       # disabled by design (negations are stopwords)
+  normalization_rules: "src/preprocessing/resources/hinglish_normalization.yaml"
+  output_file: "data/processed/mimic_text_preprocessed_v1.0.csv"   # git-ignored
 
 text_model:
-  baselines:                    # PROPOSED, not finalized
-    - "tfidf_logistic_regression"
-    - "tfidf_linear_svm"
-  tfidf: {}                     # ngram_range, max_features, min_df ... TBD
+  # Task 8: fixed, untuned baseline settings (NOT validation-optimised).
+  # Tuning is a later task; do not overwrite these with tuned values.
+  baselines:
+    version: "1.0"
+    tfidf:
+      lowercase: true           # case kept in preprocessing; vectorizer lowercases (same for all variants)
+      # sklearn's default pattern splits Devanagari words at vowel signs
+      # ('नहीं' -> 'नह'); this pattern keeps whole words in both scripts.
+      token_pattern: '(?u)[\w\u0900-\u0963\u0971-\u097F]+'   # single quotes: backslashes kept literally
+      ngram_range: [1, 2]
+      min_df: 2
+      max_df: 1.0
+      sublinear_tf: true
+      strip_accents: null       # never strip: would damage Devanagari
+    logistic_regression:
+      C: 1.0
+      solver: "lbfgs"
+      max_iter: 2000
+      class_weight: null        # classes are balanced (50.3 / 49.7), no weighting
+    linear_svm:
+      C: 1.0
+      loss: "squared_hinge"
+      dual: "auto"
+      max_iter: 10000
+      class_weight: null
+    experiments:                # id: [classifier, preprocessing mode]
+      B01: ["logistic_regression", "raw"]
+      B02: ["logistic_regression", "basic"]
+      B03: ["logistic_regression", "hinglish_normalized"]
+      B04: ["linear_svm", "raw"]
+      B05: ["linear_svm", "basic"]
+      B06: ["linear_svm", "hinglish_normalized"]
+    artifact_dir: "models/text"            # *.joblib git-ignored
+    results_dir: "results/tables/text_baselines"
+    figures_dir: "results/figures/text_baselines"
+    bootstrap_resamples: 1000   # uncertainty of validation macro-F1 (descriptive, not a test)
   transformer:
-    checkpoint: null            # TBD: multilingual/Hinglish-capable encoder
-    max_length: null
+    # Task 9. One pretrained architecture for frozen and fine-tuned runs.
+    checkpoint: "google/muril-base-cased"   # Apache-2.0; Indian languages + transliterated text
+    revision: "afd9f36c7923d54e97903922ff1b260d091d202f"   # pinned commit (weights sha256 e65e3b7aaa3c...)
+    max_length: 64              # smallest candidate truncating <= 1% of TRAIN texts (0.28%; validation 0.40%)
+    truncation: "longest_first"
+    padding: "dynamic"          # pad to longest in batch
+    # Large checkpoints are stored OUTSIDE the repo/OneDrive. The folder is
+    # read from this environment variable (set in the local .env);
+    # fallback: models/text inside the repo.
+    artifact_dir_env: "NLP_CLD_MODEL_DIR"
+    artifact_dir_default: "models/text"
+    frozen:
+      pooling: "mean"           # attention-mask mean of last hidden layer
+      batch_size: 32
+      classifier: "logistic_regression"   # StandardScaler + LR, fitted on train only
+      logistic_regression: {C: 1.0, max_iter: 2000, class_weight: null}
+    fine_tune:                  # baseline settings, NOT tuned (Task 12 tunes)
+      learning_rate: 2.0e-5
+      weight_decay: 0.01
+      batch_size: 16
+      max_epochs: 4
+      warmup_ratio: 0.1
+      gradient_clip_norm: 1.0
+      early_stopping_patience: 1          # epochs without validation macro-F1 improvement
+      selection_metric: "macro_f1"        # best checkpoint chosen on VALIDATION
+      freeze_word_embeddings: true        # 197k-token embedding matrix frozen: fits CPU RAM, faster
+      class_weight: null                  # classes balanced (50.3 / 49.7)
+    experiments:                # id: [level, preprocessing mode]
+      T01: ["frozen", "raw"]
+      T02: ["frozen", "basic"]
+      T03: ["frozen", "hinglish_normalized"]
+      T04: ["fine_tune", "best_non_normalized"]   # raw or basic, whichever frozen run scores higher on validation
+      T05: ["fine_tune", "hinglish_normalized"]
 
 image_model:
-  checkpoint: null              # TBD: vision or vision-language encoder
-  image_size: null
+  # Task 10. Image-only baseline: frozen pretrained vision tower + linear
+  # classifier. See docs/IMAGE_MODEL_REPORT.md. No text / OCR is used.
+  version: "1.0"
+  encoder:
+    checkpoint: "google/siglip-base-patch16-224"   # Apache-2.0; vision tower only (text tower unused)
+    revision: "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed"   # pinned commit (model.safetensors sha256 2c63cb7d1f2e...)
+    embedding: "pooler_output"  # SigLIP attention-pooling head output
+    embedding_dim: 768
+    batch_size: 32
+  preprocessing:
+    # Loading (src/preprocessing/image.py, version 1.0): decode, EXIF
+    # orientation, RGB. Then the encoder's own processor (from the pinned
+    # revision): resize to 224x224 bicubic WITHOUT crop (aspect ratio not
+    # kept), rescale 1/255, normalise mean 0.5 / std 0.5.
+    loader_version: "1.0"
+    image_size: 224
+    resize: "stretch_to_square"
+    processor_backend: "pil"    # SiglipImageProcessorPil, pinned (torchvision backend would differ slightly)
+  # Embedding cache: <dir of $NLP_CLD_MODEL_DIR>/../cache/image_embeddings
+  # (outside the repo); fallback models/image/cache (git-ignored).
+  cache_dir_env: "NLP_CLD_MODEL_DIR"
+  cache_dir_default: "models/image/cache"
+  artifact_dir: "models/image"  # small classifier .joblib files (git-ignored)
+  logistic_regression: {C: 1.0, max_iter: 2000, class_weight: null}   # classes balanced: no weighting
+  linear_svm: {C: 1.0, loss: "squared_hinge", dual: "auto", max_iter: 10000, class_weight: null}
+  experiments:                  # id: classifier on the frozen embeddings (fixed defaults, NOT tuned)
+    I01: "logistic_regression"
+    I02: "linear_svm"
+  fine_tune: "DEFERRED TO GPU"  # no CUDA GPU on the development laptop (Task 10 hardware check)
+  selection_metric: "macro_f1"
 
 multimodal_model:
-  # PROPOSED: start with a simple fusion (e.g. concatenation of image
-  # and text embeddings + classifier) before complex architectures.
-  fusion: null
-  hidden_dim: null
-  dropout: null
+  # Task 11. See docs/MULTIMODAL_MODEL_REPORT.md. Fixed baseline settings,
+  # NOT tuned (Task 12 tunes, on validation only).
+  version: "1.0"
+  text_representations:
+    finetuned_pooled:           # T05 pooled [CLS] (input of T05's classifier head), 768-d
+      source_experiment: "T05"
+      artifact: "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1"
+      preprocessing_mode: "hinglish_normalized"
+    frozen_mean:                # frozen MuRIL mean pooling (T03 representation), 768-d; never saw labels
+      source_experiment: "T03"
+      preprocessing_mode: "hinglish_normalized"
+  image_representation:         # Task 10 frozen SigLIP pooler_output (cached), 768-d
+    source_experiment: "I01"
+  # Text features are cached outside the repo next to the Task 9/10 caches:
+  # <dir of $NLP_CLD_MODEL_DIR>/../cache/multimodal_text (fallback models/multimodal/cache).
+  cache_dir_default: "models/multimodal/cache"
+  artifact_dir: "models/multimodal"
+  logistic_regression: {C: 1.0, max_iter: 3000, class_weight: null}   # M01; classes balanced
+  fusion_mlp:                   # M02 / M03
+    projection_dim: 256         # each modality: Linear(768 -> 256) + LayerNorm
+    hidden_dim: 256
+    dropout: 0.3
+    learning_rate: 1.0e-3
+    weight_decay: 1.0e-2
+    batch_size: 64
+    max_epochs: 50
+    early_stopping_patience: 5  # epochs without validation macro-F1 improvement
+    class_weight: null          # classes balanced (50.3 / 49.7): plain cross-entropy
+  experiments:                  # id: [classifier, text representation]
+    M01: ["logistic_regression", "finetuned_pooled"]
+    M02: ["fusion_mlp", "finetuned_pooled"]
+    M03: ["fusion_mlp", "frozen_mean"]     # control: text features that never saw the labels
+  selection_metric: "macro_f1"
+
+tuning:
+  # Task 12. Search spaces, budgets and rules fixed BEFORE any search ran.
+  # Fit on TRAIN, select on VALIDATION macro-F1 (ties -> earlier trial). TEST is never used.
+  # Kept constant: dataset, canonical split, labels, preprocessing v1.0, encoders, metric.
+  # See docs/HYPERPARAMETER_TUNING_REPORT.md. Baseline settings above are kept unchanged.
+  version: "1.0"
+  selection_metric: "macro_f1"
+  primary_seed: 42
+  robustness_seeds: [42, 123, 2026]   # mean +/- std reported; never used to pick the best result
+  traditional_text:           # A: tunes B03 (TF-IDF + LR on HINGLISH_NORMALIZED text)
+    base_experiment: "B03"
+    strategy: "grid"          # 3 x 3 x 2 x 5 = 90 trials, about 0.3-0.6 s each
+    space:
+      ngram_range: [[1, 1], [1, 2], [1, 3]]
+      min_df: [1, 2, 3]
+      sublinear_tf: [true, false]
+      C: [0.1, 0.3, 1.0, 3.0, 10.0]
+    fixed: {max_df: 1.0, max_features: null, class_weight: null}   # classes balanced: no class weighting
+  pretrained_text:            # B: T05 fine-tuning, learning-rate sweep only (CPU: ~30-45 min per run)
+    base_experiment: "T05"
+    runs: {T06: {learning_rate: 3.0e-5}, T07: {learning_rate: 5.0e-5}}   # everything else as T05
+  image:                      # C: classifier on the cached frozen SigLIP embeddings (not re-extracted)
+    base_experiment: "I01"
+    strategy: "grid"          # 8 + 8 = 16 trials
+    space:
+      logistic_regression: {C: [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0, 3.0]}
+      linear_svm: {C: [0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]}
+  multimodal:                 # D (PRIMARY): M02 fusion MLP; T05 pooled text + SigLIP image features fixed
+    base_experiment: "M02"
+    strategy: "random"        # 30 of 486 grid points (+ the baseline config), seed 42; ~10-20 s per trial
+    n_trials: 30
+    sampler_seed: 42
+    space:
+      learning_rate: [3.0e-4, 1.0e-3, 3.0e-3]
+      dropout: [0.1, 0.3, 0.5]
+      hidden_dim: [128, 256, 512]
+      projection_dim: [128, 256]
+      weight_decay: [1.0e-3, 1.0e-2, 1.0e-1]
+      batch_size: [32, 64, 128]
+    early_stopping: {monitor: "validation macro_f1", patience: 5, min_improvement: 0.0, max_epochs: 50}
+    adoption_rule: "adopt the best seed-42 configuration only if its mean over robustness_seeds exceeds the baseline configuration's mean"
+  selected:                   # Task 12 RESULTS (validation macro-F1); baselines above are kept for reproducibility
+    traditional_text:         # B07: +0.0013 vs B03 (not meaningful)
+      experiment: "B07"
+      artifact: "models/text/B07_logistic_regression_tfidf_hinglish_normalized_tuned_v1.0.joblib"
+      tfidf: {ngram_range: [1, 3], min_df: 2, max_df: 1.0, sublinear_tf: true}
+      logistic_regression: {C: 1.0, max_iter: 2000, class_weight: null}
+    pretrained_text:          # T06 (3e-5) and T07 (5e-5) were degenerate -> baseline T05 (lr 2e-5) kept
+      experiment: "T05"
+      learning_rate: 2.0e-5
+    image:                    # I03: +0.0411 vs I01 (C at the lower edge of the grid)
+      experiment: "I03"
+      artifact: "models/image/I03_siglip_logistic_regression_tuned_v1.0.joblib"
+      logistic_regression: {C: 0.001, max_iter: 2000, class_weight: null}
+    multimodal:               # M04 = TM-007, seed 42; 3-seed mean 0.8081 +/- 0.0133 vs baseline 0.8059 +/- 0.0055
+      experiment: "M04"
+      artifact: "models/multimodal/M04_fusion_mlp_finetuned_pooled_tuned_v1.0"
+      fusion_mlp: {projection_dim: 256, hidden_dim: 512, dropout: 0.1, learning_rate: 3.0e-4, weight_decay: 0.1,
+                   batch_size: 64, max_epochs: 50, early_stopping_patience: 5, min_improvement: 0.0}
+
+final_evaluation:             # Task 13. Frozen BEFORE the test set was opened; see docs/FINAL_EVALUATION_REPORT.md
+  freeze_manifest: "results/final/model_freeze_manifest.json"   # artifact/config checksums + evaluation plan
+  final_registry: "results/final/final_model_registry.json"     # final models + FINAL TEST metrics (written after test)
+  bootstrap: {resamples: 10000, seed: 42}
+  primary_comparisons: [["M04", "T05"], ["M04", "I03"]]          # RQ2 (vs text), RQ3 (vs image)
+
+final_models:                 # Task 12 development selection (VALIDATION only; TEST not evaluated)
+  FINAL_TEXT_MODEL: "T05"     # fine-tuned MuRIL, HINGLISH_NORMALIZED (fallback: B07)
+  FINAL_IMAGE_MODEL: "I03"    # frozen SigLIP + LR C=0.001
+  FINAL_MULTIMODAL_MODEL: "M04"   # fusion MLP TM-007 config (M02 equivalent within seed noise)
 
 training:
   device: null                  # "cpu" / "cuda", TBD per environment
@@ -106,7 +333,7 @@ evaluation:
     - "weighted_f1"
     - "per_class"
     - "confusion_matrix"
-  primary_metric: null          # TBD (accuracy alone is not sufficient)
+  primary_metric: "macro_f1"    # development metric (Task 8); accuracy alone is not sufficient
   tune_on: "validation"         # never "test"
 
 database:
@@ -114,7 +341,13 @@ database:
   # Names of environment variables — NOT their values.
   uri_env_var: "MONGODB_URI"
   database_name_env_var: "MONGODB_DATABASE"
-  collections:                  # PROPOSED names
+  default_database_name: "meme_detection_db"   # used if MONGODB_DATABASE is unset
+  # Connection timeouts (milliseconds). Short server selection timeout
+  # so a bad URI / blocked network fails fast instead of hanging.
+  server_selection_timeout_ms: 5000
+  connect_timeout_ms: 10000
+  socket_timeout_ms: 20000
+  collections:
     analysis_history: "analysis_history"
     user_feedback: "user_feedback"
     model_versions: "model_versions"

@@ -1,0 +1,17 @@
+family,experiment_id,modality,model,variant,validation_macro_f1,validation_accuracy,macro_f1_ci95,best_in_family
+traditional text,B01,text,TF-IDF + Logistic Regression,RAW,0.6538,0.6538,0.6193-0.6855,False
+traditional text,B02,text,TF-IDF + Logistic Regression,BASIC,0.6565,0.6565,0.6223-0.6897,False
+traditional text,B03,text,TF-IDF + Logistic Regression,HINGLISH_NORMALIZED,0.6671,0.6671,0.6332-0.7013,True
+traditional text,B04,text,TF-IDF + Linear SVM,RAW,0.6512,0.6512,0.6140-0.6844,False
+traditional text,B05,text,TF-IDF + Linear SVM,BASIC,0.6525,0.6525,0.6154-0.6855,False
+traditional text,B06,text,TF-IDF + Linear SVM,HINGLISH_NORMALIZED,0.6499,0.6499,0.6153-0.6826,False
+pretrained text,T01,text,frozen MuRIL + LR,RAW,0.6151,0.6154,0.5795-0.6511,False
+pretrained text,T02,text,frozen MuRIL + LR,BASIC,0.6298,0.63,0.5954-0.6615,False
+pretrained text,T03,text,frozen MuRIL + LR,HINGLISH_NORMALIZED,0.6191,0.6194,0.5849-0.6524,False
+pretrained text,T04,text,fine-tuned MuRIL,BASIC,0.6751,0.6751,0.6412-0.7068,False
+pretrained text,T05,text,fine-tuned MuRIL,HINGLISH_NORMALIZED,0.6869,0.687,0.6539-0.7187,True
+image-only,I01,image,frozen SigLIP + Logistic Regression,google/siglip-base-patch16-224,0.7586,0.7586,0.7306-0.7890,True
+image-only,I02,image,frozen SigLIP + Linear SVM,google/siglip-base-patch16-224,0.7507,0.7507,0.7202-0.7811,False
+multimodal,M01,image+text,early fusion: concat + StandardScaler + LR,finetuned_pooled,0.7679,0.7679,0.7361-0.7982,False
+multimodal,M02,image+text,fusion MLP (fine-tuned text + image),finetuned_pooled,0.8076,0.8077,0.7789-0.8342,False
+multimodal,M03,image+text,fusion MLP (frozen text + image),frozen_mean,0.8077,0.8077,0.7798-0.8355,True

@@ -1,0 +1,25 @@
+sample_id,error_category,review_notes
+mimic_d83b0df20bd8,slang,QUALITATIVE: male film still; body-shaming Hinglish slang about women carries the meaning; image neutral
+mimic_150caa8f593f,cultural/contextual reference,QUALITATIVE: ominous film still + 'a woman can do anything' stereotype; needs film/cultural context
+mimic_e1cebca845cb,cultural/contextual reference,QUALITATIVE: celebrity film still with sexual innuendo built on a film-title reference
+mimic_54e619206fac,image-text interaction,QUALITATIVE: woman and man posing; innuendo caption only harmful together with the picture
+mimic_c775b7ca2eda,text-dependent meaning,QUALITATIVE: grid of male faces; caption about paying for sex work with OCR-damaged numbers
+mimic_b807f18624c9,image-text interaction,QUALITATIVE: woman selfie + double-meaning caption about her pendant
+mimic_b00f635384e2,cultural/contextual reference,QUALITATIVE: bride-branded product + 'set life on fire' caption; dark cultural reference
+mimic_f61833d58764,slang,QUALITATIVE: crying actress + caption mocking a teenage girl's sexual naivety using a slang term
+mimic_b1ba28c7a398,image-text interaction,QUALITATIVE: street photo of a woman from behind + mocking caption; objectifying only in combination
+mimic_fa10e7293740,text-dependent meaning,QUALITATIVE: tweet screenshot stereotyping girls (face vs attitude); screenshot layout
+mimic_b802eba681e4,sarcasm,QUALITATIVE: proposal photo with sarcastic dialogue implying women ruin lives
+mimic_fc572548e221,slang,QUALITATIVE: woman on phone + crude sexual insinuation in Hinglish slang from an ex-partner
+mimic_0b2c73a28f30,ambiguous content,QUALITATIVE: family joke about a child losing its mother at a party; gender/family topic flagged by text
+mimic_eb1ceca76ac2,other: woman pictured (gender-presence false alarm),QUALITATIVE: older couple photo + harmless fake-ID joke; image model flagged the pictured woman
+mimic_c4151571fa90,cultural/contextual reference,QUALITATIVE: actress social-media post + political news joke; topical reference
+mimic_c875649f3d38,short text,QUALITATIVE: OCR caption empty although the picture contains English text; text model's empty-caption shortcut
+mimic_32ba6ad3925d,possible annotation ambiguity,QUALITATIVE: marriage-market joke about which men 'get' brides; label non-misogynistic is debatable
+mimic_35ec60b98af8,possible annotation ambiguity,QUALITATIVE: athletic woman photo + suggestive caption labelled non-misogynistic
+mimic_f1a62edcf1ed,possible annotation ambiguity,QUALITATIVE: husband/wife 'morning after the wedding' innuendo labelled non-misogynistic
+mimic_1a40d8eb2d6b,ambiguous content,QUALITATIVE: birds and moon 'true love' joke mentioning a girlfriend; gender-topic false alarm by text
+mimic_85dc19495abe,cultural/contextual reference,QUALITATIVE: celebrity couple + joke about the husband and a hair-oil advert
+mimic_025438b1c8d5,ambiguous content,QUALITATIVE: cartoon dog meme about a sister's wedding and a crush; teasing a man's looks
+mimic_af14ae7f1bed,slang,QUALITATIVE: chat-template meme with profanity not aimed at women; image flagged the pictured woman
+mimic_d3ce033728c4,other: woman pictured (gender-presence false alarm),QUALITATIVE: man and woman with sparklers + harmless caption; both models flagged

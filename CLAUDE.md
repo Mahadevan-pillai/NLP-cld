@@ -151,10 +151,163 @@ hyperparameters across modules.
 - Add or update tests for new non-trivial logic (preprocessing,
   splitting, metrics, database layer with mocks).
 - Tests must **not** download models/datasets or connect to MongoDB
-  Atlas; mock external services.
+  Atlas; mock external services. Use the `fake_db` fixture in
+  `tests/conftest.py` for repository tests; an autouse fixture there
+  disables `.env` loading so a real `MONGODB_URI` is never used.
 - Report test results honestly, including skipped or failing tests.
+- **CI** (`.github/workflows/ci.yml`) runs the suite on Python 3.10 and
+  3.14 for every PR, using `requirements-ci.txt`, with no dataset, `.env`
+  or MongoDB.
+  - Tests must keep passing in that environment: skip only genuinely
+    data-dependent checks.
+  - Add new test dependencies to `requirements-ci.txt`.
 
 ## 7. Current stage
-Task 1 (repository foundation) only. No dataset has been inspected, no
-model trained, no database connected, no UI built. See
+Tasks 1–13 done:
+- repository foundation;
+- the MongoDB database layer (`src/database/`, see `docs/database.md`);
+- the read-only dataset inventory (`docs/DATASET_REPORT.md`);
+- deterministic cleaning (`src/data/cleaning.py`, see
+  `docs/DATA_CLEANING_REPORT.md`);
+- EDA (`src/data/eda.py`, `notebooks/02_eda.ipynb`, see
+  `docs/EDA_REPORT.md`);
+- text preprocessing v1.0 (`src/preprocessing/`, see
+  `docs/TEXT_PREPROCESSING_REPORT.md`);
+- the canonical leakage-safe split (`src/data/splits.py`, see
+  `docs/DATA_SPLIT_REPORT.md`);
+- TF-IDF text baselines B01–B06 (`src/models/text_baselines.py`,
+  `src/training/text_baselines.py`, see `docs/TEXT_BASELINE_REPORT.md`),
+  validation only.
+- the multi-category feasibility study (Task 8.5, see below);
+- MuRIL text models T01–T05 (`src/models/transformer_text.py`,
+  `scripts/train_text_transformers.py`, see
+  `docs/TRANSFORMER_TEXT_MODEL_REPORT.md`), validation only. Best:
+  fine-tuned MuRIL on HINGLISH_NORMALIZED (T05).
+- image-only models I01/I02 (frozen SigLIP + LR/SVM;
+  `src/models/image_encoder.py`, `scripts/train_image_models.py`, see
+  `docs/IMAGE_MODEL_REPORT.md`), validation only. Best: I01.
+- multimodal fusion M01–M03 (`src/features/multimodal.py`,
+  `src/models/fusion.py`, `scripts/train_multimodal.py`, see
+  `docs/MULTIMODAL_MODEL_REPORT.md`), validation only. M02 is the main
+  model.
+- hyperparameter tuning (`src/training/tuning.py`,
+  `scripts/tune_models.py`, see `docs/HYPERPARAMETER_TUNING_REPORT.md`),
+  validation only.
+  - Final development models are in `config.yaml` `final_models`: text
+    T05, image I03, multimodal M04.
+  - Baseline configurations are kept unchanged; tuned ones live under
+    `tuning.selected`.
+  - Task 12 outputs go to `results/*/tuning/`. Never write tuning runs into
+    earlier tasks' result folders.
+- **FINAL TEST EVALUATION (Task 13)** of the frozen models
+  (`results/final/model_freeze_manifest.json`, freeze commit `ed0de53`; see
+  `docs/FINAL_EVALUATION_REPORT.md`).
+  - **The test set is now spent.** Never use test results to tune,
+    retrain, change preprocessing / thresholds / architecture or re-select
+    models.
+  - A new model is a separate, clearly labelled post-hoc experiment.
+  - Final TEST metrics live in `results/final/final_model_registry.json`.
+
+**Multimodal (Task 11):**
+- Join modalities on `sample_id` only (`src.features.multimodal.align`),
+  never on row order. Feature caches store their own sample IDs.
+- Predict with `src.inference.multimodal.predict_multimodal(image, text,
+  model_version)` (registry
+  `results/metrics/multimodal_model_registry.json`).
+  - A missing modality raises `MissingModalityError`. Never substitute
+    fake embeddings.
+- Fusion artifacts are pickle-free (safetensors + JSON). Standardisation
+  statistics come from train only.
+
+**Image inference (Task 10):**
+- Load images only with `src.preprocessing.image.load_image()`.
+- Predict with `src.inference.image.predict_image(image, model_version)`
+  (registry `results/metrics/image_model_registry.json`).
+- SigLIP is pinned by revision **and** `backend="pil"`. The torchvision
+  backend resizes differently.
+- Image embeddings are cached outside the repo, keyed by sample order and
+  image hashes. Never embed test images during development.
+- Image models must never receive caption text or file names. Rendered
+  text inside the picture is a documented limitation.
+
+**Text inference (Task 9):**
+- Use `src.inference.text.predict_text(text, model_version)` for any text
+  prediction. It reads `results/metrics/text_model_registry.json` and
+  applies the model's own preprocessing mode.
+- Large checkpoints live in `$NLP_CLD_MODEL_DIR` (outside the repo and
+  OneDrive); the registry writes them as `{MODEL_DIR}/...`. Never commit
+  them.
+- Load MuRIL only at the pinned revision in `config.yaml`, with
+  `HF_HUB_OFFLINE=1` in scripts and tests. Tests use a tiny random BERT
+  and never download models.
+- Scores are **uncalibrated** (SVM scores are not probabilities at all).
+  Never present them as confidence percentages.
+
+**Model pipelines:**
+- Models take RAW text and apply `TextPreprocessor(mode)` (the Task 6
+  `preprocess()`) inside the saved pipeline; the app must not
+  preprocess separately.
+- For TF-IDF, use the Devanagari-safe `token_pattern` from `config.yaml`.
+  sklearn's default splits Hindi words.
+- Evaluate with `src/evaluation/metrics.py` (macro-F1 is the development
+  metric).
+- Joblib artifacts are pickles: only load files this project created.
+
+**Categories (Task 8.5):**
+- Only MIMIC `Misogyny` and its sub-labels (`Objectification`,
+  `Prejudice`, `Humiliation`; multilabel, nested under misogyny) are
+  annotated.
+- Never train or display SAFE, HATE, ABUSE, THREAT, OBSCENE or SARCASM
+  predictions, and never create them by relabelling.
+- `Misogyny = 0` means "non-misogynistic", **not** "safe".
+- Enabled tasks are defined in `config/categories.yaml`.
+- Moderation outputs are limited to ALLOW / WARNING / HUMAN REVIEW (no
+  automatic BLOCK).
+
+**Splits (mandatory for every experiment):**
+- Use only `data/splits/split_assignments.csv` via
+  `src.data.splits.load_split()` / `load_split_assignments()`.
+- Never create a new random split, and never regenerate the canonical one
+  without explicit instruction.
+  - Newer scikit-learn versions shuffle differently: with 1.9.1, 2,279
+    samples would move.
+  - `scripts/create_splits.py` therefore aborts unless `--regenerate` is
+    passed.
+- Fit anything learned (TF-IDF, scalers, class weights, calibration) on
+  **train only**.
+- Tune and select on **validation**.
+- The **test set is locked**: `load_split("test", allow_test=True)` only
+  for the final evaluation of a frozen configuration, recorded in
+  `RESEARCH_LOG.md`.
+- Report results with and without the `doublemean*` watermark samples.
+
+Text for models comes from `data/processed/mimic_text_preprocessed_v1.0.csv`
+(`text_raw` / `text_basic` / `text_hinglish_normalized`). Any new text
+input (e.g. the app or OCR output) must go through
+`src.preprocessing.preprocess()` with the same mode and version the
+model was trained on. Changing the rules file or the preprocessing code
+requires bumping `text_preprocessing.version`.
+
+The single primary dataset is MIMIC. All later tasks read
+`data/processed/mimic_cleaned.csv` (from `config.yaml`
+`dataset.cleaned_file`), never the raw CSV directly.
+
+Rules for later tasks:
+- Database access goes through the repository classes only: no PyMongo
+  calls in `app/` or ML code.
+- **MIMIC file names (`_M_`/`_NM_`) encode the label.** Never use
+  `image_reference`/`image_path` as model input or derive features from
+  them.
+- Leakage groups (identical and near-duplicate images, substantive
+  identical captions) are already enforced by the canonical split
+  (Task 7).
+- Shortcut features found in EDA (`@doublemeaning`/`@doublemean`
+  watermarks, class-correlated image resolutions) must be tested for in
+  ablations and error analysis. They must never be silently exploited.
+- Notebooks are committed **without outputs**, so no dataset text is
+  stored in Git. Reusable logic belongs in `src/`, not in notebooks.
+- `original_text` is raw OCR text; preprocessing writes new columns and
+  never overwrites it.
+
+The test set was evaluated once in Task 13 (frozen models); no UI is built. See
 `PROJECT_CONTEXT.md` Section 17 for the up-to-date stage.

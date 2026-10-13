@@ -1,0 +1,7 @@
+role,experiment_id,model,modality,validation_samples,accuracy,precision,recall,macro_f1,weighted_f1,training_time_s,inference_time,best_accuracy,best_precision,best_recall,best_macro_f1,best_weighted_f1
+best traditional text,B03,TF-IDF + LR (HINGLISH_NORMALIZED),text,754,0.6671,0.6676,0.6587,0.6671,0.6671,0.246,0.03 s (754 texts),False,False,False,False,False
+best pretrained text,T05,fine-tuned MuRIL (HINGLISH_NORMALIZED),text,754,0.687,0.6759,0.712,0.6869,0.6868,1984.2,"24.1 s (754 texts, encoder incl.)",False,False,False,False,False
+best image-only,I01,frozen SigLIP + LR,image,754,0.7586,0.7533,0.7653,0.7586,0.7586,713.6,~0.21 s/image end-to-end,False,False,False,False,False
+multimodal baseline,M01,"concat(T05 pooled, SigLIP) + LR",image+text,754,0.7679,0.7688,0.7627,0.7679,0.7679,3.371,0.0431 s classifier only (+ T05 text and SigLIP image encoders),False,False,False,False,False
+MAIN multimodal,M02,fusion MLP (T05 pooled + SigLIP),image+text,754,0.8077,0.8194,0.7867,0.8076,0.8076,8.83,0.0245 s classifier only (+ T05 text and SigLIP image encoders),True,True,False,False,False
+multimodal control (frozen text),M03,fusion MLP (frozen MuRIL + SigLIP) - control,image+text,754,0.8077,0.8026,0.8133,0.8077,0.8077,16.1,0.0281 s classifier only (+ T05 text and SigLIP image encoders),True,False,True,True,True

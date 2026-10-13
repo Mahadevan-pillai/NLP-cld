@@ -1,0 +1,12 @@
+experiment_id,task_id,model,preprocessing,task,accuracy,precision,recall,macro_f1,macro_f1_ci95_low,macro_f1_ci95_high,weighted_f1,macro_f1_with_text_only,macro_f1_without_watermark,training_time_s,inference_time_s,model_size_bytes
+B01,Task 8,TF-IDF + Logistic Regression,RAW,misogyny_detection (binary),0.6538,0.6541,0.6453,0.6538,0.6193,0.6855,0.6538,0.6456,0.6509,0.107,0.012,181220
+B02,Task 8,TF-IDF + Logistic Regression,BASIC,misogyny_detection (binary),0.6565,0.6559,0.6507,0.6565,0.6223,0.6897,0.6565,0.6484,0.6536,0.188,0.027,181700
+B03,Task 8,TF-IDF + Logistic Regression,HINGLISH_NORMALIZED,misogyny_detection (binary),0.6671,0.6676,0.6587,0.6671,0.6332,0.7013,0.6671,0.6593,0.6643,0.246,0.03,181860
+B04,Task 8,TF-IDF + Linear SVM,RAW,misogyny_detection (binary),0.6512,0.6497,0.648,0.6512,0.614,0.6844,0.6512,0.643,0.6483,0.118,0.018,181088
+B05,Task 8,TF-IDF + Linear SVM,BASIC,misogyny_detection (binary),0.6525,0.6507,0.6507,0.6525,0.6154,0.6855,0.6525,0.6444,0.6497,0.193,0.042,181552
+B06,Task 8,TF-IDF + Linear SVM,HINGLISH_NORMALIZED,misogyny_detection (binary),0.6499,0.648,0.648,0.6499,0.6153,0.6826,0.6499,0.6417,0.647,0.161,0.03,181728
+T01,Task 9,frozen MuRIL + LR,RAW,misogyny_detection (binary),0.6154,0.6184,0.592,0.6151,0.5795,0.6511,0.6152,0.6054,0.6118,165.82,0.006,25937
+T02,Task 9,frozen MuRIL + LR,BASIC,misogyny_detection (binary),0.63,0.6319,0.6133,0.6298,0.5954,0.6615,0.6299,0.6207,0.6267,129.7,0.01,25937
+T03,Task 9,frozen MuRIL + LR,HINGLISH_NORMALIZED,misogyny_detection (binary),0.6194,0.6222,0.5973,0.6191,0.5849,0.6524,0.6192,0.6095,0.6159,127.84,0.01,25937
+T04,Task 9,fine-tuned MuRIL,BASIC,misogyny_detection (binary),0.6751,0.6693,0.6853,0.6751,0.6412,0.7068,0.675,0.6679,0.6738,2671.05,24.848,956664885
+T05,Task 9,fine-tuned MuRIL,HINGLISH_NORMALIZED,misogyny_detection (binary),0.687,0.6759,0.712,0.6869,0.6539,0.7187,0.6868,0.6803,0.6858,1984.21,24.086,956664899

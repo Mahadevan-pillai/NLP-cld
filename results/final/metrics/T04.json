@@ -1,0 +1,62 @@
+{
+  "experiment_id": "T04",
+  "evaluation": "FINAL TEST EVALUATION",
+  "split": "test",
+  "split_assignments_sha256": "47fb02a87b36a22d20b9fd8bbb023fb1efa05361739211933a259caa9ff24894",
+  "artifact_sha256": "61a2583be08193d816865cc5fd67c4a1cc1c30936fa935ee6e3c4b0c57177e94",
+  "role": "ablation: RQ1 (fine-tuned MuRIL)",
+  "modality": "text",
+  "description": "fine-tuned MuRIL, BASIC",
+  "score_type": "uncalibrated softmax probability",
+  "metrics": {
+    "n": 758,
+    "accuracy": 0.6741,
+    "precision": 0.6562,
+    "recall": 0.7207,
+    "f1": 0.6869,
+    "macro_precision": 0.6759,
+    "macro_recall": 0.6745,
+    "macro_f1": 0.6736,
+    "weighted_f1": 0.6735,
+    "precision_non_misogynistic": 0.6957,
+    "recall_non_misogynistic": 0.6283,
+    "f1_non_misogynistic": 0.6602,
+    "support_non_misogynistic": 382,
+    "precision_misogynistic": 0.6562,
+    "recall_misogynistic": 0.7207,
+    "f1_misogynistic": 0.6869,
+    "support_misogynistic": 376,
+    "tn": 240,
+    "fp": 142,
+    "fn": 105,
+    "tp": 271
+  },
+  "subsets": {
+    "all": {
+      "n": 758,
+      "accuracy": 0.6741,
+      "precision": 0.6562,
+      "recall": 0.7207,
+      "macro_f1": 0.6736,
+      "weighted_f1": 0.6735
+    },
+    "with_text": {
+      "n": 737,
+      "accuracy": 0.6811,
+      "precision": 0.6684,
+      "recall": 0.7139,
+      "macro_f1": 0.6809,
+      "weighted_f1": 0.6808
+    },
+    "without_watermark": {
+      "n": 744,
+      "accuracy": 0.6707,
+      "precision": 0.6459,
+      "recall": 0.7155,
+      "macro_f1": 0.6705,
+      "weighted_f1": 0.6703
+    }
+  },
+  "validation_macro_f1_at_freeze": 0.6751,
+  "evaluated_utc": "2026-10-13T11:13:03+00:00"
+}

@@ -1,0 +1,8 @@
+dataset,label_column,role,task_type,unique_labels,documented_meaning,counts_cleaned,counts_raw,labels_can_coexist,missing_labels,content_moderation_label
+MIMIC,Misogyny,primary,binary,0;1,"1 = Misogynistic, 0 = Non Misogynistic (dataset card)",0:2537; 1:2507,0:2539; 1:2515,no (single binary label),0,True
+MIMIC,Objectification,secondary (sub-category of misogyny),binary per label (multi-label set),0;1,"Objectification category of a misogynistic meme (dataset card, sub-task 2); value meaning 1 = present (structurally consistent: 0 positives among non-misogynistic)",0:3556; 1:1488,0:3561; 1:1493,yes (with other sub-labels),0,True
+MIMIC,Prejudice,secondary (sub-category of misogyny),binary per label (multi-label set),0;1,"Prejudice category of a misogynistic meme (dataset card, sub-task 2); value meaning 1 = present (structurally consistent: 0 positives among non-misogynistic)",0:4128; 1:916,0:4135; 1:919,yes (with other sub-labels),0,True
+MIMIC,Humiliation,secondary (sub-category of misogyny),binary per label (multi-label set),0;1,"Humiliation category of a misogynistic meme (dataset card, sub-task 2); value meaning 1 = present (structurally consistent: 0 positives among non-misogynistic)",0:4652; 1:392,0:4661; 1:393,yes (with other sub-labels),0,True
+DATASET 00.csv (sha256 dc0beb6901e7),result,not a content dataset,n/a,0;1;2,"agriculture (crop, soil, moisture, temperature)",,0:9062; 1:6227; 2:1122,n/a,,False
+DATASET 01.csv (sha256 59e8a76ac5ce),(none: numeric statistics; 'Sex' is a demographic field),not a content dataset,n/a,Male;Female;Both,mortality statistics by country/age/sex,,19635 each,n/a,,False
+DATASET 02.xlsx (sha256 dbad641c16c9),(none),not a content dataset,n/a,,FIFA World Cup match results (3 sheets),,,n/a,,False

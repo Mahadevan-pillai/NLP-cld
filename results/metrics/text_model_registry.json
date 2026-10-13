@@ -1,0 +1,97 @@
+{
+  "task": "misogyny_detection",
+  "label_map": {
+    "0": "non_misogynistic",
+    "1": "misogynistic"
+  },
+  "note": "Scores are uncalibrated. Large checkpoints: {MODEL_DIR} = $NLP_CLD_MODEL_DIR.",
+  "models": {
+    "B01": {
+      "kind": "tfidf_logreg",
+      "artifact": "models/text/B01_logistic_regression_tfidf_raw_v1.0.joblib",
+      "preprocessing_mode": "raw",
+      "preprocessing_version": "1.0"
+    },
+    "B02": {
+      "kind": "tfidf_logreg",
+      "artifact": "models/text/B02_logistic_regression_tfidf_basic_v1.0.joblib",
+      "preprocessing_mode": "basic",
+      "preprocessing_version": "1.0"
+    },
+    "B03": {
+      "kind": "tfidf_logreg",
+      "artifact": "models/text/B03_logistic_regression_tfidf_hinglish_normalized_v1.0.joblib",
+      "preprocessing_mode": "hinglish_normalized",
+      "preprocessing_version": "1.0"
+    },
+    "B04": {
+      "kind": "tfidf_svm",
+      "artifact": "models/text/B04_linear_svm_tfidf_raw_v1.0.joblib",
+      "preprocessing_mode": "raw",
+      "preprocessing_version": "1.0"
+    },
+    "B05": {
+      "kind": "tfidf_svm",
+      "artifact": "models/text/B05_linear_svm_tfidf_basic_v1.0.joblib",
+      "preprocessing_mode": "basic",
+      "preprocessing_version": "1.0"
+    },
+    "B06": {
+      "kind": "tfidf_svm",
+      "artifact": "models/text/B06_linear_svm_tfidf_hinglish_normalized_v1.0.joblib",
+      "preprocessing_mode": "hinglish_normalized",
+      "preprocessing_version": "1.0"
+    },
+    "T01": {
+      "preprocessing_mode": "raw",
+      "preprocessing_version": "1.0",
+      "max_length": 64,
+      "encoder": "google/muril-base-cased",
+      "encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+      "artifact": "models/text/T01_muril_frozen_logreg_raw_v1.joblib",
+      "kind": "frozen_logreg"
+    },
+    "T02": {
+      "preprocessing_mode": "basic",
+      "preprocessing_version": "1.0",
+      "max_length": 64,
+      "encoder": "google/muril-base-cased",
+      "encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+      "artifact": "models/text/T02_muril_frozen_logreg_basic_v1.joblib",
+      "kind": "frozen_logreg"
+    },
+    "T03": {
+      "preprocessing_mode": "hinglish_normalized",
+      "preprocessing_version": "1.0",
+      "max_length": 64,
+      "encoder": "google/muril-base-cased",
+      "encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+      "artifact": "models/text/T03_muril_frozen_logreg_hinglish_normalized_v1.joblib",
+      "kind": "frozen_logreg"
+    },
+    "T04": {
+      "preprocessing_mode": "basic",
+      "preprocessing_version": "1.0",
+      "max_length": 64,
+      "encoder": "google/muril-base-cased",
+      "encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+      "artifact": "{MODEL_DIR}/T04_muril_finetuned_basic_v1",
+      "kind": "fine_tuned"
+    },
+    "T05": {
+      "preprocessing_mode": "hinglish_normalized",
+      "preprocessing_version": "1.0",
+      "max_length": 64,
+      "encoder": "google/muril-base-cased",
+      "encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+      "artifact": "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1",
+      "kind": "fine_tuned"
+    },
+    "B07": {
+      "kind": "tfidf_logreg",
+      "artifact": "models/text/B07_logistic_regression_tfidf_hinglish_normalized_tuned_v1.0.joblib",
+      "preprocessing_mode": "hinglish_normalized",
+      "preprocessing_version": "1.0"
+    }
+  }
+}

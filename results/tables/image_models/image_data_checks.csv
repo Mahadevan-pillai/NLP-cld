@@ -1,0 +1,10 @@
+check,passed,detail
+canonical split counts (train/validation/test),True,"{'train': 3532, 'test': 758, 'validation': 754}"
+each sample_id assigned once,True,5044 ids
+train and validation do not overlap,True,0 shared ids
+labels valid (0/1) in train and validation,True,
+all train/validation images exist,True,4286/4286
+all train/validation images decode with load_image(),True,4286/4286
+images unchanged since Task 4 (SHA-256),True,4286/4286
+no identical image (SHA-256) in both train and validation,True,0 crossing
+no near-duplicate image pair crosses splits (Task 5 pairs),True,0 of 55 pairs

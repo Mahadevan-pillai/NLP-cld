@@ -1,0 +1,72 @@
+# Continuous integration: runs on every pull request and on pushes to main.
+#
+# What it checks (no dataset, no .env and no MongoDB are available here,
+# by design: the tests use synthetic data and mock the database):
+#   1. Repository safety: no dataset files, model weights, per-split
+#      text files or .env are committed.
+#   2. All Python files compile.
+#   3. The full pytest suite.
+# It needs no secrets.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  repository-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: No data, models or secrets committed
+        run: |
+          set -euo pipefail
+          bad=$(git ls-files | grep -E \
+            '^data/raw/[^.]|^data/processed/[^.]|^data/splits/(train|validation|test)\.csv$|(^|/)\.env$|\.(joblib|pkl|pickle|pt|pth|ckpt|safetensors|bin|onnx|h5)$|\.(jpg|jpeg)$|_with_text\.csv$|preprocessing_examples\.csv$' \
+            || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Files that must not be committed:"; echo "$bad"; exit 1
+          fi
+          if git ls-files -z | xargs -0 grep -lE 'mongodb(\+srv)?://[^ "]*@' | grep -v '^tests/test_db_connection.py$'; then
+            echo "::error::Possible MongoDB connection string with credentials committed"; exit 1
+          fi
+          echo "OK: no dataset files, model artifacts, text dumps, .env or credentials tracked"
+
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.10 = project development version; 3.14 = newest, early warning
+        python-version: ["3.10", "3.14"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements-ci.txt
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install -r requirements-ci.txt
+      - name: Show versions
+        run: python -m pip list --format=freeze | grep -iE '^(numpy|pandas|scikit-learn|matplotlib|pyyaml|pymongo|pillow|pytest|torch|transformers)=='
+      - name: Compile all Python files
+        run: python -m compileall -q src scripts tests
+      - name: Run tests
+        env:
+          MPLBACKEND: Agg
+          HF_HUB_OFFLINE: "1"   # tests must never download models
+        run: python -m pytest -q -rs

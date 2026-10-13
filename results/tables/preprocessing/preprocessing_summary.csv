@@ -1,0 +1,4 @@
+mode,samples,changed_vs_raw,percent_changed_vs_raw,changed_vs_previous_mode,mean_chars,mean_whitespace_tokens,vocabulary_eda_tokens,vocabulary_whitespace_tokens_case_sensitive,empty_texts,newly_empty_vs_raw
+raw,5044,0,0.0,0,57.857,11.258,14244,20235,148,0
+basic,5044,671,13.3,671,57.477,11.258,14022,19919,148,0
+hinglish_normalized,5044,1255,24.88,655,57.615,11.258,13962,19810,148,0

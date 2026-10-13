@@ -1,0 +1,4 @@
+family,baseline_model,tuned_model,validation_baseline_macro_f1,validation_tuned_macro_f1,test_baseline_macro_f1,test_tuned_macro_f1,test_difference,test_difference_ci95,note
+traditional text,B03,B07,0.6671,0.6684,0.6359,0.6359,-0.0,-0.0078-0.0077,both configurations were frozen before TEST; validation and test columns are separate measurements
+image-only,I01,I03,0.7586,0.7997,0.7768,0.8047,0.0279,0.0026-0.0539,both configurations were frozen before TEST; validation and test columns are separate measurements
+multimodal,M02,M04,0.8076,0.8183,0.8016,0.8031,0.0016,-0.0168-0.0198,both configurations were frozen before TEST; validation and test columns are separate measurements

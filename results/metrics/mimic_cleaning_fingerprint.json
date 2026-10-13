@@ -1,0 +1,90 @@
+{
+  "dataset": "MIMIC",
+  "dataset_key": "mimic",
+  "generated_at": "2026-10-10T10:21:58+00:00",
+  "source": {
+    "citation": "Singh, A., Sharma, D., & Singh, V. K. (2024). ACM Transactions on Asian and Low-Resource Language Information Processing. https://doi.org/10.1145/3656169",
+    "dataset_card": "https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset",
+    "license": "CC-BY-4.0 (dataset card licence tag; confirm it matches your download source)"
+  },
+  "input": {
+    "annotation_file": "data/raw/mimic/MIMIC2024.csv",
+    "annotation_sha256": "98dd8843ef8189e44f7acbd2b61b5a2d263146700b838a93127c427f109c7f26",
+    "records": 5054
+  },
+  "cleaning": {
+    "version": "1.0",
+    "code_sha256": "068f1dd8bb1bf4ce5dc80edfd88a5fff590792caa84727587d2866cafd7ce035",
+    "label_mapping": {
+      "0": 0,
+      "1": 1
+    },
+    "random_seed": "NOT_USED (no random operations)",
+    "policy": {
+      "malformed_record": "REMOVE",
+      "missing_id": "REMOVE",
+      "duplicate_row": "REMOVE",
+      "conflicting_duplicate_id": "REMOVE + FLAG FOR REVIEW",
+      "missing_label": "REMOVE",
+      "invalid_label": "REMOVE",
+      "invalid_secondary_label": "KEEP + FLAG FOR REVIEW",
+      "missing_text": "KEEP",
+      "image_path_repaired": "REPAIR METADATA",
+      "missing_image": "REMOVE",
+      "corrupt_image": "REMOVE",
+      "duplicate_image_and_text": "REMOVE",
+      "conflicting_labels_identical_sample": "REMOVE + FLAG FOR REVIEW",
+      "same_image_different_text": "KEEP + FLAG FOR REVIEW",
+      "duplicate_text_different_images": "KEEP",
+      "text_label_conflict": "KEEP + FLAG FOR REVIEW",
+      "secondary_label_conflict": "KEEP + FLAG FOR REVIEW",
+      "no_secondary_label": "KEEP + FLAG FOR REVIEW"
+    }
+  },
+  "output": {
+    "cleaned_file": "data/processed/mimic_cleaned.csv",
+    "cleaned_sha256": "1ff17281346f0332163efdfb6aacfe0408d657e93d2748afe826e0ee268340f2",
+    "rows": 5044,
+    "retained_images_digest": "b824fa0eaebfc8c0546a3866067755dd1a9852abe0228be23e0133c6e936efeb"
+  },
+  "counts": {
+    "excluded_by_category": {
+      "conflicting_labels_identical_sample": 4,
+      "duplicate_image_and_text": 6
+    },
+    "review_flags": {
+      "duplicate_text": 21,
+      "no_secondary_label": 1,
+      "secondary_label_conflict": 1,
+      "text_label_conflict": 5
+    }
+  },
+  "label_distribution": {
+    "before": {
+      "0": 2539,
+      "1": 2515
+    },
+    "after": {
+      "0": 2537,
+      "1": 2507
+    }
+  },
+  "modality_availability": {
+    "image_only_samples": 5044,
+    "multimodal_samples": 5044,
+    "text_only_samples_with_text": 4896,
+    "note": "All retained samples have a readable image and a label; text is empty for samples with has_text=False."
+  },
+  "post_cleaning_checks": {
+    "sample_ids_unique": true,
+    "sample_ids_present": true,
+    "target_labels_valid": true,
+    "original_label_matches_target": true,
+    "image_paths_unique": true,
+    "no_unflagged_identical_images": true,
+    "has_text_consistent": true,
+    "all_images_readable": true,
+    "original_text_identical_to_raw": true,
+    "count_reconciles": true
+  }
+}

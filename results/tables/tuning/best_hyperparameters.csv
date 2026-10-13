@@ -1,0 +1,5 @@
+family,baseline_model,baseline_configuration,baseline_macro_f1,tuned_model,best_configuration,tuned_macro_f1,absolute_improvement,relative_improvement_pct,trials_searched,search_runtime_s
+traditional text,B03,"{""ngram_range"": [1, 2], ""min_df"": 2, ""sublinear_tf"": true, ""C"": 1.0}",0.6671,B07,"{""C"": 1.0, ""min_df"": 2, ""ngram_range"": [1, 3], ""sublinear_tf"": true}",0.6684,0.0013,0.19,90,72.8
+pretrained text,T05,"{""learning_rate"": 2e-05}",0.6869,T07,"{""learning_rate"": 5e-05}",0.3345,-0.3524,-51.3,2,5285.3
+image-only,I01,"{""classifier"": ""logistic_regression"", ""C"": 1.0}",0.7586,I03,"{""C"": 0.001, ""classifier"": ""logistic_regression""}",0.7997,0.0411,5.42,16,49.8
+multimodal (main),M02,"{""learning_rate"": 0.001, ""dropout"": 0.3, ""hidden_dim"": 256, ""projection_dim"": 256, ""weight_decay"": 0.01, ""batch_size"": 64}",0.8076,M04,"{""batch_size"": 64, ""dropout"": 0.1, ""hidden_dim"": 512, ""learning_rate"": 0.0003, ""projection_dim"": 256, ""weight_decay"": 0.1}",0.8183,0.0107,1.32,30,234.6

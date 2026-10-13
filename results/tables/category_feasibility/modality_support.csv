@@ -1,0 +1,11 @@
+category,dataset,text_supported,image_supported,multimodal_supported,sample_count,positives,samples_with_text_in_population,recommended_model_task,note
+MISOGYNY,MIMIC,True,True,True,5044,2507,4896,stage 1 binary,every sample has image + OCR text field; 148 samples have empty text
+OBJECTIFICATION,MIMIC,True,True,True,2507,1488,2401,stage 2 multilabel head (conditional on misogyny),every sample has image + OCR text field; 148 samples have empty text
+PREJUDICE,MIMIC,True,True,True,2507,916,2401,stage 2 multilabel head (conditional on misogyny),every sample has image + OCR text field; 148 samples have empty text
+HUMILIATION,MIMIC,True,True,True,2507,392,2401,stage 2 multilabel head (conditional on misogyny),every sample has image + OCR text field; 148 samples have empty text
+SAFE,none,False,False,False,0,0,0,NOT TRAINABLE (no annotation),
+HATE,none,False,False,False,0,0,0,NOT TRAINABLE (no annotation),
+ABUSE,none,False,False,False,0,0,0,NOT TRAINABLE (no annotation),
+THREAT,none,False,False,False,0,0,0,NOT TRAINABLE (no annotation),
+OBSCENE,none,False,False,False,0,0,0,NOT TRAINABLE (no annotation),
+SARCASM,none,False,False,False,0,0,0,NOT TRAINABLE (no annotation),

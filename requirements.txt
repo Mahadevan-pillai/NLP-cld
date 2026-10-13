@@ -25,6 +25,7 @@ pandas>=2.1
 
 # Traditional ML / evaluation
 scikit-learn>=1.4
+scipy>=1.10              # Task 13: exact McNemar test (scipy.stats.binomtest)
 
 # Plotting (EDA, result figures)
 matplotlib>=3.8
@@ -45,7 +46,7 @@ opencv-python-headless>=4.9
 
 # Deep learning / NLP
 torch>=2.2
-transformers>=4.40
+transformers>=5.19      # Task 10 uses the 5.x image-processor backend API (backend="pil"); tested with 5.19.0
 sentence-transformers>=3.0
 
 # Application
@@ -53,3 +54,9 @@ streamlit>=1.35
 
 # Testing
 pytest>=8.0
+
+# Notebooks (Task 5): create, execute and validate notebooks/*.ipynb
+# (ipykernel also lets VS Code / Jupyter run them in this environment)
+nbformat>=5.9
+nbclient>=0.10
+ipykernel>=6.29

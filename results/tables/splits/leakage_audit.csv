@@ -1,0 +1,15 @@
+check,type,passed,detail
+valid_split_names,blocking,True,"values: ['test', 'train', 'validation']"
+sample_id_unique,blocking,True,0 duplicated ids
+every_sample_assigned,blocking,True,5044 of 5044
+splits_mutually_exclusive,blocking,True,0 ids in more than one split
+union_equals_dataset,blocking,True,union 5044 vs dataset 5044
+no_sample_lost_or_duplicated,blocking,True,5044 assigned for 5044 samples
+leakage_groups_not_crossing,blocking,True,0 groups cross splits
+identical_images_not_crossing,blocking,True,0 image hashes in >1 split
+near_duplicate_pairs_not_crossing,blocking,True,0 of 55 pairs cross
+identical_records_not_crossing,blocking,True,0 records cross
+task4_duplicate_groups_crossing,info,True,1 Task 4 groups cross (only trivial <3-word captions are allowed to)
+identical_raw_text_crossing,info,True,1 distinct non-empty raw texts occur in >1 split
+identical_normalized_text_crossing,info,True,1 distinct non-empty normalized texts occur in >1 split (not used for grouping by design)
+reproducible_rerun_identical,blocking,True,same input/config/seed -> same split

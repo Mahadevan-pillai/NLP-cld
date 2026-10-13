@@ -1,0 +1,4 @@
+group,test_samples,recall_B07,recall_T05,recall_I03,recall_M04
+Objectification,225,0.6622,0.6889,0.8933,0.8667
+Prejudice,122,0.5656,0.6148,0.6393,0.6148
+Humiliation,75,0.68,0.6667,0.7467,0.72

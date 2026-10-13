@@ -1,0 +1,562 @@
+{
+  "created_utc": "2026-10-13T09:35:40+00:00",
+  "statement": "Frozen BEFORE any test label was read. After this point TEST results must not influence development.",
+  "git_head_at_freeze": "358142e65253f2927615653e8e3b0784f79d89cc",
+  "finals": {
+    "FINAL_TEXT_MODEL": "T05",
+    "FINAL_IMAGE_MODEL": "I03",
+    "FINAL_MULTIMODAL_MODEL": "M04"
+  },
+  "label_map": {
+    "0": "non_misogynistic",
+    "1": "misogynistic"
+  },
+  "preprocessing": {
+    "text_version": "1.0",
+    "image_loader_version": "1.0",
+    "image_processor_backend": "pil"
+  },
+  "encoders": {
+    "text": "google/muril-base-cased@afd9f36c7923d54e97903922ff1b260d091d202f",
+    "image": "google/siglip-base-patch16-224@7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed"
+  },
+  "tuned_configurations": {
+    "traditional_text": {
+      "experiment": "B07",
+      "artifact": "models/text/B07_logistic_regression_tfidf_hinglish_normalized_tuned_v1.0.joblib",
+      "tfidf": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 2,
+        "max_df": 1.0,
+        "sublinear_tf": true
+      },
+      "logistic_regression": {
+        "C": 1.0,
+        "max_iter": 2000,
+        "class_weight": null
+      }
+    },
+    "pretrained_text": {
+      "experiment": "T05",
+      "learning_rate": 2e-05
+    },
+    "image": {
+      "experiment": "I03",
+      "artifact": "models/image/I03_siglip_logistic_regression_tuned_v1.0.joblib",
+      "logistic_regression": {
+        "C": 0.001,
+        "max_iter": 2000,
+        "class_weight": null
+      }
+    },
+    "multimodal": {
+      "experiment": "M04",
+      "artifact": "models/multimodal/M04_fusion_mlp_finetuned_pooled_tuned_v1.0",
+      "fusion_mlp": {
+        "projection_dim": 256,
+        "hidden_dim": 512,
+        "dropout": 0.1,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.1,
+        "batch_size": 64,
+        "max_epochs": 50,
+        "early_stopping_patience": 5,
+        "min_improvement": 0.0
+      }
+    }
+  },
+  "random_seed": 42,
+  "torch_threads_note": "fusion training is bit-exact only for the same CPU thread count; inference is deterministic",
+  "evaluation_plan": {
+    "primary_population": "all 758 canonical TEST samples (empty OCR captions included, as in Tasks 8-12)",
+    "secondary_populations": [
+      "caption not empty",
+      "without doublemean watermark"
+    ],
+    "decision_rule": "argmax of the model output (LR probability > 0.5, SVM margin > 0, softmax argmax); no threshold tuning",
+    "metrics": [
+      "accuracy",
+      "precision",
+      "recall",
+      "macro_f1",
+      "weighted_f1",
+      "per-class precision/recall/F1",
+      "confusion matrix"
+    ],
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 42,
+      "method": "percentile, resampling test samples; paired for differences"
+    },
+    "primary_comparisons": {
+      "RQ2_multimodal_vs_text": [
+        "M04",
+        "T05"
+      ],
+      "RQ3_multimodal_vs_image": [
+        "M04",
+        "I03"
+      ]
+    },
+    "significance_rule": "only for primary comparisons: Holm-adjusted exact McNemar p < 0.05 AND paired bootstrap 95% CI of the macro-F1 difference excludes 0",
+    "rq1_comparisons": {
+      "TF-IDF LR": [
+        "B01",
+        "B02",
+        "B03"
+      ],
+      "TF-IDF SVM": [
+        "B04",
+        "B05",
+        "B06"
+      ],
+      "frozen MuRIL": [
+        "T01",
+        "T02",
+        "T03"
+      ],
+      "fine-tuned MuRIL": [
+        "T04",
+        "T05"
+      ]
+    },
+    "rq1_controlled_contrast": "HINGLISH_NORMALIZED minus BASIC within each family (they differ only by normalization); descriptive paired bootstrap CIs, no significance claim",
+    "rq_answer_rule": "SUPPORTED = positive difference meeting the significance rule (RQ2/RQ3) or positive with CI excluding 0 in all families (RQ1); PARTIALLY SUPPORTED = positive difference without that evidence; NOT SUPPORTED = difference <= 0; INCONCLUSIVE = mixed signs across families with CIs including 0",
+    "fusion_ablation": [
+      "M01",
+      "M02",
+      "M03",
+      "M04"
+    ],
+    "modality_ablation": {
+      "text": [
+        "B07",
+        "T05"
+      ],
+      "image": [
+        "I03"
+      ],
+      "text+image": [
+        "M04"
+      ],
+      "within_model_reliance": "M04 with text or image input replaced by its TRAIN mean"
+    },
+    "multicategory": "no sub-category model was trained (Task 8.5 stage 2 disabled): descriptive per-sub-label recall only",
+    "after_test": "no tuning, retraining, preprocessing, threshold, architecture or model-selection change"
+  },
+  "models": {
+    "B01": {
+      "modality": "text",
+      "description": "TF-IDF + LR, RAW",
+      "role": "ablation: RQ1 (TF-IDF LR)",
+      "registry_entry": {
+        "kind": "tfidf_logreg",
+        "artifact": "models/text/B01_logistic_regression_tfidf_raw_v1.0.joblib",
+        "preprocessing_mode": "raw",
+        "preprocessing_version": "1.0"
+      },
+      "artifact_sha256": "ba2a2425c030c3cf57f5ba03acdd277c3e3aa80abc13990b0328f91bdb24b425",
+      "score_type": "uncalibrated LR probability",
+      "validation_macro_f1": 0.6538,
+      "validation_accuracy": 0.6538,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "B02": {
+      "modality": "text",
+      "description": "TF-IDF + LR, BASIC",
+      "role": "ablation: RQ1 (TF-IDF LR)",
+      "registry_entry": {
+        "kind": "tfidf_logreg",
+        "artifact": "models/text/B02_logistic_regression_tfidf_basic_v1.0.joblib",
+        "preprocessing_mode": "basic",
+        "preprocessing_version": "1.0"
+      },
+      "artifact_sha256": "437ae3af1dad204a06f15d6867c739e52cb82bbe05b232cb316feb56a3a65d3d",
+      "score_type": "uncalibrated LR probability",
+      "validation_macro_f1": 0.6565,
+      "validation_accuracy": 0.6565,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "B03": {
+      "modality": "text",
+      "description": "TF-IDF + LR, HINGLISH_NORMALIZED",
+      "role": "ablation: RQ1 (TF-IDF LR); untuned traditional baseline",
+      "registry_entry": {
+        "kind": "tfidf_logreg",
+        "artifact": "models/text/B03_logistic_regression_tfidf_hinglish_normalized_v1.0.joblib",
+        "preprocessing_mode": "hinglish_normalized",
+        "preprocessing_version": "1.0"
+      },
+      "artifact_sha256": "3649fb5cf4ef1c0e1e07b8a97e7e5d48787c5b45f0561bec08c423dcd278cf34",
+      "score_type": "uncalibrated LR probability",
+      "validation_macro_f1": 0.6671,
+      "validation_accuracy": 0.6671,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "B04": {
+      "modality": "text",
+      "description": "TF-IDF + Linear SVM, RAW",
+      "role": "ablation: RQ1 (TF-IDF SVM)",
+      "registry_entry": {
+        "kind": "tfidf_svm",
+        "artifact": "models/text/B04_linear_svm_tfidf_raw_v1.0.joblib",
+        "preprocessing_mode": "raw",
+        "preprocessing_version": "1.0"
+      },
+      "artifact_sha256": "4a7c8bb1b3c9667a6c13223d265918f26bc68b9025b7164fba03169e869771a8",
+      "score_type": "SVM margin (NOT a probability)",
+      "validation_macro_f1": 0.6512,
+      "validation_accuracy": 0.6512,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "B05": {
+      "modality": "text",
+      "description": "TF-IDF + Linear SVM, BASIC",
+      "role": "ablation: RQ1 (TF-IDF SVM)",
+      "registry_entry": {
+        "kind": "tfidf_svm",
+        "artifact": "models/text/B05_linear_svm_tfidf_basic_v1.0.joblib",
+        "preprocessing_mode": "basic",
+        "preprocessing_version": "1.0"
+      },
+      "artifact_sha256": "02618a7e4bd2cb6729943f81e512a0477f69078d17716ea94bb8ac48c59ff563",
+      "score_type": "SVM margin (NOT a probability)",
+      "validation_macro_f1": 0.6525,
+      "validation_accuracy": 0.6525,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "B06": {
+      "modality": "text",
+      "description": "TF-IDF + Linear SVM, HINGLISH_NORMALIZED",
+      "role": "ablation: RQ1 (TF-IDF SVM)",
+      "registry_entry": {
+        "kind": "tfidf_svm",
+        "artifact": "models/text/B06_linear_svm_tfidf_hinglish_normalized_v1.0.joblib",
+        "preprocessing_mode": "hinglish_normalized",
+        "preprocessing_version": "1.0"
+      },
+      "artifact_sha256": "5120c4d94f8f311be79bd6da28e716fa54581ed4bce0bbd9ff2b529d74c140fd",
+      "score_type": "SVM margin (NOT a probability)",
+      "validation_macro_f1": 0.6499,
+      "validation_accuracy": 0.6499,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "B07": {
+      "modality": "text",
+      "description": "TF-IDF + LR, HINGLISH_NORMALIZED (tuned)",
+      "role": "MAIN: traditional text baseline",
+      "registry_entry": {
+        "kind": "tfidf_logreg",
+        "artifact": "models/text/B07_logistic_regression_tfidf_hinglish_normalized_tuned_v1.0.joblib",
+        "preprocessing_mode": "hinglish_normalized",
+        "preprocessing_version": "1.0"
+      },
+      "artifact_sha256": "a2aaae39128863791b2d65833e0b0c1e3a9be8b89ed0501dd9d96d84e97875a6",
+      "score_type": "uncalibrated LR probability",
+      "validation_macro_f1": 0.6684,
+      "validation_accuracy": 0.6684,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "T01": {
+      "modality": "text",
+      "description": "frozen MuRIL + LR, RAW",
+      "role": "ablation: RQ1 (frozen MuRIL)",
+      "registry_entry": {
+        "preprocessing_mode": "raw",
+        "preprocessing_version": "1.0",
+        "max_length": 64,
+        "encoder": "google/muril-base-cased",
+        "encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+        "artifact": "models/text/T01_muril_frozen_logreg_raw_v1.joblib",
+        "kind": "frozen_logreg"
+      },
+      "artifact_sha256": "d7ee193d71eb6beb060d5a465d036caacab41ce8e9f739ee254d7fcd674e263f",
+      "score_type": "uncalibrated LR probability",
+      "validation_macro_f1": 0.6151,
+      "validation_accuracy": 0.6154,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "T02": {
+      "modality": "text",
+      "description": "frozen MuRIL + LR, BASIC",
+      "role": "ablation: RQ1 (frozen MuRIL)",
+      "registry_entry": {
+        "preprocessing_mode": "basic",
+        "preprocessing_version": "1.0",
+        "max_length": 64,
+        "encoder": "google/muril-base-cased",
+        "encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+        "artifact": "models/text/T02_muril_frozen_logreg_basic_v1.joblib",
+        "kind": "frozen_logreg"
+      },
+      "artifact_sha256": "bdd439dff9823afc150e428d5eb36af5b76b0cc185991c839b243f4a856b20e0",
+      "score_type": "uncalibrated LR probability",
+      "validation_macro_f1": 0.6298,
+      "validation_accuracy": 0.63,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "T03": {
+      "modality": "text",
+      "description": "frozen MuRIL + LR, HINGLISH_NORMALIZED",
+      "role": "ablation: RQ1 (frozen MuRIL)",
+      "registry_entry": {
+        "preprocessing_mode": "hinglish_normalized",
+        "preprocessing_version": "1.0",
+        "max_length": 64,
+        "encoder": "google/muril-base-cased",
+        "encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+        "artifact": "models/text/T03_muril_frozen_logreg_hinglish_normalized_v1.joblib",
+        "kind": "frozen_logreg"
+      },
+      "artifact_sha256": "cec5bebd4d741bf2f6b43c757136116ae60810ad27cee14b1fa4018fc379f193",
+      "score_type": "uncalibrated LR probability",
+      "validation_macro_f1": 0.6191,
+      "validation_accuracy": 0.6194,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "T04": {
+      "modality": "text",
+      "description": "fine-tuned MuRIL, BASIC",
+      "role": "ablation: RQ1 (fine-tuned MuRIL)",
+      "registry_entry": {
+        "preprocessing_mode": "basic",
+        "preprocessing_version": "1.0",
+        "max_length": 64,
+        "encoder": "google/muril-base-cased",
+        "encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+        "artifact": "{MODEL_DIR}/T04_muril_finetuned_basic_v1",
+        "kind": "fine_tuned"
+      },
+      "artifact_sha256": "61a2583be08193d816865cc5fd67c4a1cc1c30936fa935ee6e3c4b0c57177e94",
+      "score_type": "uncalibrated softmax probability",
+      "validation_macro_f1": 0.6751,
+      "validation_accuracy": 0.6751,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "T05": {
+      "modality": "text",
+      "description": "fine-tuned MuRIL, HINGLISH_NORMALIZED",
+      "role": "FINAL_TEXT_MODEL",
+      "registry_entry": {
+        "preprocessing_mode": "hinglish_normalized",
+        "preprocessing_version": "1.0",
+        "max_length": 64,
+        "encoder": "google/muril-base-cased",
+        "encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+        "artifact": "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1",
+        "kind": "fine_tuned"
+      },
+      "artifact_sha256": "697692cc1d9e111f05e584c8d7acee28bda32b51bf210f4d0d4fba89f467fd83",
+      "score_type": "uncalibrated softmax probability",
+      "validation_macro_f1": 0.6869,
+      "validation_accuracy": 0.687,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "I01": {
+      "modality": "image",
+      "description": "frozen SigLIP + LR (C=1)",
+      "role": "ablation: image classifier (untuned)",
+      "registry_entry": {
+        "kind": "frozen_logreg",
+        "artifact": "models/image/I01_siglip_logistic_regression_v1.0.joblib",
+        "encoder": "google/siglip-base-patch16-224",
+        "encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+        "embedding": "pooler_output",
+        "embedding_dim": 768,
+        "image_preprocessing_version": "1.0",
+        "image_preprocessing": {
+          "loader_version": "1.0",
+          "image_size": 224,
+          "resize": "stretch_to_square",
+          "processor_backend": "pil"
+        }
+      },
+      "artifact_sha256": "e35caa80af0757029b6e835aaaae0cc2129d36fad93d4d489a394b059caa2dee",
+      "score_type": "uncalibrated LR probability",
+      "validation_macro_f1": 0.7586,
+      "validation_accuracy": 0.7586,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "I02": {
+      "modality": "image",
+      "description": "frozen SigLIP + Linear SVM",
+      "role": "ablation: image classifier",
+      "registry_entry": {
+        "kind": "frozen_svm",
+        "artifact": "models/image/I02_siglip_linear_svm_v1.0.joblib",
+        "encoder": "google/siglip-base-patch16-224",
+        "encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+        "embedding": "pooler_output",
+        "embedding_dim": 768,
+        "image_preprocessing_version": "1.0",
+        "image_preprocessing": {
+          "loader_version": "1.0",
+          "image_size": 224,
+          "resize": "stretch_to_square",
+          "processor_backend": "pil"
+        }
+      },
+      "artifact_sha256": "52cba62fe060f3cf270932c2ba64e884bfe893a821827c00c3bdf3218ad64734",
+      "score_type": "SVM margin (NOT a probability)",
+      "validation_macro_f1": 0.7507,
+      "validation_accuracy": 0.7507,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "I03": {
+      "modality": "image",
+      "description": "frozen SigLIP + LR (C=0.001, tuned)",
+      "role": "FINAL_IMAGE_MODEL",
+      "registry_entry": {
+        "kind": "frozen_logreg",
+        "artifact": "models/image/I03_siglip_logistic_regression_tuned_v1.0.joblib",
+        "encoder": "google/siglip-base-patch16-224",
+        "encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+        "embedding": "pooler_output",
+        "embedding_dim": 768,
+        "image_preprocessing_version": "1.0",
+        "image_preprocessing": {
+          "loader_version": "1.0",
+          "image_size": 224,
+          "resize": "stretch_to_square",
+          "processor_backend": "pil"
+        }
+      },
+      "artifact_sha256": "73c5497e95dad8f8e2e5428a3fdef8f8f99cc6918406d9e6235e9450268fb779",
+      "score_type": "uncalibrated LR probability",
+      "validation_macro_f1": 0.7997,
+      "validation_accuracy": 0.7997,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "M01": {
+      "modality": "image+text",
+      "description": "concat(T05 pooled, SigLIP) + LR",
+      "role": "ablation: fusion (early concatenation)",
+      "registry_entry": {
+        "kind": "concat_logreg",
+        "artifact": "models/multimodal/M01_concat_logreg_finetuned_pooled_v1.0.joblib",
+        "text_representation": "finetuned_pooled",
+        "text_source": "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1",
+        "text_encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+        "text_preprocessing_mode": "hinglish_normalized",
+        "text_preprocessing_version": "1.0",
+        "max_length": 64,
+        "image_encoder": "google/siglip-base-patch16-224",
+        "image_encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+        "image_preprocessing_version": "1.0"
+      },
+      "artifact_sha256": "4f1f3ad6321ec0f93f1b56ae425ab51c51ff79758f0cd401e22dc667a0465add",
+      "score_type": "uncalibrated LR probability",
+      "validation_macro_f1": 0.7679,
+      "validation_accuracy": 0.7679,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "M02": {
+      "modality": "image+text",
+      "description": "fusion MLP, T05 text, baseline config",
+      "role": "ablation: fusion (untuned MLP)",
+      "registry_entry": {
+        "kind": "fusion_mlp",
+        "artifact": "models/multimodal/M02_fusion_mlp_finetuned_pooled_v1.0",
+        "text_representation": "finetuned_pooled",
+        "text_source": "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1",
+        "text_encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+        "text_preprocessing_mode": "hinglish_normalized",
+        "text_preprocessing_version": "1.0",
+        "max_length": 64,
+        "image_encoder": "google/siglip-base-patch16-224",
+        "image_encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+        "image_preprocessing_version": "1.0"
+      },
+      "artifact_sha256": "fdc95315f16b5373e71df373288d9ccbf1068eed025a2a9cc1eaa3875f6e0639",
+      "score_type": "uncalibrated softmax probability",
+      "validation_macro_f1": 0.8076,
+      "validation_accuracy": 0.8077,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "M03": {
+      "modality": "image+text",
+      "description": "fusion MLP, frozen MuRIL text, baseline config",
+      "role": "ablation: fusion (frozen text)",
+      "registry_entry": {
+        "kind": "fusion_mlp",
+        "artifact": "models/multimodal/M03_fusion_mlp_frozen_mean_v1.0",
+        "text_representation": "frozen_mean",
+        "text_source": "google/muril-base-cased",
+        "text_encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+        "text_preprocessing_mode": "hinglish_normalized",
+        "text_preprocessing_version": "1.0",
+        "max_length": 64,
+        "image_encoder": "google/siglip-base-patch16-224",
+        "image_encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+        "image_preprocessing_version": "1.0"
+      },
+      "artifact_sha256": "e5548b81f06ce1fe73d9de7ba92cdc6b8f616245af3c423375e2b89569bd4ab3",
+      "score_type": "uncalibrated softmax probability",
+      "validation_macro_f1": 0.8077,
+      "validation_accuracy": 0.8077,
+      "validation_reproduced_by_evaluation_code": true
+    },
+    "M04": {
+      "modality": "image+text",
+      "description": "fusion MLP, T05 text, tuned config TM-007",
+      "role": "FINAL_MULTIMODAL_MODEL",
+      "registry_entry": {
+        "kind": "fusion_mlp",
+        "artifact": "models/multimodal/M04_fusion_mlp_finetuned_pooled_tuned_v1.0",
+        "text_representation": "finetuned_pooled",
+        "text_source": "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1",
+        "text_encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+        "text_preprocessing_mode": "hinglish_normalized",
+        "text_preprocessing_version": "1.0",
+        "max_length": 64,
+        "image_encoder": "google/siglip-base-patch16-224",
+        "image_encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+        "image_preprocessing_version": "1.0"
+      },
+      "artifact_sha256": "5b132e127981eb73782b88dae2bc28cebfd8ed027581691c789ce63ab75a9c02",
+      "score_type": "uncalibrated softmax probability",
+      "validation_macro_f1": 0.8183,
+      "validation_accuracy": 0.8183,
+      "validation_reproduced_by_evaluation_code": true
+    }
+  },
+  "checksums": {
+    "config.yaml": "573045fa796c970fb4f534d1b7a22f09354eefed860d940e12549b5dccb8337f",
+    "config/categories.yaml": "7534f20d1f4735616e41848ebeb92fceceabca61502821bea14bb06c67e58fb8",
+    "hinglish_rules": "d57d474f5cab4157b2acf6d1e11f180fa6d39e0ba7b37c375303ae2e8ac24f5e",
+    "split_assignments.csv": "47fb02a87b36a22d20b9fd8bbb023fb1efa05361739211933a259caa9ff24894",
+    "split_manifest.json": "1f64930b007456b6f6f213c2f077dc80b484791675cda7a29bc684fad91a7063",
+    "src/preprocessing": "aed46c7ddd715ea5147b375b1c361bbd9c8fc3c61de3cdfd2e0b351682e6d440",
+    "src/models": "044a13c28188b0d8e55f6e7bf3ac3fc21127639e1d73e18a773fe96110586f27",
+    "src/features": "fa79195e9949a55b2ce4005d3a973162f2216cd64a9e0dc2390d49469ec2c4c3",
+    "src/evaluation": "cb6592e8cab35900a21dba71701c1d763e0c0efbb56d7bdad58619d2b8e332f6",
+    "scripts/final_evaluation.py": "e4938625f441e961916ce7a1f4aee9535f74ecff7fa7b6ef9a3bfc5247b3bdfa",
+    "text_model_registry.json": "fef6731d0f6e34456d9cc0f6c9f65084d5b8ee745671e3a1fb93109194b31dad",
+    "image_model_registry.json": "d71f2273db3c6dfa26d5fb9b40c50bc05d33a954ce244b623b2796afa5bf2584",
+    "multimodal_model_registry.json": "9e94a0141a78afc12503bdaa7d6992852591307d4a3c67902c0b6eef8aa97297",
+    "muril_weights": "e65e3b7aaa3ce16d23fc4218783efd0417880655f8f398e6cb1a111a0de0c95f",
+    "siglip_weights": "2c63cb7d1f2e95ba501893cbb8faeb4ea9a3af295498d35097126228659c2af8",
+    "artifact:B01": "ba2a2425c030c3cf57f5ba03acdd277c3e3aa80abc13990b0328f91bdb24b425",
+    "artifact:B02": "437ae3af1dad204a06f15d6867c739e52cb82bbe05b232cb316feb56a3a65d3d",
+    "artifact:B03": "3649fb5cf4ef1c0e1e07b8a97e7e5d48787c5b45f0561bec08c423dcd278cf34",
+    "artifact:B04": "4a7c8bb1b3c9667a6c13223d265918f26bc68b9025b7164fba03169e869771a8",
+    "artifact:B05": "02618a7e4bd2cb6729943f81e512a0477f69078d17716ea94bb8ac48c59ff563",
+    "artifact:B06": "5120c4d94f8f311be79bd6da28e716fa54581ed4bce0bbd9ff2b529d74c140fd",
+    "artifact:B07": "a2aaae39128863791b2d65833e0b0c1e3a9be8b89ed0501dd9d96d84e97875a6",
+    "artifact:T01": "d7ee193d71eb6beb060d5a465d036caacab41ce8e9f739ee254d7fcd674e263f",
+    "artifact:T02": "bdd439dff9823afc150e428d5eb36af5b76b0cc185991c839b243f4a856b20e0",
+    "artifact:T03": "cec5bebd4d741bf2f6b43c757136116ae60810ad27cee14b1fa4018fc379f193",
+    "artifact:T04": "61a2583be08193d816865cc5fd67c4a1cc1c30936fa935ee6e3c4b0c57177e94",
+    "artifact:T05": "697692cc1d9e111f05e584c8d7acee28bda32b51bf210f4d0d4fba89f467fd83",
+    "artifact:I01": "e35caa80af0757029b6e835aaaae0cc2129d36fad93d4d489a394b059caa2dee",
+    "artifact:I02": "52cba62fe060f3cf270932c2ba64e884bfe893a821827c00c3bdf3218ad64734",
+    "artifact:I03": "73c5497e95dad8f8e2e5428a3fdef8f8f99cc6918406d9e6235e9450268fb779",
+    "artifact:M01": "4f1f3ad6321ec0f93f1b56ae425ab51c51ff79758f0cd401e22dc667a0465add",
+    "artifact:M02": "fdc95315f16b5373e71df373288d9ccbf1068eed025a2a9cc1eaa3875f6e0639",
+    "artifact:M03": "e5548b81f06ce1fe73d9de7ba92cdc6b8f616245af3c423375e2b89569bd4ab3",
+    "artifact:M04": "5b132e127981eb73782b88dae2bc28cebfd8ed027581691c789ce63ab75a9c02"
+  }
+}

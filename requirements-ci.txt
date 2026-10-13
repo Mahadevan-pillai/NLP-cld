@@ -1,0 +1,27 @@
+# ------------------------------------------------------------------
+# requirements-ci.txt: packages needed to run the test suite in CI
+# ------------------------------------------------------------------
+# A subset of requirements.txt (same minimum versions). It leaves out
+# sentence-transformers / streamlit / notebook tooling, which the tests
+# do not import, so CI stays fast and small. torch (CPU-only) is
+# installed separately by the workflow.
+#
+# When a new test imports another third-party package, add it here
+# too (CI will fail with ModuleNotFoundError otherwise).
+# ------------------------------------------------------------------
+
+numpy>=1.26
+pandas>=2.1
+scikit-learn>=1.4
+scipy>=1.10              # Task 13: exact McNemar test (scipy.stats.binomtest)
+matplotlib>=3.8
+PyYAML>=6.0
+python-dotenv>=1.0
+pymongo>=4.6
+Pillow>=10.2
+pytest>=8.0
+
+# Task 9 transformer tests (tiny random BERT, no model download).
+# torch itself is installed by the workflow from the CPU-only PyTorch index
+# (the default Linux wheel pulls in GBs of CUDA libraries).
+transformers>=5.19      # Task 10 uses the 5.x image-processor backend API (backend="pil"); tested with 5.19.0

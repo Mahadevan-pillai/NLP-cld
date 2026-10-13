@@ -78,6 +78,10 @@ data/processed/**
 data/splits/**
 !data/splits/**/
 !data/splits/**/.gitkeep
+# Canonical split (Task 7): sample IDs + split name only, no dataset text.
+# Versioned so every experiment uses exactly the same split.
+!data/splits/split_assignments.csv
+!data/splits/split_manifest.json
 
 # Dataset archives anywhere in the repo
 *.zip
@@ -140,3 +144,12 @@ temp/
 ocr_tmp/
 ocr_output/
 *.tmp
+
+# Preprocessing before/after examples contain dataset text (Task 6)
+results/tables/preprocessing/preprocessing_examples.csv
+
+# Text-baseline validation errors with dataset text (Task 8)
+results/tables/text_baselines/*_with_text.csv
+
+# Task 9 validation errors with dataset text
+results/tables/text_models/*_with_text.csv
