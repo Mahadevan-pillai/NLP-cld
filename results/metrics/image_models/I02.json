@@ -1,0 +1,67 @@
+{
+  "experiment_id": "I02",
+  "task": "misogyny_detection (binary)",
+  "modality": "image",
+  "model": "frozen SigLIP + Linear SVM",
+  "encoder": "google/siglip-base-patch16-224",
+  "encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+  "classifier": "linear_svm",
+  "classifier_settings": {
+    "C": 1.0,
+    "loss": "squared_hinge",
+    "dual": "auto",
+    "max_iter": 10000,
+    "class_weight": null
+  },
+  "embedding": "pooler_output",
+  "embedding_dim": 768,
+  "image_preprocessing": {
+    "loader_version": "1.0",
+    "image_size": 224,
+    "resize": "stretch_to_square",
+    "processor_backend": "pil"
+  },
+  "score_type": "decision score (signed margin, NOT a probability)",
+  "feature_extraction_seconds_train_val": 713.3,
+  "train_seconds": 2.38,
+  "inference_seconds_classifier_only": 0.0043,
+  "artifact": "models/image/I02_siglip_linear_svm_v1.0.joblib",
+  "artifact_bytes": 25789,
+  "reload_reproduces_predictions": true,
+  "converged": true,
+  "text_features_used": false,
+  "metrics": {
+    "n": 754,
+    "accuracy": 0.7507,
+    "precision": 0.7493,
+    "recall": 0.7493,
+    "f1": 0.7493,
+    "macro_precision": 0.7507,
+    "macro_recall": 0.7507,
+    "macro_f1": 0.7507,
+    "weighted_f1": 0.7507,
+    "precision_non_misogynistic": 0.752,
+    "recall_non_misogynistic": 0.752,
+    "f1_non_misogynistic": 0.752,
+    "support_non_misogynistic": 379,
+    "precision_misogynistic": 0.7493,
+    "recall_misogynistic": 0.7493,
+    "f1_misogynistic": 0.7493,
+    "support_misogynistic": 375,
+    "tn": 285,
+    "fp": 94,
+    "fn": 94,
+    "tp": 281
+  },
+  "subset_macro_f1": {
+    "all": 0.7507,
+    "with_text": 0.7498,
+    "without_watermark": 0.7486
+  },
+  "macro_f1_ci95": [
+    0.7202,
+    0.7811
+  ],
+  "random_seed": 42,
+  "test_set": "NOT EVALUATED"
+}

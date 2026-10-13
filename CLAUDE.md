@@ -163,7 +163,7 @@ hyperparameters across modules.
   - Add new test dependencies to `requirements-ci.txt`.
 
 ## 7. Current stage
-Tasks 1–9 done:
+Tasks 1–10 done:
 - repository foundation;
 - the MongoDB database layer (`src/database/`, see `docs/database.md`);
 - the read-only dataset inventory (`docs/DATASET_REPORT.md`);
@@ -183,6 +183,20 @@ Tasks 1–9 done:
   `scripts/train_text_transformers.py`, see
   `docs/TRANSFORMER_TEXT_MODEL_REPORT.md`), validation only. Best:
   fine-tuned MuRIL on HINGLISH_NORMALIZED (T05).
+- image-only models I01/I02 (frozen SigLIP + LR/SVM;
+  `src/models/image_encoder.py`, `scripts/train_image_models.py`, see
+  `docs/IMAGE_MODEL_REPORT.md`), validation only. Best: I01.
+
+**Image inference (Task 10):**
+- Load images only with `src.preprocessing.image.load_image()`.
+- Predict with `src.inference.image.predict_image(image, model_version)`
+  (registry `results/metrics/image_model_registry.json`).
+- SigLIP is pinned by revision **and** `backend="pil"`. The torchvision
+  backend resizes differently.
+- Image embeddings are cached outside the repo, keyed by sample order and
+  image hashes. Never embed test images during development.
+- Image models must never receive caption text or file names. Rendered
+  text inside the picture is a documented limitation.
 
 **Text inference (Task 9):**
 - Use `src.inference.text.predict_text(text, model_version)` for any text

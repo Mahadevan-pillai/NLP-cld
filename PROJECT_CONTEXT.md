@@ -312,7 +312,7 @@ data, document what is persisted, avoid logging raw user input.
 
 ## 17. Current project stage
 
-**Task 9 — Pretrained / Transformer Text Models (complete, validation only).**
+**Task 10 — Image-Only Vision Model (complete, validation only).**
 
 IMPLEMENTED in Task 1: directory structure, documentation
 (`CLAUDE.md`, `PROJECT_CONTEXT.md`, `RESEARCH_LOG.md`, `README.md`),
@@ -436,10 +436,40 @@ IMPLEMENTED in Task 9 (binary misogyny task only, developer's choice):
 - **Test set NOT evaluated.** `docs/TRANSFORMER_TEXT_MODEL_REPORT.md`;
   log entries T01–T05.
 
-NOT STARTED: image/multimodal models, tuning, final test evaluation,
-OCR, explainability, Streamlit UI, deployment, paper writing.
+IMPLEMENTED in Task 10 (binary task; image only, no OCR or caption input):
+- Hardware: CPU only (no CUDA). Vision fine-tuning is **DEFERRED TO
+  GPU**.
+- Encoder: **SigLIP base** (`google/siglip-base-patch16-224`, pinned
+  `7fd15f06…`, Apache-2.0; developer's choice over OpenAI CLIP, whose
+  model card puts any deployment out of scope). Frozen vision tower,
+  768-d `pooler_output`, 224×224 stretch, PIL backend pinned.
+- **I01 frozen SigLIP + LR: macro-F1 0.7586** (CI 0.731–0.789), the best
+  validation model so far; I02 + Linear SVM 0.7507. Both beat the text
+  models (T05 0.6869), with non-overlapping CIs.
+- Checks:
+  - not driven by the resolution shortcut (D01 diagnostic) or by hidden
+    near-duplicates;
+  - **suspected gender-presence shortcut**: "woman pictured →
+    misogynistic", seen in manual error review;
+  - LR scores are overconfident.
+- Image and text are complementary (error φ = 0.13). Image recall is
+  higher for Objectification; text recall is higher for Prejudice and
+  Humiliation.
+- **New architecture pieces:**
+  - `src/preprocessing/image.py` `load_image()`, shared by training and
+    inference;
+  - `src/models/image_encoder.py`, with an embedding cache outside the
+    repo and stale-cache detection;
+  - `src/inference/image.py` `predict_image(image, model_version)` with
+    the registry `results/metrics/image_model_registry.json`;
+  - config `image_model`.
+- **Test set NOT evaluated; no test image opened.**
+  `docs/IMAGE_MODEL_REPORT.md`; log entries I01, I02, D01.
 
-Next planned task: **TASK 10 — Image-Only Vision Model.**
+NOT STARTED: multimodal models, tuning, final test evaluation, OCR,
+explainability, Streamlit UI, deployment, paper writing.
+
+Next planned task: **TASK 11 — Multimodal Image + Text Fusion Model.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

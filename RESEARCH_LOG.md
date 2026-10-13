@@ -1110,3 +1110,171 @@ Limitations: untuned; single seed and split; small validation set (CI about ±3.
 Conclusion: Best development text model (validation only). Normalization helps the fine-tuned model by +1.2 pp in this single run; not established.
 
 Next Experiment: TASK 10 - Image-Only Vision Model (text tuning, if any, in Task 12 on validation only).
+
+### Experiment ID: I01
+
+Date: 2026-10-13
+
+Status: COMPLETED
+
+Research Question: RQ2 groundwork (image-only baseline for text vs image vs multimodal). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned (Task 4); images `data/raw/mimic/Files` (read-only, verified unchanged by SHA-256)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NO TEST IMAGE OPENED, NOT EVALUATED.
+
+Input Modality: Image only (no OCR, no caption text, no file name)
+
+Preprocessing: load_image() v1.0 (decode, EXIF orientation, RGB) + SiglipImageProcessorPil from the pinned revision (resize 224x224 bicubic, no crop; rescale 1/255; normalise mean 0.5 / std 0.5)
+
+Feature Representation: Frozen SigLIP vision tower `pooler_output` (attention-pooling head), 768-d; encoder in eval/no-grad; embeddings cached per split outside the repo
+
+Model: frozen SigLIP + Logistic Regression
+
+Model Version / Pretrained Checkpoint: `google/siglip-base-patch16-224` @ `7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed` (model.safetensors SHA-256 `2c63cb7d1f2e…`), vision tower only
+
+Hyperparameters: {"C": 1.0, "max_iter": 2000, "class_weight": null} with StandardScaler (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H, no CUDA), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_image_models.py train`; converged: True; save→reload reproduces predictions: True; predict_image() reproduces all 754 validation predictions
+
+Validation Metrics: macro-F1 **0.7586** (95% bootstrap CI 0.731–0.789); accuracy 0.7586; precision (misogynistic) 0.7533; recall 0.7653; weighted-F1 0.7586; TN 285, FP 94, FN 88, TP 287; macro-F1 on samples with caption 0.7581; without watermark 0.7567
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: embedding extraction 713 s (train 593 s + validation 120 s) on CPU; classifier fit 0.27 s; classifier inference 5 ms for 754 images; predict_image end-to-end about 210 ms/image; artifact 25,937 bytes
+
+Artifacts: `models/image/I01_siglip_logistic_regression_v1.0.joblib` (git-ignored); `results/metrics/image_model_registry.json`; `results/metrics/image_models/I01.json`; `results/figures/image_models/I01_confusion_matrix.png`
+
+Observations: Best image-only model and best validation model so far: +0.0717 vs T05 (text), +0.0915 vs B03; CIs do not overlap with T05. Errors nearly symmetric (FP 94, FN 88). Not driven by the resolution shortcut (0.753 outside source resolutions) or near-duplicates (no train neighbour with cosine >= 0.95). Complementary to text: errors weakly correlated with T05 (phi 0.134); Objectification recall 0.855 vs T05 0.687, but Prejudice/Humiliation lower than text. Manual review: positive predictions mostly picture a woman (gender-presence shortcut suspected; false positives on harmless photos of women). LR scores extremely polarised and overconfident.
+
+Error Analysis Notes: see `docs/IMAGE_MODEL_REPORT.md` §13–14
+
+Limitations: untuned; frozen encoder (fine-tuning DEFERRED TO GPU); single seed and split; small validation set (CI about ±3 pp); encoder can see text rendered in the image; suspected gender-presence shortcut; 224x224 stretch
+
+Conclusion: Best development image-only model (validation only); strong but shortcut-prone. Motivates fusion.
+
+Next Experiment: TASK 11 - Multimodal Image + Text Fusion Model
+
+### Experiment ID: I02
+
+Date: 2026-10-13
+
+Status: COMPLETED
+
+Research Question: RQ2 groundwork (image-only baseline for text vs image vs multimodal). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned (Task 4); images `data/raw/mimic/Files` (read-only, verified unchanged by SHA-256)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NO TEST IMAGE OPENED, NOT EVALUATED.
+
+Input Modality: Image only (no OCR, no caption text, no file name)
+
+Preprocessing: load_image() v1.0 (decode, EXIF orientation, RGB) + SiglipImageProcessorPil from the pinned revision (resize 224x224 bicubic, no crop; rescale 1/255; normalise mean 0.5 / std 0.5)
+
+Feature Representation: Frozen SigLIP vision tower `pooler_output` (attention-pooling head), 768-d; encoder in eval/no-grad; embeddings cached per split outside the repo
+
+Model: frozen SigLIP + Linear SVM
+
+Model Version / Pretrained Checkpoint: `google/siglip-base-patch16-224` @ `7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed` (model.safetensors SHA-256 `2c63cb7d1f2e…`), vision tower only
+
+Hyperparameters: {"C": 1.0, "loss": "squared_hinge", "dual": "auto", "max_iter": 10000, "class_weight": null} with StandardScaler (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H, no CUDA), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_image_models.py train`; converged: True; save→reload reproduces predictions: True; predict_image() reproduces all 754 validation predictions
+
+Validation Metrics: macro-F1 **0.7507** (95% bootstrap CI 0.720–0.781); accuracy 0.7507; precision (misogynistic) 0.7493; recall 0.7493; weighted-F1 0.7507; TN 285, FP 94, FN 94, TP 281; macro-F1 on samples with caption 0.7498; without watermark 0.7486
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: embedding extraction 713 s (train 593 s + validation 120 s) on CPU; classifier fit 2.38 s; classifier inference 4 ms for 754 images; predict_image end-to-end about 210 ms/image; artifact 25,789 bytes
+
+Artifacts: `models/image/I02_siglip_linear_svm_v1.0.joblib` (git-ignored); `results/metrics/image_model_registry.json`; `results/metrics/image_models/I02.json`; `results/figures/image_models/I02_confusion_matrix.png`
+
+Observations: 0.0079 below I01 (within CIs). Scores are signed SVM margins, not probabilities.
+
+Error Analysis Notes: see `docs/IMAGE_MODEL_REPORT.md` §13–14
+
+Limitations: untuned; frozen encoder (fine-tuning DEFERRED TO GPU); single seed and split; small validation set (CI about ±3 pp); encoder can see text rendered in the image; suspected gender-presence shortcut; 224x224 stretch
+
+Conclusion: Comparable to I01; LR preferred (best validation macro-F1).
+
+Next Experiment: TASK 11 - Multimodal Image + Text Fusion Model
+
+### Experiment ID: D01
+
+Date: 2026-10-13
+
+Status: COMPLETED (DIAGNOSTIC, not a model)
+
+Research Question: RQ2 groundwork (image-only baseline for text vs image vs multimodal). Development comparison on VALIDATION. Tests the class-correlated resolution shortcut (Task 5).
+
+Dataset: MIMIC, cleaned (Task 4); images `data/raw/mimic/Files` (read-only, verified unchanged by SHA-256)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NO TEST IMAGE OPENED, NOT EVALUATED.
+
+Input Modality: Image only (no OCR, no caption text, no file name)
+
+Preprocessing: NOT_APPLICABLE (image header only)
+
+Feature Representation: One-hot of the exact image resolution read from the file header (resolutions seen < 5 times in train grouped); no pixels, no file name, no text
+
+Model: DIAGNOSTIC: exact resolution one-hot + LR
+
+Model Version / Pretrained Checkpoint: none
+
+Hyperparameters: {"OneHotEncoder": {"min_frequency": 5, "handle_unknown": "infrequent_if_exist"}, "LogisticRegression": {"max_iter": 2000}}
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H, no CUDA), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_image_models.py train` (diagnostic part)
+
+Validation Metrics: macro-F1 **0.5153** (95% bootstrap CI 0.479–0.549); accuracy 0.5703; precision (misogynistic) 0.7040; recall 0.2347; weighted-F1 0.5162; TN 342, FP 37, FN 287, TP 88; macro-F1 on samples with caption 0.5247; without watermark 0.5094
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: negligible (header reads only)
+
+Artifacts: `results/metrics/image_models/D01.json`; `results/tables/image_models/resolution_shortcut_check.csv`
+
+Observations: Shortcut diagnostic, not a model. Exact resolution alone: macro-F1 0.5153 overall; 0.903 inside the 53 validation images with train-defined class-correlated resolutions, 0.489 elsewhere. The shortcut exists but covers about 7% of validation; I01 does not depend on it overall.
+
+Error Analysis Notes: see `docs/IMAGE_MODEL_REPORT.md` §13–14
+
+Limitations: untuned; frozen encoder (fine-tuning DEFERRED TO GPU); single seed and split; small validation set (CI about ±3 pp); encoder can see text rendered in the image; suspected gender-presence shortcut; 224x224 stretch
+
+Conclusion: Resolution shortcut is real but small; keep reporting per-resolution results.
+
+Next Experiment: Repeat this check for the Task 11 fusion model.
