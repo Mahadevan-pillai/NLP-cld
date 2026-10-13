@@ -164,7 +164,31 @@ Tasks 1–5 done:
 - deterministic cleaning (`src/data/cleaning.py`, see
   `docs/DATA_CLEANING_REPORT.md`);
 - EDA (`src/data/eda.py`, `notebooks/02_eda.ipynb`, see
-  `docs/EDA_REPORT.md`).
+  `docs/EDA_REPORT.md`);
+- text preprocessing v1.0 (`src/preprocessing/`, see
+  `docs/TEXT_PREPROCESSING_REPORT.md`);
+- the canonical leakage-safe split (`src/data/splits.py`, see
+  `docs/DATA_SPLIT_REPORT.md`).
+
+**Splits (mandatory for every experiment):**
+- Use only `data/splits/split_assignments.csv` via
+  `src.data.splits.load_split()` / `load_split_assignments()`.
+- Never create a new random split, and never regenerate the canonical one
+  without explicit instruction.
+- Fit anything learned (TF-IDF, scalers, class weights, calibration) on
+  **train only**.
+- Tune and select on **validation**.
+- The **test set is locked**: `load_split("test", allow_test=True)` only
+  for the final evaluation of a frozen configuration, recorded in
+  `RESEARCH_LOG.md`.
+- Report results with and without the `doublemean*` watermark samples.
+
+Text for models comes from `data/processed/mimic_text_preprocessed_v1.0.csv`
+(`text_raw` / `text_basic` / `text_hinglish_normalized`). Any new text
+input (e.g. the app or OCR output) must go through
+`src.preprocessing.preprocess()` with the same mode and version the
+model was trained on. Changing the rules file or the preprocessing code
+requires bumping `text_preprocessing.version`.
 
 The single primary dataset is MIMIC. All later tasks read
 `data/processed/mimic_cleaned.csv` (from `config.yaml`
@@ -176,9 +200,9 @@ Rules for later tasks:
 - **MIMIC file names (`_M_`/`_NM_`) encode the label.** Never use
   `image_reference`/`image_path` as model input or derive features from
   them.
-- Splits must keep each `duplicate_group` within one split. They must
-  also group the near-duplicate image pairs in
-  `results/tables/eda/near_duplicate_images.csv`, after review.
+- Leakage groups (identical and near-duplicate images, substantive
+  identical captions) are already enforced by the canonical split
+  (Task 7).
 - Shortcut features found in EDA (`@doublemeaning`/`@doublemean`
   watermarks, class-correlated image resolutions) must be tested for in
   ablations and error analysis. They must never be silently exploited.
@@ -187,5 +211,5 @@ Rules for later tasks:
 - `original_text` is raw OCR text; preprocessing writes new columns and
   never overwrites it.
 
-No data has been split, no model trained, no UI built. See
+No model has been trained and no UI built. See
 `PROJECT_CONTEXT.md` Section 17 for the up-to-date stage.
