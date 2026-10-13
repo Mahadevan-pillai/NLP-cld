@@ -163,7 +163,7 @@ hyperparameters across modules.
   - Add new test dependencies to `requirements-ci.txt`.
 
 ## 7. Current stage
-Tasks 1–11 done:
+Tasks 1–12 done:
 - repository foundation;
 - the MongoDB database layer (`src/database/`, see `docs/database.md`);
 - the read-only dataset inventory (`docs/DATASET_REPORT.md`);
@@ -190,6 +190,15 @@ Tasks 1–11 done:
   `src/models/fusion.py`, `scripts/train_multimodal.py`, see
   `docs/MULTIMODAL_MODEL_REPORT.md`), validation only. M02 is the main
   model.
+- hyperparameter tuning (`src/training/tuning.py`,
+  `scripts/tune_models.py`, see `docs/HYPERPARAMETER_TUNING_REPORT.md`),
+  validation only.
+  - Final development models are in `config.yaml` `final_models`: text
+    T05, image I03, multimodal M04.
+  - Baseline configurations are kept unchanged; tuned ones live under
+    `tuning.selected`.
+  - Task 12 outputs go to `results/*/tuning/`. Never write tuning runs into
+    earlier tasks' result folders.
 
 **Multimodal (Task 11):**
 - Join modalities on `sample_id` only (`src.features.multimodal.align`),

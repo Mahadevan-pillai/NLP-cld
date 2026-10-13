@@ -1,0 +1,8 @@
+check,passed,detail
+scripts/tune_models.py never loads the test split,True,
+scripts/report_tuning.py never loads the test split,True,
+src/training/tuning.py never loads the test split,True,
+no test metric in any Task 12 output,True,
+every tuned-model result says test_set = NOT EVALUATED,True,5 files
+canonical split unchanged (manifest SHA-256),True,"{'train': 3532, 'test': 758, 'validation': 754}"
+selection used validation macro-F1 only (no test-based threshold or selection),True,by construction: only train/validation loaded (load_development_data)

@@ -1,0 +1,68 @@
+{
+  "experiment_id": "I03",
+  "task": "misogyny_detection (binary)",
+  "model": "frozen SigLIP + logistic_regression (tuned)",
+  "modality": "image",
+  "base_experiment": "I01",
+  "selected_trial": "TI-001",
+  "parameters": {
+    "C": 0.001,
+    "classifier": "logistic_regression"
+  },
+  "classifier": "logistic_regression",
+  "classifier_settings": {
+    "C": 0.001,
+    "max_iter": 2000,
+    "class_weight": null
+  },
+  "encoder": "google/siglip-base-patch16-224",
+  "encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+  "embedding": "pooler_output",
+  "embedding_dim": 768,
+  "image_preprocessing": {
+    "loader_version": "1.0",
+    "image_size": 224,
+    "resize": "stretch_to_square",
+    "processor_backend": "pil"
+  },
+  "random_seed": 42,
+  "train_seconds": 0.309,
+  "train_macro_f1": 0.8494,
+  "reload_reproduces_predictions": true,
+  "artifact": "models/image/I03_siglip_logistic_regression_tuned_v1.0.joblib",
+  "artifact_bytes": 25937,
+  "score_type": "uncalibrated logistic-regression probability of 'misogynistic'",
+  "metrics": {
+    "n": 754,
+    "accuracy": 0.7997,
+    "precision": 0.8043,
+    "recall": 0.7893,
+    "f1": 0.7968,
+    "macro_precision": 0.7998,
+    "macro_recall": 0.7997,
+    "macro_f1": 0.7997,
+    "weighted_f1": 0.7997,
+    "precision_non_misogynistic": 0.7953,
+    "recall_non_misogynistic": 0.81,
+    "f1_non_misogynistic": 0.8026,
+    "support_non_misogynistic": 379,
+    "precision_misogynistic": 0.8043,
+    "recall_misogynistic": 0.7893,
+    "f1_misogynistic": 0.7968,
+    "support_misogynistic": 375,
+    "tn": 307,
+    "fp": 72,
+    "fn": 79,
+    "tp": 296
+  },
+  "subset_macro_f1": {
+    "all": 0.7997,
+    "with_text": 0.7975,
+    "without_watermark": 0.798
+  },
+  "macro_f1_ci95": [
+    0.7717,
+    0.8288
+  ],
+  "test_set": "NOT EVALUATED"
+}

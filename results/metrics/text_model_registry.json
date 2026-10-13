@@ -86,6 +86,12 @@
       "encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
       "artifact": "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1",
       "kind": "fine_tuned"
+    },
+    "B07": {
+      "kind": "tfidf_logreg",
+      "artifact": "models/text/B07_logistic_regression_tfidf_hinglish_normalized_tuned_v1.0.joblib",
+      "preprocessing_mode": "hinglish_normalized",
+      "preprocessing_version": "1.0"
     }
   }
 }

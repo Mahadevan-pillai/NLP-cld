@@ -41,6 +41,7 @@ class FusionConfig:
     batch_size: int = 64
     max_epochs: int = 50
     early_stopping_patience: int = 5
+    min_improvement: float = 0.0    # an epoch counts as better only if macro-F1 rises by MORE than this
     seed: int = 42
 
 
@@ -137,7 +138,7 @@ def train_fusion(text_tr, image_tr, y_tr, text_va, image_va, y_va, cfg: FusionCo
         val_loss = float(loss_fn(torch.from_numpy(logits), torch.as_tensor(y_va, dtype=torch.long)))
         val_f1 = float(f1_score(y_va, logits.argmax(1), average="macro"))
         result.history.append(EpochRecord(epoch, float(np.mean(losses)), val_loss, val_f1, time.perf_counter() - start))
-        if val_f1 > result.best_val_macro_f1:
+        if val_f1 > result.best_val_macro_f1 + cfg.min_improvement:
             result.best_val_macro_f1, result.best_epoch, stale = val_f1, epoch, 0
             best_state = {k: v.detach().clone() for k, v in model.state_dict().items()}
         else:

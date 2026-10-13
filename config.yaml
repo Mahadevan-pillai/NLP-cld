@@ -243,6 +243,71 @@ multimodal_model:
     M03: ["fusion_mlp", "frozen_mean"]     # control: text features that never saw the labels
   selection_metric: "macro_f1"
 
+tuning:
+  # Task 12. Search spaces, budgets and rules fixed BEFORE any search ran.
+  # Fit on TRAIN, select on VALIDATION macro-F1 (ties -> earlier trial). TEST is never used.
+  # Kept constant: dataset, canonical split, labels, preprocessing v1.0, encoders, metric.
+  # See docs/HYPERPARAMETER_TUNING_REPORT.md. Baseline settings above are kept unchanged.
+  version: "1.0"
+  selection_metric: "macro_f1"
+  primary_seed: 42
+  robustness_seeds: [42, 123, 2026]   # mean +/- std reported; never used to pick the best result
+  traditional_text:           # A: tunes B03 (TF-IDF + LR on HINGLISH_NORMALIZED text)
+    base_experiment: "B03"
+    strategy: "grid"          # 3 x 3 x 2 x 5 = 90 trials, about 0.3-0.6 s each
+    space:
+      ngram_range: [[1, 1], [1, 2], [1, 3]]
+      min_df: [1, 2, 3]
+      sublinear_tf: [true, false]
+      C: [0.1, 0.3, 1.0, 3.0, 10.0]
+    fixed: {max_df: 1.0, max_features: null, class_weight: null}   # classes balanced: no class weighting
+  pretrained_text:            # B: T05 fine-tuning, learning-rate sweep only (CPU: ~30-45 min per run)
+    base_experiment: "T05"
+    runs: {T06: {learning_rate: 3.0e-5}, T07: {learning_rate: 5.0e-5}}   # everything else as T05
+  image:                      # C: classifier on the cached frozen SigLIP embeddings (not re-extracted)
+    base_experiment: "I01"
+    strategy: "grid"          # 8 + 8 = 16 trials
+    space:
+      logistic_regression: {C: [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0, 3.0]}
+      linear_svm: {C: [0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]}
+  multimodal:                 # D (PRIMARY): M02 fusion MLP; T05 pooled text + SigLIP image features fixed
+    base_experiment: "M02"
+    strategy: "random"        # 30 of 486 grid points (+ the baseline config), seed 42; ~10-20 s per trial
+    n_trials: 30
+    sampler_seed: 42
+    space:
+      learning_rate: [3.0e-4, 1.0e-3, 3.0e-3]
+      dropout: [0.1, 0.3, 0.5]
+      hidden_dim: [128, 256, 512]
+      projection_dim: [128, 256]
+      weight_decay: [1.0e-3, 1.0e-2, 1.0e-1]
+      batch_size: [32, 64, 128]
+    early_stopping: {monitor: "validation macro_f1", patience: 5, min_improvement: 0.0, max_epochs: 50}
+    adoption_rule: "adopt the best seed-42 configuration only if its mean over robustness_seeds exceeds the baseline configuration's mean"
+  selected:                   # Task 12 RESULTS (validation macro-F1); baselines above are kept for reproducibility
+    traditional_text:         # B07: +0.0013 vs B03 (not meaningful)
+      experiment: "B07"
+      artifact: "models/text/B07_logistic_regression_tfidf_hinglish_normalized_tuned_v1.0.joblib"
+      tfidf: {ngram_range: [1, 3], min_df: 2, max_df: 1.0, sublinear_tf: true}
+      logistic_regression: {C: 1.0, max_iter: 2000, class_weight: null}
+    pretrained_text:          # T06 (3e-5) and T07 (5e-5) were degenerate -> baseline T05 (lr 2e-5) kept
+      experiment: "T05"
+      learning_rate: 2.0e-5
+    image:                    # I03: +0.0411 vs I01 (C at the lower edge of the grid)
+      experiment: "I03"
+      artifact: "models/image/I03_siglip_logistic_regression_tuned_v1.0.joblib"
+      logistic_regression: {C: 0.001, max_iter: 2000, class_weight: null}
+    multimodal:               # M04 = TM-007, seed 42; 3-seed mean 0.8081 +/- 0.0133 vs baseline 0.8059 +/- 0.0055
+      experiment: "M04"
+      artifact: "models/multimodal/M04_fusion_mlp_finetuned_pooled_tuned_v1.0"
+      fusion_mlp: {projection_dim: 256, hidden_dim: 512, dropout: 0.1, learning_rate: 3.0e-4, weight_decay: 0.1,
+                   batch_size: 64, max_epochs: 50, early_stopping_patience: 5, min_improvement: 0.0}
+
+final_models:                 # Task 12 development selection (VALIDATION only; TEST not evaluated)
+  FINAL_TEXT_MODEL: "T05"     # fine-tuned MuRIL, HINGLISH_NORMALIZED (fallback: B07)
+  FINAL_IMAGE_MODEL: "I03"    # frozen SigLIP + LR C=0.001
+  FINAL_MULTIMODAL_MODEL: "M04"   # fusion MLP TM-007 config (M02 equivalent within seed noise)
+
 training:
   device: null                  # "cpu" / "cuda", TBD per environment
   batch_size: null

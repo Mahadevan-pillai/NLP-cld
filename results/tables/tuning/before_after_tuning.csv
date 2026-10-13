@@ -1,0 +1,5 @@
+family,baseline_model,tuned_model,baseline_macro_f1,tuned_macro_f1,absolute_change,baseline_accuracy,tuned_accuracy,baseline_precision,tuned_precision,baseline_recall,tuned_recall,baseline_train_s,tuned_train_s,tuned_ci95,baseline_seed_mean,tuned_seed_mean
+traditional text,B03,B07,0.6671,0.6684,0.0013,0.6671,0.6684,0.6676,0.6694,0.6587,0.6587,0.25,1.23,0.6339-0.7012,,
+pretrained text,T05,T07,0.6869,0.3345,-0.3524,0.687,0.5027,0.6759,0.0,0.712,0.0,1984.21,1513.01,0.3183-0.3500,,
+image-only,I01,I03,0.7586,0.7997,0.0411,0.7586,0.7997,0.7533,0.8043,0.7653,0.7893,0.27,0.31,0.7717-0.8288,,
+multimodal (main),M02,M04,0.8076,0.8183,0.0107,0.8077,0.8183,0.8194,0.8199,0.7867,0.8133,8.83,9.08,0.7905-0.8460,0.8059,0.8081

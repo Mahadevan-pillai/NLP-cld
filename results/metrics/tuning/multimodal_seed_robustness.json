@@ -1,0 +1,42 @@
+{
+  "baseline": {
+    "n_seeds": 3,
+    "mean": 0.8059,
+    "std": 0.0055,
+    "min": 0.7997,
+    "max": 0.8103,
+    "seed_42": 0.8076,
+    "seed_123": 0.7997,
+    "seed_2026": 0.8103
+  },
+  "tuned": {
+    "n_seeds": 3,
+    "mean": 0.8081,
+    "std": 0.0133,
+    "min": 0.7931,
+    "max": 0.8183,
+    "seed_42": 0.8183,
+    "seed_123": 0.8129,
+    "seed_2026": 0.7931
+  },
+  "tuned_frozen_text": {
+    "n_seeds": 3,
+    "mean": 0.8028,
+    "std": 0.002,
+    "min": 0.8011,
+    "max": 0.805,
+    "seed_42": 0.805,
+    "seed_123": 0.8011,
+    "seed_2026": 0.8024
+  },
+  "adopted": "tuned",
+  "best_trial": "TM-007",
+  "best_params": {
+    "batch_size": 64,
+    "dropout": 0.1,
+    "hidden_dim": 512,
+    "learning_rate": 0.0003,
+    "projection_dim": 256,
+    "weight_decay": 0.1
+  }
+}
