@@ -1,0 +1,9 @@
+combination,count
+Objectification,1276
+Prejudice,676
+Humiliation,267
+Objectification+Prejudice,162
+Prejudice+Humiliation,75
+Objectification+Humiliation,47
+Objectification+Prejudice+Humiliation,3
+(none),1

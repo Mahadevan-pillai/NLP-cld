@@ -101,11 +101,21 @@ Planned metrics: Accuracy, Precision, Recall, F1, Macro-F1,
 Weighted-F1, per-class metrics, confusion matrix.
 
 ## 10. Dataset Strategy
-- Primary candidate: **MIMIC** (Misogyny Identification in Multimodal
-  Internet Content in Hindi-English Code-Mixed Language).
-- Schema, size, labels, class balance, splits and license are **TO BE
-  VERIFIED** by a dedicated inspection task.
-- Datasets are not combined until label/task compatibility is shown.
+- **MIMIC** (Misogyny Identification in Multimodal Internet Content in
+  Hindi-English Code-Mixed Language) is the **single primary dataset**:
+  5,054 memes (image + OCR text), a balanced binary label
+  (1 = misogynistic), licence CC-BY-4.0 (per its
+  [dataset card](https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset)).
+- **Cleaned metadata:** 5,044 samples. 10 duplicate or contradictory
+  memes were excluded, with every decision logged. Raw files are never
+  modified.
+- No datasets are merged.
+- Reports: [docs/DATASET_REPORT.md](docs/DATASET_REPORT.md) (inspection)
+  and [docs/DATA_CLEANING_REPORT.md](docs/DATA_CLEANING_REPORT.md)
+  (cleaning).
+- Re-run with `python scripts/inspect_datasets.py` (read-only
+  inspection) and `python scripts/clean_dataset.py` (deterministic
+  cleaning).
 - Raw datasets live in `data/raw/`, are never modified, and are never
   committed to Git.
 
@@ -146,20 +156,20 @@ checks connectivity (needs `MONGODB_URI` in `.env`), and
 │   ├── raw/              # original datasets (git-ignored)
 │   ├── processed/        # derived data (git-ignored)
 │   └── splits/           # train/val/test splits (git-ignored)
-├── notebooks/            # exploration / EDA
+├── notebooks/            # 02_eda.ipynb (reproduces the EDA)
 ├── src/
 │   ├── data/  preprocessing/  features/  models/  training/
 │   ├── evaluation/  explainability/
 │   ├── database/         # MongoDB connection, schemas, repositories, indexes
 │   └── utils/            # config.py — config loader
-├── scripts/              # check_mongodb.py, init_database.py
+├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py
 ├── models/{text,image,multimodal}/   # model artifacts (git-ignored)
 ├── results/
 │   ├── figures/  metrics/  tables/  paper/   # versioned small outputs
 │   └── predictions/      # per-sample outputs (git-ignored)
 ├── app/                  # Streamlit app (later)
 ├── tests/                # pytest tests
-└── docs/                 # database.md
+└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md
 ```
 
 ## 14. Setup Instructions
@@ -217,12 +227,21 @@ For an NVIDIA GPU, install PyTorch first with the command from
 **Task 1 — Project Foundation: complete.**
 **Task 2 — MongoDB Atlas Foundation: complete** (database layer + unit
 tests; live Atlas connectivity depends on your `.env`).
+**Task 3 — Dataset Inventory & Compatibility: complete.**
+**Task 4 — Dataset Cleaning & Final Dataset Strategy: complete.**
+**Task 5 — Exploratory Data Analysis: complete.**
 - ✅ Repository structure, documentation, configuration, ignore rules,
   dependency list, config loader with tests.
 - ✅ Database layer: connection manager, validation, repositories,
   indexes, health-check/init scripts, unit tests.
-- ❌ Dataset inspection — not done.
-- ❌ Preprocessing / EDA — not done.
+- ✅ Dataset inspection (read-only): MIMIC inventoried, report in
+  `docs/DATASET_REPORT.md`. No data cleaned, split or modified.
+- ✅ Dataset cleaning: 5,044 cleaned samples, every exclusion logged
+  (`docs/DATA_CLEANING_REPORT.md`). Text left exactly as provided.
+- ❌ Train/validation/test splitting — not done.
+- ✅ EDA: 17 tables, 13 figures, notebook, `docs/EDA_REPORT.md`. It found shortcut risks (watermark
+  handles, image resolutions, near-duplicate images) that later tasks must handle.
+- ❌ Text preprocessing / Hinglish normalization — not done.
 - ❌ Model training — **not started**.
 - ❌ Experimental metrics — **none exist**.
 - ❌ OCR, explainability, Streamlit UI, deployment — not started.
@@ -230,18 +249,20 @@ tests; live Atlas connectivity depends on your `.env`).
 ## 19. Planned Development Roadmap
 1. ✅ Task 1 — Project foundation and repository initialization
 2. ✅ Task 2 — MongoDB Atlas foundation and secure database layer
-3. Dataset inspection and selection
-4. Preprocessing, Hinglish normalization, EDA, leakage-safe splits
-5. Text baselines (TF-IDF + LR / SVM)
-6. Transformer text model, image model, multimodal fusion
-7. Hyperparameter tuning (validation only) and final test evaluation
-8. OCR evaluation and OCR-noise experiment
-9. Explainability
-10. Streamlit application, history, dashboard, feedback
-11. Deployment
-12. Research paper (IEEE format)
+3. ✅ Task 3 — Dataset inventory, verification and compatibility analysis
+4. ✅ Task 4 — Dataset cleaning and final dataset strategy
+5. ✅ Task 5 — Exploratory data analysis
+6. Text preprocessing, Hinglish normalization, leakage-safe splits
+7. Text baselines (TF-IDF + LR / SVM)
+8. Transformer text model, image model, multimodal fusion
+9. Hyperparameter tuning (validation only) and final test evaluation
+10. OCR evaluation and OCR-noise experiment (to be reframed: dataset text is already OCR output)
+11. Explainability
+12. Streamlit application, history, dashboard, feedback
+13. Deployment
+14. Research paper (IEEE format)
 
-The order after Task 2 is indicative and may change.
+The order after Task 5 is indicative and may change.
 
 ## 20. Disclaimer
 This repository is an academic research project in progress.

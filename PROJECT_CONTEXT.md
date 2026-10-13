@@ -124,24 +124,36 @@ interpretability.
 Key principle: the app imports the same preprocessing and model code
 used in training, so training and inference stay consistent.
 
-## 7. Planned datasets
+## 7. Datasets (FINAL strategy, Task 4)
 
-- **Primary candidate: MIMIC** — *Misogyny Identification in Multimodal
-  Internet Content in Hindi-English Code-Mixed Language.* Provided by
-  the developer. Schema, size, labels, splits and license are
-  **TO BE VERIFIED**.
-- Other datasets may be available locally. None has been inspected.
+- **MIMIC**: *Misogyny Identification in Multimodal Internet Content
+  in Hindi-English Code-Mixed Language* (Singh, Sharma & Singh, 2024,
+  ACM TALLIP, https://doi.org/10.1145/3656169; dataset card
+  https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset).
+  - **Role:** the single **PRIMARY TRAINING DATASET** for all
+    experiments.
+  - **Contents:** 5,054 memes (image + OCR text), binary `Misogyny`
+    label (documented: 1 = misogynistic, 0 = non-misogynistic) plus
+    sub-labels Objectification / Prejudice / Humiliation. Licence
+    CC-BY-4.0 (per dataset card).
+  - **Cleaned (Task 4):** 5,044 samples in
+    `data/processed/mimic_cleaned.csv`. 10 excluded: 6 identical
+    copies, plus 2 identical memes labelled both ways.
+- No datasets are merged. Other local files (`Downloads/DATASET 0x`)
+  are NOT USED. Offensive/hate data, if ever used, is a separate
+  auxiliary task. No external-validation dataset is available yet.
+- Details: `docs/DATASET_REPORT.md` (inspection) and
+  `docs/DATA_CLEANING_REPORT.md` (cleaning).
 
-## 8. Dataset uncertainty / inspection requirement
+## 8. Remaining dataset caveats
 
-No assumption is made about: schema, sample counts, label names,
-class distribution, file names, image paths, text column names,
-secondary labels, or licenses.
-
-A dedicated future task will inspect each dataset for structure, task,
-modalities, languages, labels, sample count, missing data, duplicates,
-licensing and compatibility, and then assign roles:
-PRIMARY / SECONDARY / EXTERNAL VALIDATION / MUST REMAIN SEPARATE.
+- The dataset has **no official split**; the project creates its own.
+  It must keep `duplicate_group` members together.
+- File names encode the label; they must never be used as features.
+- 148 samples have empty text (106 misogynistic / 42 not). The
+  experiment design must state how the text-only model handles them.
+- `ExtractedText` is **OCR output** (EasyOCR per the dataset card), not
+  a human transcription (see the RQ3 note in §10).
 
 Datasets will **not** be combined until label/task compatibility has
 been demonstrated.
@@ -168,6 +180,16 @@ Listing a model here does not finalize it.
 These may be refined after dataset inspection and literature review.
 Novelty must not be claimed until relevant literature is reviewed.
 
+**RQ3 / OCR experiment: TO BE REFRAMED (finding from Task 4).** The
+dataset text is itself OCR output (EasyOCR per the dataset card), so
+there is no human "reference text". Options to decide before the OCR
+task:
+- dataset OCR vs the project's own OCR pipeline;
+- a small manually transcribed subset as reference.
+
+The research question has not been changed yet; that is a decision for
+the developer.
+
 ## 11. Planned experiments (PLANNED — no results exist)
 
 | ID | Modality | Hinglish normalization |
@@ -178,8 +200,9 @@ Novelty must not be claimed until relevant literature is reviewed.
 | E4 | Image + Text | Without |
 | E5 | Image + Text | With |
 
-OCR experiment (PLANNED): reference dataset text vs OCR-extracted text
-vs OCR-extracted + normalized text.
+OCR experiment (PLANNED; TO BE REFRAMED, see §10): reference dataset
+text vs OCR-extracted text vs OCR-extracted + normalized text. Note
+that the "reference" dataset text is itself OCR output.
 
 Every run is recorded in `RESEARCH_LOG.md`.
 
@@ -277,8 +300,7 @@ data, document what is persisted, avoid logging raw user input.
 
 ## 17. Current project stage
 
-**Task 2 — MongoDB Atlas Foundation and Secure Database Layer
-(complete).**
+**Task 4 — Dataset Cleaning and Final Dataset Strategy (complete).**
 
 IMPLEMENTED in Task 1: directory structure, documentation
 (`CLAUDE.md`, `PROJECT_CONTEXT.md`, `RESEARCH_LOG.md`, `README.md`),
@@ -291,12 +313,47 @@ health-check and init scripts, unit tests with a mocked client and an
 in-memory fake database, `docs/database.md`. Live Atlas connectivity is
 verified separately with `scripts/check_mongodb.py`.
 
-NOT STARTED: dataset inspection, preprocessing, EDA, splitting, model
-training, tuning, OCR, explainability, Streamlit UI, deployment, paper
-writing. No experimental results exist.
+IMPLEMENTED in Task 3: read-only dataset inspection (`src/data/`,
+`scripts/inspect_datasets.py`), inventory and compatibility tables in
+`results/tables/`, `docs/DATASET_REPORT.md`, verified column names in
+`config.yaml`, log entry `INS-20261010-01`. MIMIC recommended as the
+single primary dataset.
 
-Next planned task: **Task 3 — Dataset Inventory, Verification and
-Compatibility Analysis.**
+IMPLEMENTED in Task 4:
+- MIMIC finalized as the single primary dataset.
+- Deterministic cleaning pipeline (`src/data/cleaning.py`,
+  `scripts/clean_dataset.py`), producing `data/processed/mimic_cleaned.csv`
+  (5,044 samples, git-ignored).
+- Exclusion log, duplicate decisions and cleaning summary in
+  `results/tables/`; fingerprint in `results/metrics/`.
+- `docs/DATA_CLEANING_REPORT.md`; log entry `INS-20261010-02`.
+- Label meaning, licence and text origin documented from the dataset
+  card.
+
+IMPLEMENTED in Task 5:
+- Reproducible EDA (`src/data/eda.py`, `src/data/eda_plots.py`,
+  `scripts/run_eda.py`, `notebooks/02_eda.ipynb`).
+- 17 tables in `results/tables/eda/`, 13 figures in
+  `results/figures/eda/`, `docs/EDA_REPORT.md`, log entry
+  `INS-20261010-03`.
+
+Key EDA findings for later tasks:
+- The classes are balanced.
+- **Shortcut and leakage risks:**
+  - class-exclusive `@handles` (watermarks);
+  - class-correlated image resolutions;
+  - 48 near-duplicate image pairs not yet grouped;
+  - label-encoding file names.
+- The splitting task must group near-duplicates and `duplicate_group`s
+  together.
+- Handle masking should be tested in preprocessing ablations.
+
+NOT STARTED: text preprocessing, Hinglish normalization, splitting,
+model training, tuning, OCR, explainability, Streamlit UI, deployment,
+paper writing. No experimental results exist.
+
+Next planned task: **Task 6 — Text Preprocessing and Hinglish
+Normalization.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

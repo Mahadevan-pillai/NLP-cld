@@ -1,0 +1,4 @@
+label,count_all_samples,percent_all_samples,count_within_positive_class,percent_within_positive_class,count_in_negative_class
+Objectification,1488,29.5,1488,59.35,0
+Prejudice,916,18.16,916,36.54,0
+Humiliation,392,7.77,392,15.64,0

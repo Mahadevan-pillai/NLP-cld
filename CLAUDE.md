@@ -157,8 +157,35 @@ hyperparameters across modules.
 - Report test results honestly, including skipped or failing tests.
 
 ## 7. Current stage
-Tasks 1–2 done: repository foundation and the MongoDB database layer
-(`src/database/`, see `docs/database.md`). Database access goes through
-the repository classes only — no PyMongo calls in `app/` or ML code.
-No dataset has been inspected, no model trained, no UI built. See
+Tasks 1–5 done:
+- repository foundation;
+- the MongoDB database layer (`src/database/`, see `docs/database.md`);
+- the read-only dataset inventory (`docs/DATASET_REPORT.md`);
+- deterministic cleaning (`src/data/cleaning.py`, see
+  `docs/DATA_CLEANING_REPORT.md`);
+- EDA (`src/data/eda.py`, `notebooks/02_eda.ipynb`, see
+  `docs/EDA_REPORT.md`).
+
+The single primary dataset is MIMIC. All later tasks read
+`data/processed/mimic_cleaned.csv` (from `config.yaml`
+`dataset.cleaned_file`), never the raw CSV directly.
+
+Rules for later tasks:
+- Database access goes through the repository classes only: no PyMongo
+  calls in `app/` or ML code.
+- **MIMIC file names (`_M_`/`_NM_`) encode the label.** Never use
+  `image_reference`/`image_path` as model input or derive features from
+  them.
+- Splits must keep each `duplicate_group` within one split. They must
+  also group the near-duplicate image pairs in
+  `results/tables/eda/near_duplicate_images.csv`, after review.
+- Shortcut features found in EDA (`@doublemeaning`/`@doublemean`
+  watermarks, class-correlated image resolutions) must be tested for in
+  ablations and error analysis. They must never be silently exploited.
+- Notebooks are committed **without outputs**, so no dataset text is
+  stored in Git. Reusable logic belongs in `src/`, not in notebooks.
+- `original_text` is raw OCR text; preprocessing writes new columns and
+  never overwrites it.
+
+No data has been split, no model trained, no UI built. See
 `PROJECT_CONTEXT.md` Section 17 for the up-to-date stage.

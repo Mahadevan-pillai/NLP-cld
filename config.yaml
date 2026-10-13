@@ -32,21 +32,37 @@ paths:
   results_paper: "results/paper"
   research_log: "RESEARCH_LOG.md"
 
-# Everything below is TO BE VERIFIED by the dataset inspection task.
-# Do not fill these in by assumption.
+# Column names and raw label values were VERIFIED from the actual file
+# (Task 3); label meaning, licence and text origin come from the
+# dataset card (Task 4). See docs/DATASET_REPORT.md and
+# docs/DATA_CLEANING_REPORT.md. Do not fill values in by assumption.
 dataset:
-  primary: null                 # TBD after inspection (candidate: MIMIC)
+  primary: "mimic"              # FINAL (Task 4): single primary dataset
   candidates:
     - name: "MIMIC"
-      status: "to_be_verified"
-  version: null
-  source: null
-  license: null
-  text_column: null
-  image_column: null
-  label_column: null
-  labels: null                  # list of label names, TBD
-  positive_label: null          # which label means "misogynistic", TBD
+      key: "mimic"
+      status: "inspected"       # Task 3
+      role: "PRIMARY TRAINING DATASET"
+  annotation_file: "data/raw/mimic/MIMIC2024.csv"
+  image_dir: "data/raw/mimic/Files"
+  version: "MIMIC2024.csv (sha256 98dd8843ef81...)"   # file fingerprint, not an official version
+  source: "Paper https://doi.org/10.1145/3656169; card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset"
+  license: "CC-BY-4.0"          # per dataset card licence tag
+  text_origin: "OCR (dataset card: 'EasyORC', presumably EasyOCR)"
+  id_column: "FileName"         # also the image reference; never use as a feature
+  text_column: "ExtractedText"
+  image_column: "FileName"
+  label_column: "Misogyny"
+  secondary_label_columns: ["Objectification", "Prejudice", "Humiliation"]
+  label_values: ["0", "1"]      # raw values as stored in the file
+  labels:                       # documented meaning (dataset card)
+    "0": "non_misogynistic"
+    "1": "misogynistic"
+  positive_label: "1"           # raw value meaning "misogynistic"
+  label_mapping:                # raw value -> internal target_label (identity, kept explicit)
+    "0": 0
+    "1": 1
+  cleaned_file: "data/processed/mimic_cleaned.csv"   # Task 4 output (git-ignored)
 
 splitting:
   # "official" if the dataset ships its own split, otherwise
