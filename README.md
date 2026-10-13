@@ -264,6 +264,7 @@ tests; live Atlas connectivity depends on your `.env`).
 **Task 12 — Hyperparameter tuning: complete** (validation only; `docs/HYPERPARAMETER_TUNING_REPORT.md`).
 **Task 13 — Final evaluation: complete** (TEST evaluated once after a committed model freeze; `docs/FINAL_EVALUATION_REPORT.md`).
 **Task 14 — OCR pipeline & OCR robustness: complete** (frozen models only; `docs/OCR_ROBUSTNESS_REPORT.md`).
+**Task 15 — Explainability & advanced error analysis: complete** (frozen models only; `docs/EXPLAINABILITY_ERROR_ANALYSIS_REPORT.md`).
 Only misogyny and its sub-categories are annotated, so the app will report *misogyny detected / not
 detected*, never "safe".
 - ✅ Repository structure, documentation, configuration, ignore rules,
@@ -301,7 +302,11 @@ detected*, never "safe".
   (itself EasyOCR output, so this is agreement, not accuracy). With OCR text instead of the caption, the frozen models lose at most
   0.011 macro-F1 (M04 0.8031 -> 0.8018, T05 0.6476 -> 0.6372; all CIs include 0); Hinglish normalization recovers nothing.
   Fallback: no text / OCR error -> image-only; low OCR confidence -> image-only + HUMAN REVIEW. Uploads are not stored.
-- ❌ Explainability, Streamlit UI, deployment — not started.
+- ✅ Explainability (`src/explainability/`): word attributions (Integrated Gradients / exact TF-IDF contributions), image
+  occlusion maps, text-vs-image-vs-multimodal comparison and a moderation design (ALLOW / WARNING / HUMAN REVIEW, no
+  automatic blocking). It found fairness risks: the text model reacts to words referring to women and ignores negation,
+  and the image model reacts to pictured women. Explanations are model attribution, not proof of reasoning.
+- ❌ Streamlit UI, deployment — not started.
 
 ## 19. Planned Development Roadmap
 1. ✅ Task 1 — Project foundation and repository initialization
@@ -318,12 +323,12 @@ detected*, never "safe".
 12. ✅ Task 12 — Hyperparameter tuning (validation only)
 13. ✅ Task 13 — Final test evaluation, ablation study and result analysis
 14. ✅ Task 14 — OCR pipeline and OCR robustness experiment (frozen models)
-15. Explainability and advanced error analysis
+15. ✅ Task 15 — Explainability and advanced error analysis (frozen models)
 16. Streamlit application, history, dashboard, feedback
 17. Deployment
 18. Research paper (IEEE format)
 
-The order after Task 14 is indicative and may change.
+The order after Task 15 is indicative and may change.
 
 ## 20. Disclaimer
 This repository is an academic research project in progress.

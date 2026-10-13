@@ -1,0 +1,37 @@
+sample_id,error_category,review_notes
+mimic_b94d53892871,gender-presence false alarm,QUALITATIVE: singer portrait + homework-copying joke; benign; image model flags the pictured woman and M04 follows the image
+mimic_a0c7478470ce,text gender-term false alarm,QUALITATIVE: tweet screenshot of a woman in a gaming chair; benign caption with a feminine verb form; text model flags it and M04 follows the text
+mimic_1dfcec7b4c52,short text,QUALITATIVE: dataset caption empty although the picture has a caption about quarrelling as a love language; text model's empty-caption shortcut
+mimic_190c218f5768,gender cues in both modalities,QUALITATIVE: TV-serial couple + 'she must be thinking about other men' template with a pop-culture punchline about the man; both models flag
+mimic_7c7b083e8efe,possible annotation ambiguity,QUALITATIVE: actress swimsuit post + cricketers joking about a flirty comment; caption empty; labelled non-misogynistic (debatable)
+mimic_a224141e3e00,gender-presence false alarm,QUALITATIVE: photo-edit joke about a woman in a mask; caption empty; image model flags the pictured woman and the text model the empty caption
+mimic_4ba95b7caa85,gender-presence false alarm,QUALITATIVE: cricketer in a skirt standing with women; benign joke; image model flags and M04 follows the image
+mimic_da60d0e7699d,gender cues in both modalities,QUALITATIVE: 'no girlfriend no problem' photo edit; benign; the word girlfriend and a pictured girl flag both models
+mimic_cfca02f1ccd1,ambiguous content,QUALITATIVE: TV-series stills; couple joke about marriage with mild innuendo; labelled non-misogynistic
+mimic_b5fe1c33b782,text gender-term false alarm,QUALITATIVE: 'when a girl talks in English' joke that mocks the man; benign; text model flags the gender word and M04 follows the text
+mimic_73c98a363f6a,no clear content cause,QUALITATIVE: Devanagari 'jugaad' joke about a car part; no gender cue in text or image; text model flags and M04 follows the text
+mimic_1a7824070888,slang,QUALITATIVE: sibling profanity joke with women pictured; profanity not aimed at women; all three models flag
+mimic_ddc18c37c013,gender cues in both modalities,QUALITATIVE: 'girls be honest' question with a woman's photo; benign; both models flag
+mimic_6c73c637fe43,gender cues in both modalities,QUALITATIVE: TV-series stills; 'be my girlfriend' chocolate joke; benign; dataset caption garbled; both models flag
+mimic_9c9d8d92bafe,gender cues in both modalities,QUALITATIVE: Devanagari joke about grandmothers' generosity; women and a baby pictured; benign; both models flag
+mimic_247c87574e20,incomplete caption,QUALITATIVE: dog in a wig 'getting ready for a festival'; dataset caption keeps only the last words; text model flags and M04 follows the text
+mimic_81737b901267,gender cues in both modalities,QUALITATIVE: 'crush on her' reaction meme with a girl's face; benign; both models flag
+mimic_b6c9a71db1a4,ambiguous content,QUALITATIVE: Devanagari riddle with a cartoon woman's face; possible double meaning; text model flags and M04 follows the text
+mimic_65823e95c514,text-dependent meaning,QUALITATIVE: festival innuendo about a neighbour's sister-in-law over film stills; text model right; image neutral; M04 follows the image
+mimic_a4e3ba496ce2,slang,QUALITATIVE: romantic song lyric answered with vulgar Hinglish insults; all three models miss
+mimic_be06a10bffcf,implicit meaning,QUALITATIVE: cartoon character dismissing women's complaints with an insult; no woman pictured or named; all three models miss
+mimic_288f8dbc0b08,text-dependent meaning,QUALITATIVE: child photo + gold-digger stereotype about wanting a rich man's son; text model right; M04 follows the image
+mimic_78205350f08d,text-dependent meaning,QUALITATIVE: 'advantage of being a girl' stereotype over film stills; text model right; M04 follows the image
+mimic_a78c7c5add67,slang,QUALITATIVE: derogatory Hinglish phrase for a pampered girl over actor stills; all three models miss
+mimic_e34e7da43494,image-text interaction,QUALITATIVE: woman photographed from behind on railway tracks + sanitation joke; objectifying in combination; image model right; M04 follows the text
+mimic_cf880685d3ee,text-dependent meaning,QUALITATIVE: cartoon bears + girlfriend asking for a gas-cylinder refill (gold-digger stereotype); text model right; M04 follows the image
+mimic_3ac1892e26e2,image-text interaction,QUALITATIVE: colourist joke mocking the pictured woman's skin; image model right; M04 follows the text
+mimic_8d850df13bc6,cultural/contextual reference,QUALITATIVE: child-marriage reference (boy and veiled girl + regional travel line); needs cultural context; image model right; M04 follows the text
+mimic_de2b5881139e,possible annotation ambiguity,QUALITATIVE: tweet complaining that teachers punish boys but not girls; labelled misogynistic (debatable)
+mimic_be7128df581f,text-dependent meaning,QUALITATIVE: child photo + 'not every girl wants money but I do'; text model right; M04 follows the image
+mimic_0f9d6df8f9cd,image-text interaction,QUALITATIVE: man sitting on a crying woman's head + insult caption; humiliation shown in the picture; image model right; M04 follows the text
+mimic_a744158a1243,text-dependent meaning,QUALITATIVE: Devanagari complaint about a woman giving a switched-off phone number; cartoon man; text model right; M04 follows the image
+mimic_35a48e8db087,implicit meaning,QUALITATIVE: woman's silhouette completing a bitten-apple logo; visual objectification needs the logo reference; all three models miss
+mimic_0ce9695899ca,slang,QUALITATIVE: wedding photo + body-shaming Hinglish insult about weight; image model right; text model misses; M04 follows the text
+mimic_5ebcf3c1add7,possible annotation ambiguity,QUALITATIVE: crying girl refusing chores because she is the youngest; labelled misogynistic (debatable)
+mimic_4ba9f2e29bc5,image-text interaction,QUALITATIVE: Valentine's-week couple stills where a condom box is the joke; meaning in the picture; image model right; M04 follows the text

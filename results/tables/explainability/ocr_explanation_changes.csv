@@ -1,0 +1,3 @@
+group,memes,label_correct_after_ocr,label_correct_before_ocr,median_top3_jaccard,share_decisive_ocr_word_not_in_reference,share_decisive_reference_word_lost_by_ocr,median_share_of_words_shared,mwu_p_jaccard_changed_vs_control
+control (label unchanged),92,67,67,0.5,0.2826,0.2,0.7,2.38e-23
+label changed,92,42,50,0.0,0.587,0.4,0.4583,2.38e-23

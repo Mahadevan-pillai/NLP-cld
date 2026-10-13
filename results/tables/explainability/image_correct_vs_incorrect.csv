@@ -1,0 +1,4 @@
+model,measure,correct_n,incorrect_n,median_correct,median_incorrect,mwu_p,mwu_p_holm
+I03,concentration_top10,203,148,0.2468,0.252,0.913,0.913
+I03,text_enrichment,203,148,1.0243,1.0831,0.278,0.801
+I03,max_abs_cell,203,148,0.618,0.6173,0.267,0.801

@@ -1,0 +1,10 @@
+modality_agreement,memes,share,M04_accuracy
+AGREE,472,0.6227,0.8644
+DISAGREE,5,0.0066,0.6
+PARTIAL DISAGREEMENT,281,0.3707,0.7046
+dependence: label depends on the image,208,0.2744,0.7885
+dependence: label depends on the text,83,0.1095,0.5181
+dependence: label needs both modalities,2,0.0026,0.0
+dependence: label unchanged when either modality is neutralised,465,0.6135,0.8645
+M04 label changes when the TEXT is neutralised,85,0.1121,
+M04 label changes when the IMAGE is neutralised,210,0.277,

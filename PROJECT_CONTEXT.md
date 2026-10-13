@@ -264,8 +264,9 @@ History, Research Dashboard, About, plus user feedback where
 appropriate. OCR engine: **EasyOCR 1.7.2** (selected in Task 14;
 `config/ocr.yaml`, `src/ocr/`), with the fallback and privacy design in
 `docs/OCR_ROBUSTNESS_REPORT.md` §15–16.
-Explainability (SHAP / LIME / token attribution / image heatmaps) is
-PLANNED and must correspond to the actual trained model.
+Explainability is DONE in Task 15 with methods matched to the actual models
+(Integrated Gradients, exact TF-IDF contributions, occlusion, modality
+ablation); SHAP / LIME were not needed. See `docs/EXPLAINABILITY_ERROR_ANALYSIS_REPORT.md`.
 Deployment target (e.g. Hugging Face Spaces) is TO BE EVALUATED.
 
 Privacy: avoid retaining uploads unnecessarily, store only necessary
@@ -593,9 +594,36 @@ model, threshold, preprocessing rule or split changed):
 - **Privacy:** uploads are processed in memory and never cached.
 - Report: `docs/OCR_ROBUSTNESS_REPORT.md`; log entries OCR-SEL, OCR-TEST.
 
-NOT STARTED: explainability, Streamlit UI, deployment, paper writing.
+DONE in Task 15 (explainability + advanced error analysis of the frozen
+models on TEST; nothing changed; plan `results/metrics/explainability/xai_plan.json`
+written first):
+- **Methods** (`src/explainability/`, `config/explainability.yaml`):
+  - T05: Integrated Gradients (word level);
+  - B07: exact coefficient × TF-IDF;
+  - I03: occlusion (8 × 8 map);
+  - M04: unimodal comparison + train-mean modality ablation + AGREE /
+    PARTIAL / DISAGREE.
+  - All in log-odds; consistency 758/758 with the Task 13 predictions.
+- **Findings (shortcuts, fairness risks; reported, not fixed):**
+  - T05 behaves like a female-reference-word detector and ignores
+    negation: FP rate 70% vs 33% on non-misogynistic memes with / without
+    such a word.
+  - I03's strongest positive region is usually a pictured woman
+    (qualitative).
+  - M04 is image-dominated; when the text decides, it is right only 52%
+    of the time.
+  - OCR changes T05 labels by adding or removing decisive words.
+- **Error taxonomy:** 391 memes; 60 of 149 M04 errors manually reviewed.
+- **Design for Task 16:**
+  - moderation ALLOW / WARNING / HUMAN_REVIEW (label + agreement based,
+    no thresholds, no BLOCK);
+  - the UI explanation object `explain_meme()` / `explain_text_input()`
+    (in memory, never cached).
+- Report: `docs/EXPLAINABILITY_ERROR_ANALYSIS_REPORT.md`; log entry XAI-T15.
 
-Next planned task: **TASK 15 — Explainability & Advanced Error Analysis.**
+NOT STARTED: Streamlit UI, deployment, paper writing.
+
+Next planned task: **TASK 16 — Complete Application Integration: Inference + MongoDB + Streamlit.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

@@ -1,0 +1,5 @@
+randomisation,memes,median_spearman,median_abs_spearman,share_abs_spearman_below_0.5
+classifier head re-initialised,50,0.9211,0.9211,0.02
+head + last encoder layer + pooler re-initialised,50,-0.43,0.43,0.56
+all weights re-initialised (random BERT),50,-0.1071,0.3199,0.76
+T05 pooled TEST features: variance share of the 1st / first 3 principal components,758,0.9796,0.9893,

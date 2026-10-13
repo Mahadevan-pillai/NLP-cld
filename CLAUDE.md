@@ -163,7 +163,7 @@ hyperparameters across modules.
   - Add new test dependencies to `requirements-ci.txt`.
 
 ## 7. Current stage
-Tasks 1–14 done:
+Tasks 1–15 done:
 - repository foundation;
 - the MongoDB database layer (`src/database/`, see `docs/database.md`);
 - the read-only dataset inventory (`docs/DATASET_REPORT.md`);
@@ -209,6 +209,29 @@ Tasks 1–14 done:
   - Final TEST metrics live in `results/final/final_model_registry.json`.
 - OCR pipeline and post-hoc OCR robustness of the frozen models (Task 14;
   `src/ocr/`, `config/ocr.yaml`, see `docs/OCR_ROBUSTNESS_REPORT.md`).
+
+- Explainability and advanced error analysis of the frozen models (Task 15;
+  `src/explainability/`, `config/explainability.yaml`, see
+  `docs/EXPLAINABILITY_ERROR_ANALYSIS_REPORT.md`).
+
+**Explainability (Task 15):**
+- Explain with `src.explainability`:
+  - `explain_text()`: IG for T05, exact linear for TF-IDF;
+  - `explain_image()`: occlusion;
+  - `explain_multimodal()`: comparison + train-mean ablation;
+  - `explain_meme()` / `explain_text_input()`: the UI object.
+- Moderation goes through `src.explainability.moderation.recommend()`: rules
+  in `config/explainability.yaml`, labels and agreement only. Never add
+  confidence thresholds (scores are uncalibrated) or a BLOCK outcome.
+- Present explanations as **model attribution**, never as proof. Never
+  describe people as misogynistic, and never claim percentage contributions
+  of a modality.
+- Known shortcuts (female-reference words in T05, pictured women in I03,
+  empty captions) are fairness risks. Show them as limitations; do not
+  "fix" them without a new, separately recorded training experiment.
+- Explanations of dataset memes contain dataset content: keep them in
+  git-ignored files (`results/predictions/explainability/`,
+  `*_with_content.png`, `*_with_text.csv`). Never cache user inputs.
 
 **OCR (Task 14):**
 - OCR goes through `src.ocr.extract_text_from_image()` (EasyOCR 1.7.2,
@@ -331,5 +354,5 @@ Rules for later tasks:
   never overwrites it.
 
 The test set was evaluated once in Task 13 (frozen models) and reused only for the
-post-hoc Task 14 OCR measurement (nothing changed); no UI is built. See
+post-hoc Task 14 OCR measurement and Task 15 explanations (nothing changed); no UI is built. See
 `PROJECT_CONTEXT.md` Section 17 for the up-to-date stage.

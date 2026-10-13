@@ -154,3 +154,7 @@ results/tables/text_baselines/*_with_text.csv
 # Task 9 validation errors with dataset text
 results/tables/text_models/*_with_text.csv
 results/tables/ocr/*_with_text.csv
+
+# Task 15: explanation figures / tables that show dataset meme images or caption text
+results/figures/explainability/*_with_content.png
+results/tables/explainability/*_with_text.csv

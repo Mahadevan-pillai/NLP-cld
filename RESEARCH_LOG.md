@@ -2286,3 +2286,59 @@ Limitations: reference captions are EasyOCR output (agreement, not accuracy; mod
 Conclusion: the deployable OCR pipeline performs close to the reported caption-based TEST results; Hinglish normalization recovers nothing; multimodal predictions are more stable, but a robustness advantage in macro-F1 is not statistically supported. No model, threshold, preprocessing rule or split was changed.
 
 Next Experiment: TASK 15 - Explainability & Advanced Error Analysis
+
+### Experiment ID: XAI-T15
+
+Date: 2026-10-13
+
+Status: COMPLETED: post-hoc explainability and advanced error analysis of the FROZEN Task 13 final models (no training, tuning or setting change)
+
+Research Question: What drives the frozen models' predictions (text words, image regions, modalities), which shortcuts do they use, how do OCR errors change explanations, and how should explanations and moderation be presented in the application?
+
+Dataset: MIMIC (cleaned, Task 4) with Task 6 v1.0 text, the original images and Task 14 OCR outputs
+
+Dataset Version: canonical split SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: not used (only M04's stored train-mean standardiser, for the ablation)
+
+Validation Split: not used
+
+Test Split: 758 TEST memes, read through the Task 13 access point after `verify_freeze()`; TEST already evaluated once in Task 13. Plan `results/metrics/explainability/xai_plan.json` written before any TEST explanation
+
+Input Modality: text, image, image + text
+
+Preprocessing: frozen per model (Task 6 v1.0 HINGLISH_NORMALIZED for T05/B07/M04 text; Task 10 v1.0 for images); OCR text from Task 14 (EasyOCR 1.7.2, preparation `none`)
+
+Feature Representation: as frozen in Tasks 8–13
+
+Model: T05 (FINAL_TEXT_MODEL), I03 (FINAL_IMAGE_MODEL), M04 (FINAL_MULTIMODAL_MODEL), B07 (traditional baseline); artifact SHA-256 prefixes 697692cc1d9e / 73c5497e95da / 5b132e127981 / a2aaae391288
+
+Model Version / Pretrained Checkpoint: `google/muril-base-cased@afd9f36c`, `google/siglip-base-patch16-224@7fd15f06` (PIL processor)
+
+Hyperparameters: XAI methods (config/explainability.yaml v1.0): T05 Integrated Gradients, 32 steps, [PAD]-embedding baseline, target logit difference, WordPiece sum per word; B07 coefficient x TF-IDF (exact); I03 occlusion, 56 px window, stride 28 (49 copies, 8 x 8 cells), grey fill; M04 train-mean modality ablation + agreement rule (0/1/2 single-modality models disagreeing = AGREE/PARTIAL/DISAGREE) + IG/occlusion through the fusion model
+
+Random Seed: 42 (sample set, research image set, manual-review sample, deletion test); random-classifier / randomisation checks seed 0
+
+Training Environment: no training; CPU i5-13500H, Python 3.10.0, torch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: none
+
+Validation Metrics: unchanged (Tasks 8–13)
+
+Test Metrics: **Task 13 final metrics unchanged.** Explanation sample set 30 memes (3 x 10 categories); T05 IG + B07 linear for all 758 captions; I03/M04 occlusion for 351 memes (200 uniform random + all I03/M04 errors + sample set). Consistency: XAI code reproduces T05/I03/M04/B07 TEST predictions 758/758. T05: female-reference words mean IG +0.281 (+0.245 in non-misogynistic memes, 86% positive), male-reference −0.108, negation −0.045; FP rate on non-misogynistic memes with vs without a female-reference word T05 70.2% vs 33.1% (Fisher Holm p 1.3e-5), M04 38.3% vs 13.4% (6.3e-4), I03 34.0% vs 16.1% (0.038), B07 42.6% vs 35.5% (0.79); all 21 empty captions predicted misogynistic; synthetic probes: negation 0/6 T05 label changes, gender swap 4/6. Deletion faithfulness: top-1 IG word drop median 0.066 vs random 0.008 (183 memes). I03: random-classifier map correlation median 0.01; OCR-text-region enrichment median 0.99; correct vs incorrect maps not different (Holm p ≥ 0.80); 10 of 12 I03-positive sample memes have the strongest positive cell on a pictured woman (qualitative). M04: AGREE 472 (acc 0.864), PARTIAL 281 (0.705), DISAGREE 5 (0.600); label depends on image 208, on text 83 (acc 0.518). OCR: where T05's label changes with OCR text, top-3 word Jaccard 0.00 vs 0.50 (control), decisive OCR word absent from the reference 58.7% vs 28.3%. Error taxonomy: 391 memes; M04 149 errors (63 FP / 86 FN), 60 manually reviewed (24 Task 13 + 36 new): image–text dependency 15, slang 8, cultural reference 6, annotation ambiguity 6, gender cues in both modalities 6. Moderation simulation (meme mode, dataset captions): ALLOW 242 / WARNING 225 (85.8% truly misogynistic) / HUMAN_REVIEW 291
+
+Runtime / Resource Notes: see `results/tables/explainability/explanation_runtime.csv` and docs §18; full TEST computation about 1 h on CPU (occlusion about 8 s per image); cache outside the repo
+
+Artifacts: `src/explainability/` (text, image, multimodal, moderation, explanation, errors); `config/explainability.yaml`; `scripts/xai_experiment.py`, `scripts/report_xai.py`; `results/tables/explainability/*.csv` (advanced_error_analysis.csv, error_distribution.csv, …); `results/figures/explainability/*.png` (6 tracked); `results/metrics/explainability/xai_plan.json`, `explanation_object_example.json`; per-meme explanations in `results/predictions/explainability/` (git-ignored); `docs/EXPLAINABILITY_ERROR_ANALYSIS_REPORT.md`; `tests/test_explainability.py`
+
+Observations: T05 behaves like a female-reference-word detector and ignores negation; I03 attribution concentrates on pictured women (qualitative), not on rendered text; M04 is image-dominated and inherits T05's lexical cues when the text decides; OCR changes T05 labels by adding or removing decisive words
+
+Error Analysis Notes: methodology and categories in docs §11–12; manual categories are a single reviewer's judgement (no agreement statistic)
+
+Limitations: attribution is not causation (baseline/fill dependent, no interactions); T05 head-only randomisation not discriminative (cascading check added after the plan); no automatic face detection (OpenCV 5 has no Haar detector); probes are 14 invented sentences; TEST reused post-hoc (nothing changed); config in `config/explainability.yaml` because `config.yaml` is checksum-frozen
+
+Conclusion: explanations are consistent with the frozen models and pass the faithfulness checks; they reveal gender-presence / female-term shortcuts (fairness risks) that are reported, not fixed; a conservative ALLOW / WARNING / HUMAN_REVIEW design and a structured explanation object are ready for Task 16
+
+Next Experiment: TASK 16 - Complete Application Integration: Inference + MongoDB + Streamlit

@@ -1,0 +1,256 @@
+{
+  "created_utc": "2026-10-13T15:23:02+00:00",
+  "statement": "Written BEFORE any TEST explanation was computed. Explanations, error analysis and the moderation evaluation change no model, threshold, preprocessing rule or split.",
+  "config_sha256": "9a39d4566603753b3fc0c136b1773594982916f7effc673d3c4a9c26f922b700",
+  "frozen_artifacts": {
+    "artifact:B07": "a2aaae39128863791b2d65833e0b0c1e3a9be8b89ed0501dd9d96d84e97875a6",
+    "artifact:T05": "697692cc1d9e111f05e584c8d7acee28bda32b51bf210f4d0d4fba89f467fd83",
+    "artifact:I03": "73c5497e95dad8f8e2e5428a3fdef8f8f99cc6918406d9e6235e9450268fb779",
+    "artifact:M04": "5b132e127981eb73782b88dae2bc28cebfd8ed027581691c789ce63ab75a9c02"
+  },
+  "freeze_commit_manifest_created": "2026-10-13T09:35:40+00:00",
+  "models": {
+    "text": "T05",
+    "image": "I03",
+    "multimodal": "M04",
+    "traditional_text": "B07"
+  },
+  "text": {
+    "method": "integrated_gradients",
+    "steps": 32,
+    "baseline": "pad_embedding",
+    "aggregation": "sum of WordPiece attributions per whitespace word",
+    "linear_method": "coefficient_times_tfidf",
+    "top_k": 5
+  },
+  "image": {
+    "method": "occlusion",
+    "window": 56,
+    "stride": 28,
+    "fill": 0.0,
+    "ui_window": 112,
+    "ui_stride": 56,
+    "research_set": {
+      "uniform_random": 200,
+      "add_all_errors_of": [
+        "M04",
+        "I03"
+      ],
+      "seed": 42
+    },
+    "sanity_check_random_classifiers": 5
+  },
+  "multimodal": {
+    "method": "modality_ablation_and_unimodal_comparison",
+    "ablation_baseline": "train_mean",
+    "agreement_rule": "count of single-modality models (T05, I03) whose label differs from M04: 0 AGREE, 1 PARTIAL DISAGREEMENT, 2 DISAGREE",
+    "text_attribution_through_fusion": true,
+    "image_attribution_through_fusion": true
+  },
+  "explanation_sample_set": {
+    "per_category": 3,
+    "seed": 42,
+    "categories": [
+      "true_positive",
+      "true_negative",
+      "false_positive",
+      "false_negative",
+      "text_image_disagreement",
+      "multimodal_correction",
+      "multimodal_failure",
+      "ocr_failure",
+      "hinglish_example",
+      "negation_example"
+    ]
+  },
+  "lexicons": {
+    "female_reference": [
+      "girl",
+      "girls",
+      "woman",
+      "women",
+      "lady",
+      "ladies",
+      "wife",
+      "gf",
+      "girlfriend",
+      "she",
+      "her",
+      "mom",
+      "mother",
+      "sister",
+      "daughter",
+      "aunty",
+      "aunt",
+      "bride",
+      "ladki",
+      "ladkiya",
+      "ladkiyan",
+      "ladkiyon",
+      "ladkiyo",
+      "aurat",
+      "aurate",
+      "auraten",
+      "auraton",
+      "biwi",
+      "bibi",
+      "patni",
+      "bhabhi",
+      "didi",
+      "behen",
+      "bahen",
+      "maa",
+      "mummy",
+      "beti",
+      "saas",
+      "bahu",
+      "dulhan",
+      "लड़की",
+      "लड़कियां",
+      "लड़कियों",
+      "औरत",
+      "औरतें",
+      "औरतों",
+      "बीवी",
+      "पत्नी",
+      "भाभी",
+      "दीदी",
+      "बहन",
+      "माँ",
+      "बेटी",
+      "सास",
+      "बहू"
+    ],
+    "male_reference": [
+      "boy",
+      "boys",
+      "man",
+      "men",
+      "husband",
+      "bf",
+      "boyfriend",
+      "he",
+      "him",
+      "dad",
+      "father",
+      "brother",
+      "son",
+      "uncle",
+      "groom",
+      "ladka",
+      "ladke",
+      "ladko",
+      "aadmi",
+      "mard",
+      "pati",
+      "bhai",
+      "bhaiya",
+      "papa",
+      "beta",
+      "jiju",
+      "लड़का",
+      "लड़के",
+      "आदमी",
+      "मर्द",
+      "पति",
+      "भाई",
+      "पापा",
+      "बेटा"
+    ],
+    "watermark": [
+      "doublemeaning",
+      "doublemean"
+    ]
+  },
+  "error_analysis": {
+    "population": "TEST memes where T05, I03 or M04 is wrong, or where the M04/T05 label changes with OCR text (Task 14)",
+    "manual_review": {
+      "additional_m04_errors": 36,
+      "stratify_by": "false_positive / false_negative",
+      "seed": 42,
+      "reviewer": "single reviewer (AI assistant in this session); no inter-annotator agreement"
+    }
+  },
+  "moderation": {
+    "outputs": [
+      "ALLOW",
+      "WARNING",
+      "HUMAN_REVIEW"
+    ],
+    "meme_mode": [
+      {
+        "id": "M0",
+        "when": "ocr_route == reject",
+        "then": null,
+        "reason": "image could not be read; no analysis"
+      },
+      {
+        "id": "M1",
+        "when": "ocr_route == image_only_and_human_review",
+        "then": "HUMAN_REVIEW",
+        "reason": "OCR text unreliable (very low OCR confidence)"
+      },
+      {
+        "id": "M2",
+        "when": "ocr_route == image_only and image_label == 1",
+        "then": "HUMAN_REVIEW",
+        "reason": "only the image model was available and it flags the meme"
+      },
+      {
+        "id": "M3",
+        "when": "ocr_route == image_only and image_label == 0",
+        "then": "ALLOW",
+        "reason": "image model does not flag the meme; text could not be analysed"
+      },
+      {
+        "id": "M4",
+        "when": "text, image and multimodal labels all 1",
+        "then": "WARNING",
+        "reason": "all three models flag the meme as potentially misogynistic"
+      },
+      {
+        "id": "M5",
+        "when": "text, image and multimodal labels all 0",
+        "then": "ALLOW",
+        "reason": "no model flags the meme"
+      },
+      {
+        "id": "M6",
+        "when": "otherwise (models disagree)",
+        "then": "HUMAN_REVIEW",
+        "reason": "the models disagree"
+      }
+    ],
+    "text_mode": [
+      {
+        "id": "T0",
+        "when": "processed text empty",
+        "then": "HUMAN_REVIEW",
+        "reason": "no text to analyse (empty text is a known shortcut of the text models)"
+      },
+      {
+        "id": "T1",
+        "when": "T05 and B07 labels both 1",
+        "then": "WARNING",
+        "reason": "both text models flag the text"
+      },
+      {
+        "id": "T2",
+        "when": "T05 and B07 labels both 0",
+        "then": "ALLOW",
+        "reason": "no text model flags the text"
+      },
+      {
+        "id": "T3",
+        "when": "otherwise (text models disagree)",
+        "then": "HUMAN_REVIEW",
+        "reason": "the text models disagree"
+      }
+    ]
+  },
+  "faithfulness_checks": {
+    "text_deletion": "remove top-1 / top-3 words by IG towards the predicted class vs 5 random draws of the same number of words (uniform random set)",
+    "text_randomised_head": "IG with T05's classifier head re-initialised (seed 0), 50 memes: Spearman correlation with the real attributions",
+    "image_randomised_classifier": "5 random linear classifiers on the same occluded embeddings: Spearman correlation with I03 maps"
+  }
+}

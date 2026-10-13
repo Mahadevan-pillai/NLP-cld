@@ -1,0 +1,6 @@
+T05_outcome,memes_non_empty,share_top_positive_word_female_reference,median_top1_share_of_abs_attribution
+TP,244,0.2049,0.3112
+FP,132,0.1894,0.3004
+TN,238,0.0042,0.2254
+FN,123,0.0163,0.2358
+empty caption (all predicted misogynistic?),21,,1.0

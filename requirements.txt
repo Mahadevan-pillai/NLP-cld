@@ -11,7 +11,8 @@
 #
 # Not included on purpose:
 #   - TensorFlow / other DL frameworks (PyTorch only)
-#   - SHAP / LIME (explainability is a later task)
+#   - SHAP / LIME (Task 15 explainability is implemented with torch / numpy only: Integrated Gradients,
+#     exact linear contributions, occlusion; no extra dependency)
 #
 # PyTorch note: on Windows, plain "pip install torch" installs the CPU
 # build. For an NVIDIA GPU, install torch first using the command from

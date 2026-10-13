@@ -1,0 +1,5 @@
+group,memes,T05_macro_f1,B07_macro_f1,M04_macro_f1
+contains negation word,141,0.5976,0.6323,0.8075
+no negation word,617,0.6529,0.6351,0.8006
+Hinglish spelling variant,98,0.6004,0.6561,0.8274
+no Hinglish variant,660,0.6504,0.63,0.797

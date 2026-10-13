@@ -1,0 +1,10 @@
+scenario,recommendation,memes,share,truly_misogynistic,share_truly_misogynistic,rules
+"meme mode, dataset captions",ALLOW,242,0.3193,28,0.1157,M3:8;M5:234
+"meme mode, dataset captions",HUMAN_REVIEW,291,0.3839,155,0.5326,M2:13;M6:278
+"meme mode, dataset captions",WARNING,225,0.2968,193,0.8578,M4:225
+"meme mode, our OCR + Task 14 fallback",ALLOW,228,0.3008,27,0.1184,M5:228
+"meme mode, our OCR + Task 14 fallback",HUMAN_REVIEW,324,0.4274,175,0.5401,M1:48;M2:1;M6:275
+"meme mode, our OCR + Task 14 fallback",WARNING,206,0.2718,174,0.8447,M4:206
+"text mode (T05 + B07), dataset captions",ALLOW,243,0.3206,65,0.2675,T2:243
+"text mode (T05 + B07), dataset captions",HUMAN_REVIEW,276,0.3641,139,0.5036,T0:21;T3:255
+"text mode (T05 + B07), dataset captions",WARNING,239,0.3153,172,0.7197,T1:239

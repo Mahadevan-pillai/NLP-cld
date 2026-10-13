@@ -1,0 +1,31 @@
+sample_id,category,true_label,I03_pred,focus_region,strongest_positive_cell_on_pictured_woman,review_notes
+mimic_a0a6f0ce4c08,true_positive,1,1,person/face,yes,QUALITATIVE: two women's faces are the strongest positive cells
+mimic_1975d2c38ceb,true_positive,1,0,diffuse,unclear,QUALITATIVE: weak map; no region dominates
+mimic_c3a46c6bfe5e,true_positive,1,0,diffuse,unclear,QUALITATIVE: weak map over a street scene with a woman; caption region mildly negative
+mimic_153cb84876f6,true_negative,0,0,person/face,no woman pictured,QUALITATIVE: man's face pushes towards non-misogynistic
+mimic_b3d7a56fd68e,true_negative,0,0,person/face,no woman pictured,QUALITATIVE: man in a shop pushes towards non-misogynistic
+mimic_df02af73e3a1,true_negative,0,0,object,no woman pictured,QUALITATIVE: car body is positive; caption region negative
+mimic_7c7b083e8efe,false_positive,0,1,body/clothing,yes,QUALITATIVE: swimsuit body region is the strongest positive cell
+mimic_f1a62edcf1ed,false_positive,0,0,person/face,yes,"QUALITATIVE: woman's face positive, man's face negative (scores nearly cancel)"
+mimic_b94d53892871,false_positive,0,1,person/face,yes,QUALITATIVE: woman's face and hair are the strongest positive cells
+mimic_8567cdd5188b,false_negative,1,1,person/face,yes,QUALITATIVE: pictured woman positive
+mimic_caf25fd83c0b,false_negative,1,0,background,unclear,QUALITATIVE: background and costume cells dominate; no clear focus on the person
+mimic_288f8dbc0b08,false_negative,1,0,diffuse,no woman pictured,QUALITATIVE: child photo; almost every cell negative
+mimic_7d04dbd674e2,text_image_disagreement,0,0,person/face,no woman pictured,QUALITATIVE: man pushes towards non-misogynistic
+mimic_5ff45fd154bc,text_image_disagreement,1,0,person/face,no woman pictured,QUALITATIVE: man's face negative; caption band mildly positive
+mimic_2d4d01fc7b85,text_image_disagreement,1,0,person/face,yes,QUALITATIVE: cartoon woman in a car is positive
+mimic_d0b6e83dca32,multimodal_correction,1,0,person/face,unclear,QUALITATIVE: woman and man both present; weak mixed map
+mimic_8e8307952569,multimodal_correction,0,1,person/face,yes,QUALITATIVE: woman in the middle panel is positive
+mimic_603eac91090b,multimodal_correction,0,1,person/face,yes,"QUALITATIVE: woman's face positive, man's face negative"
+mimic_7483691f795b,multimodal_failure,1,1,person/face,yes,QUALITATIVE: actress panel positive
+mimic_1000e89c75df,multimodal_failure,1,1,person/face,yes,QUALITATIVE: woman's face in a chat screenshot positive
+mimic_33d0c6b88358,multimodal_failure,1,1,text region,no,QUALITATIVE: faces mostly negative; caption region carries the positive cells
+mimic_db7fe6d48508,ocr_failure,0,0,diffuse,no woman pictured,QUALITATIVE: product and man; weak map
+mimic_e0932880211d,ocr_failure,0,1,body/clothing,no woman pictured,QUALITATIVE: cartoon dogs; clothing cells positive
+mimic_162c71c17f7a,ocr_failure,0,0,diffuse,no woman pictured,QUALITATIVE: sports team photo; weak map
+mimic_91fc1cabba21,hinglish_example,0,0,diffuse,no woman pictured,QUALITATIVE: cats and text; weak map
+mimic_1b4ad8ddcdcd,hinglish_example,0,0,person/face,no woman pictured,QUALITATIVE: baby's face negative
+mimic_a97b27cc1813,hinglish_example,0,1,person/face,yes,QUALITATIVE: woman in the centre is positive
+mimic_f7e9c8147065,negation_example,0,0,diffuse,no woman pictured,QUALITATIVE: man and mannequin; weak map
+mimic_7d510b93eef0,negation_example,0,0,body/clothing,no woman pictured,QUALITATIVE: clothing close-ups positive; man's face negative
+mimic_e333a32e8c79,negation_example,1,1,body/clothing,yes,QUALITATIVE: woman's body region positive

@@ -1,0 +1,496 @@
+{
+ "note": "synthetic inputs (generated image, invented sentences); real frozen models",
+ "meme_mode": {
+  "mode": "meme",
+  "prediction": {
+   "model_version": "M04",
+   "predicted_label": 0,
+   "predicted_name": "non_misogynistic",
+   "score": 0.281523,
+   "score_type": "uncalibrated softmax probability of 'misogynistic'",
+   "calibrated": false,
+   "source": "multimodal (primary prediction)"
+  },
+  "text_explanation": {
+   "model_version": "T05",
+   "method": {
+    "name": "integrated_gradients",
+    "steps": 32,
+    "baseline": "[PAD] embedding for every non-special token",
+    "target": "logit difference: log-odds of 'misogynistic' (positive = towards misogynistic)",
+    "aggregation": "sum of WordPiece attributions per word"
+   },
+   "tokens": [
+    {
+     "token": "ladkiyan",
+     "position": 0,
+     "contribution": 0.596858,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 2
+    },
+    {
+     "token": "kamzor",
+     "position": 1,
+     "contribution": 0.156013,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 2
+    },
+    {
+     "token": "nahi",
+     "position": 2,
+     "contribution": 0.04825,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    },
+    {
+     "token": "hoti",
+     "position": 3,
+     "contribution": 0.175309,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    },
+    {
+     "token": "hain",
+     "position": 4,
+     "contribution": 0.036263,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    }
+   ],
+   "top_positive": [
+    {
+     "token": "ladkiyan",
+     "position": 0,
+     "contribution": 0.596858,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 2
+    },
+    {
+     "token": "hoti",
+     "position": 3,
+     "contribution": 0.175309,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    },
+    {
+     "token": "kamzor",
+     "position": 1,
+     "contribution": 0.156013,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 2
+    },
+    {
+     "token": "nahi",
+     "position": 2,
+     "contribution": 0.04825,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    },
+    {
+     "token": "hain",
+     "position": 4,
+     "contribution": 0.036263,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    }
+   ],
+   "top_negative": [],
+   "logit_difference": 0.732569,
+   "completeness_error": 0.021315,
+   "truncated": false,
+   "processed_text_empty": false,
+   "limitations": [
+    "Model attribution, not proof of reasoning, intent or harm.",
+    "Integrated Gradients depends on the chosen baseline ([PAD] embeddings); another baseline gives other values.",
+    "Attributions of single words ignore how words act together; removing a highlighted word is not guaranteed to change the label.",
+    "Words are the tokenizer's pre-tokenised units (punctuation is separate); [UNK] pieces are flagged.",
+    "Words beyond the model's maximum length were never seen and have no attribution.",
+    "The score is an uncalibrated softmax probability, not a confidence percentage."
+   ]
+  },
+  "image_explanation": {
+   "model_version": "I03",
+   "method": {
+    "name": "occlusion",
+    "window_px": 112,
+    "stride_px": 56,
+    "fill": "mid-grey (0 after normalisation)",
+    "input": "224 x 224 (image stretched to a square, Task 10 preprocessing)",
+    "target": "drop in log-odds of 'misogynistic' when the region is hidden",
+    "forward_passes": 10
+   },
+   "heatmap": [
+    [
+     0.214274,
+     0.266096,
+     0.237734,
+     0.157549
+    ],
+    [
+     0.268418,
+     0.439257,
+     0.346194,
+     0.082291
+    ],
+    [
+     0.11484,
+     0.392413,
+     0.356274,
+     0.042562
+    ],
+    [
+     -0.092881,
+     0.172407,
+     0.257894,
+     0.078093
+    ]
+   ],
+   "heatmap_shape": [
+    4,
+    4
+   ],
+   "top_regions_towards_misogynistic": [
+    {
+     "cell": [
+      1,
+      1
+     ],
+     "box_fraction": [
+      0.25,
+      0.25,
+      0.5,
+      0.5
+     ],
+     "contribution": 0.439257
+    },
+    {
+     "cell": [
+      2,
+      1
+     ],
+     "box_fraction": [
+      0.25,
+      0.5,
+      0.5,
+      0.75
+     ],
+     "contribution": 0.392413
+    },
+    {
+     "cell": [
+      2,
+      2
+     ],
+     "box_fraction": [
+      0.5,
+      0.5,
+      0.75,
+      0.75
+     ],
+     "contribution": 0.356274
+    }
+   ],
+   "top_regions_towards_non_misogynistic": [
+    {
+     "cell": [
+      3,
+      0
+     ],
+     "box_fraction": [
+      0.0,
+      0.75,
+      0.25,
+      1.0
+     ],
+     "contribution": -0.092881
+    }
+   ],
+   "logit_difference": -1.050362,
+   "limitations": [
+    "Model attribution, not proof of visual reasoning, intent or harm.",
+    "Occlusion with a grey square creates an unnatural input; the score change partly reflects that artefact.",
+    "Resolution is coarse (one value per cell); small details inside a cell are not separated.",
+    "Regions interact: hiding two regions together can change the score differently from the sum of the two.",
+    "The image model can respond to text rendered inside the picture; a highlighted region may be the meme's text, not a purely visual feature.",
+    "The score is uncalibrated (an overconfident LR probability), not a confidence percentage."
+   ]
+  },
+  "modality_comparison": {
+   "predictions": {
+    "text": {
+     "model_version": "T05",
+     "predicted_label": 1,
+     "predicted_name": "misogynistic",
+     "score": 0.675369,
+     "score_type": "uncalibrated softmax probability of 'misogynistic'",
+     "calibrated": false
+    },
+    "image": {
+     "model_version": "I03",
+     "predicted_label": 0,
+     "predicted_name": "non_misogynistic",
+     "score": 0.259156,
+     "score_type": "uncalibrated logistic-regression probability of 'misogynistic'",
+     "calibrated": false
+    },
+    "multimodal": {
+     "model_version": "M04",
+     "predicted_label": 0,
+     "predicted_name": "non_misogynistic",
+     "score": 0.281523,
+     "score_type": "uncalibrated softmax probability of 'misogynistic'",
+     "calibrated": false
+    }
+   },
+   "agreement": "PARTIAL DISAGREEMENT",
+   "disagreeing_models": [
+    "text"
+   ],
+   "ablation": {
+    "method": "modality features replaced by their TRAIN mean (0 after M04's standardiser)",
+    "full": {
+     "predicted_label": 0,
+     "logit_difference": -0.93692,
+     "score": 0.281523
+    },
+    "text_neutralised": {
+     "predicted_label": 0,
+     "logit_difference": -1.805988,
+     "score": 0.141124
+    },
+    "image_neutralised": {
+     "predicted_label": 1,
+     "logit_difference": 1.182897,
+     "score": 0.765468
+    },
+    "label_changes_without_text": false,
+    "label_changes_without_image": true,
+    "dependence": "label depends on the image"
+   }
+  },
+  "ocr": {
+   "status": "caption supplied",
+   "confidence": null,
+   "route": "multimodal",
+   "reason": "caption supplied by the caller; OCR not run"
+  },
+  "moderation": {
+   "recommendation": "HUMAN_REVIEW",
+   "rule_id": "M6",
+   "reason": "the models disagree",
+   "wording": "Flagged for human review: the model outputs are uncertain or disagree.",
+   "automatic_block": false
+  },
+  "limitations": [
+   "Explanations show model attribution and may not reflect human reasoning.",
+   "Scores are uncalibrated and are not confidence percentages.",
+   "The models were trained on one dataset (MIMIC); they can be wrong and can rely on shortcuts (for example, a pictured woman or certain words).",
+   "Only misogyny is modelled: 'not flagged' does not mean the content is safe in other respects."
+  ],
+  "disclaimer": "Explanations show model attribution and may not reflect human reasoning. The model classifies content, not people.",
+  "stored": false
+ },
+ "text_mode": {
+  "mode": "text",
+  "prediction": {
+   "source": "text model (primary prediction)",
+   "model_version": "T05",
+   "predicted_label": 1,
+   "predicted_name": "misogynistic",
+   "score": 0.671833,
+   "score_type": "uncalibrated softmax probability of 'misogynistic'",
+   "calibrated": false
+  },
+  "text_explanation": {
+   "model_version": "T05",
+   "method": {
+    "name": "integrated_gradients",
+    "steps": 32,
+    "baseline": "[PAD] embedding for every non-special token",
+    "target": "logit difference: log-odds of 'misogynistic' (positive = towards misogynistic)",
+    "aggregation": "sum of WordPiece attributions per word"
+   },
+   "tokens": [
+    {
+     "token": "she",
+     "position": 0,
+     "contribution": 1.034648,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    },
+    {
+     "token": "is",
+     "position": 1,
+     "contribution": 0.081474,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    },
+    {
+     "token": "going",
+     "position": 2,
+     "contribution": -0.009026,
+     "direction": "towards non-misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    },
+    {
+     "token": "to",
+     "position": 3,
+     "contribution": 0.107071,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    },
+    {
+     "token": "the",
+     "position": 4,
+     "contribution": -0.005696,
+     "direction": "towards non-misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    },
+    {
+     "token": "office",
+     "position": 5,
+     "contribution": -0.176891,
+     "direction": "towards non-misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    }
+   ],
+   "top_positive": [
+    {
+     "token": "she",
+     "position": 0,
+     "contribution": 1.034648,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    },
+    {
+     "token": "to",
+     "position": 3,
+     "contribution": 0.107071,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    },
+    {
+     "token": "is",
+     "position": 1,
+     "contribution": 0.081474,
+     "direction": "towards misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    }
+   ],
+   "top_negative": [
+    {
+     "token": "office",
+     "position": 5,
+     "contribution": -0.176891,
+     "direction": "towards non-misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    },
+    {
+     "token": "going",
+     "position": 2,
+     "contribution": -0.009026,
+     "direction": "towards non-misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    },
+    {
+     "token": "the",
+     "position": 4,
+     "contribution": -0.005696,
+     "direction": "towards non-misogynistic",
+     "unknown_token": false,
+     "wordpieces": 1
+    }
+   ],
+   "logit_difference": 0.716488,
+   "completeness_error": 0.06983,
+   "truncated": false,
+   "processed_text_empty": false,
+   "limitations": [
+    "Model attribution, not proof of reasoning, intent or harm.",
+    "Integrated Gradients depends on the chosen baseline ([PAD] embeddings); another baseline gives other values.",
+    "Attributions of single words ignore how words act together; removing a highlighted word is not guaranteed to change the label.",
+    "Words are the tokenizer's pre-tokenised units (punctuation is separate); [UNK] pieces are flagged.",
+    "Words beyond the model's maximum length were never seen and have no attribution.",
+    "The score is an uncalibrated softmax probability, not a confidence percentage."
+   ]
+  },
+  "second_opinion": {
+   "source": "TF-IDF baseline",
+   "model_version": "B07",
+   "predicted_label": 1,
+   "predicted_name": "misogynistic",
+   "score": 0.588603,
+   "score_type": "uncalibrated logistic-regression probability of 'misogynistic'",
+   "calibrated": false,
+   "top_positive": [
+    {
+     "token": "she",
+     "position": 0,
+     "contribution": 0.453884,
+     "direction": "towards misogynistic",
+     "not_in_vocabulary": false
+    },
+    {
+     "token": "to",
+     "position": 3,
+     "contribution": 0.11967,
+     "direction": "towards misogynistic",
+     "not_in_vocabulary": false
+    },
+    {
+     "token": "office",
+     "position": 5,
+     "contribution": 0.012517,
+     "direction": "towards misogynistic",
+     "not_in_vocabulary": false
+    },
+    {
+     "token": "going",
+     "position": 2,
+     "contribution": 0.003206,
+     "direction": "towards misogynistic",
+     "not_in_vocabulary": false
+    }
+   ]
+  },
+  "image_explanation": null,
+  "modality_comparison": null,
+  "ocr": null,
+  "moderation": {
+   "recommendation": "WARNING",
+   "rule_id": "T1",
+   "reason": "both text models flag the text",
+   "wording": "Potentially misogynistic content (model prediction). Shown with a warning; open to review.",
+   "automatic_block": false
+  },
+  "limitations": [
+   "Explanations show model attribution and may not reflect human reasoning.",
+   "Scores are uncalibrated and are not confidence percentages.",
+   "The models were trained on one dataset (MIMIC); they can be wrong and can rely on shortcuts (for example, a pictured woman or certain words).",
+   "Only misogyny is modelled: 'not flagged' does not mean the content is safe in other respects."
+  ],
+  "disclaimer": "Explanations show model attribution and may not reflect human reasoning. The model classifies content, not people.",
+  "stored": false
+ }
+}
