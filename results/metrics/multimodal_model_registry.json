@@ -46,6 +46,19 @@
       "image_encoder": "google/siglip-base-patch16-224",
       "image_encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
       "image_preprocessing_version": "1.0"
+    },
+    "M04": {
+      "kind": "fusion_mlp",
+      "artifact": "models/multimodal/M04_fusion_mlp_finetuned_pooled_tuned_v1.0",
+      "text_representation": "finetuned_pooled",
+      "text_source": "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1",
+      "text_encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+      "text_preprocessing_mode": "hinglish_normalized",
+      "text_preprocessing_version": "1.0",
+      "max_length": 64,
+      "image_encoder": "google/siglip-base-patch16-224",
+      "image_encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+      "image_preprocessing_version": "1.0"
     }
   }
 }

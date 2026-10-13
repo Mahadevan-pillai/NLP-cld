@@ -1446,3 +1446,451 @@ Limitations: untuned; single seed and split; epoch selected on validation (optim
 Conclusion: Frozen text representation is sufficient inside fusion at this stage.
 
 Next Experiment: TASK 12 - Hyperparameter Tuning and Model Optimization
+
+### Experiment ID: TUNE-A
+
+Date: 2026-10-13
+
+Status: COMPLETED
+
+Research Question: Task 12 hyperparameter search: TF-IDF + Logistic Regression (base B03). Selection on VALIDATION macro-F1.
+
+Dataset: MIMIC, cleaned (Task 4) + preprocessed text (Task 6 v1.0) + images (read-only)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (used for selection)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text
+
+Preprocessing: fixed (Task 6 v1.0 / Task 10 v1.0), unchanged across trials
+
+Feature Representation: fixed across trials (see model)
+
+Model: TF-IDF + Logistic Regression on HINGLISH_NORMALIZED text
+
+Model Version / Pretrained Checkpoint: unchanged from the base experiment
+
+Hyperparameters: search space ngram_range {(1,1),(1,2),(1,3)} x min_df {1,2,3} x sublinear_tf {T,F} x C {0.1,0.3,1,3,10} (grid, 90 + baseline)
+
+Random Seed: 42 (all search trials)
+
+Training Environment: Windows 11, CPU only (i5-13500H, no CUDA), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: 91 trials (`results/tables/tuning/hyperparameter_trials.csv`, search `traditional_text`); statuses {'COMPLETED': 91}; validation macro-F1 min 0.5962 / median 0.6512 / max 0.6684; best TT-073 {"C": 1.0, "min_df": 2, "ngram_range": [1, 3], "sublinear_tf": true}
+
+Validation Metrics: best trial TT-073: macro-F1 0.6684, accuracy 0.6684, weighted-F1 0.6684
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: sum of trial times 72.8 s
+
+Artifacts: trial log only; selected model in its own entry
+
+Observations: Baseline TT-000 reproduced B03 (0.6671) exactly. Broad plateau: median trial 0.6512; best TT-073 (1-3-grams, min_df 2, sublinear, C 1) only +0.0013 (one more correct sample). min_df 1 raises train macro-F1 to 0.92-0.99 without validation gain.
+
+Error Analysis Notes: see `docs/HYPERPARAMETER_TUNING_REPORT.md`
+
+Limitations: selection on the same validation set inflates the best score; single split
+
+Conclusion: see the selected-model entry.
+
+Next Experiment: TASK 13 - Final Evaluation, Ablation Study & Result Analysis
+
+### Experiment ID: B07
+
+Date: 2026-10-13
+
+Status: COMPLETED (Task 12 tuned / selected configuration)
+
+Research Question: Task 12: does tuning improve the B03 baseline on VALIDATION?
+
+Dataset: MIMIC, cleaned (Task 4) + preprocessed text (Task 6 v1.0) + images (read-only)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (used for selection)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text
+
+Preprocessing: hinglish_normalized (Task 6 v1.0) inside the pipeline
+
+Feature Representation: TF-IDF word 1-3-grams
+
+Model: TF-IDF + Logistic Regression (tuned)
+
+Model Version / Pretrained Checkpoint: none (no pretrained weights)
+
+Hyperparameters: {"C": 1.0, "min_df": 2, "ngram_range": [1, 3], "sublinear_tf": true}; fixed {"max_df": 1.0, "max_features": null, "class_weight": null}
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H, no CUDA), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: selected trial TT-073; rebuilt as the full raw-text pipeline (TextPreprocessor inside): predictions identical to the search run: True; reload reproduces predictions: True; 6650 TF-IDF features
+
+Validation Metrics: macro-F1 **0.6684** (95% bootstrap CI 0.634–0.701); accuracy 0.6684; precision (misogynistic) 0.6694; recall 0.6587; weighted-F1 0.6684; TN 257, FP 122, FN 128, TP 247
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: fit 1.232 s (incl. preprocessing); artifact 204,372 bytes
+
+Artifacts: `models/text/B07_logistic_regression_tfidf_hinglish_normalized_tuned_v1.0.joblib` (git-ignored); `results/metrics/tuning/B07.json`
+
+Observations: Best TF-IDF configuration; +0.0013 vs B03 is not a meaningful improvement. Rebuilt full pipeline gives the same predictions as the search run.
+
+Error Analysis Notes: see `docs/HYPERPARAMETER_TUNING_REPORT.md`
+
+Limitations: validation-selected (optimistic); single split; untested on test
+
+Conclusion: Tuning confirms the Task 8 defaults were near-optimal. Cheap fallback text model.
+
+Next Experiment: TASK 13 - Final Evaluation, Ablation Study & Result Analysis
+
+### Experiment ID: T06
+
+Date: 2026-10-13
+
+Status: COMPLETED (Task 12 tuned / selected configuration)
+
+Research Question: Task 12: does tuning improve the T05 baseline on VALIDATION?
+
+Dataset: MIMIC, cleaned (Task 4) + preprocessed text (Task 6 v1.0) + images (read-only)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (used for selection)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text
+
+Preprocessing: hinglish_normalized (Task 6 v1.0)
+
+Feature Representation: MuRIL WordPiece, max_length 64
+
+Model: fine-tuned MuRIL (T05 setup, learning rate 3e-05)
+
+Model Version / Pretrained Checkpoint: `google/muril-base-cased` @ `afd9f36c…`
+
+Hyperparameters: {"learning_rate": 3e-05, "weight_decay": 0.01, "batch_size": 16, "max_epochs": 4, "warmup_ratio": 0.1, "gradient_clip_norm": 1.0, "early_stopping_patience": 1, "freeze_word_embeddings": true, "max_length": 64, "seed": 42, "max_batches_per_epoch": null} (only learning_rate changed vs T05)
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H, no CUDA), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_text_transformers.py finetune --exp T05 --run-id T06 --learning-rate 3e-05 --out tuning`; 2 epochs, best epoch 1; epoch 1: train loss 0.693, val loss 0.693, val macro-F1 0.3322; epoch 2: train loss 0.693, val loss 0.693, val macro-F1 0.3322; train macro-F1 0.3327; save→reload reproduces predictions: True
+
+Validation Metrics: macro-F1 **0.3322** (95% bootstrap CI 0.316–0.348); accuracy 0.4973; precision (misogynistic) 0.4973; recall 1.0000; weighted-F1 0.3304; TN 0, FP 379, FN 0, TP 375
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: training 29.8 min on CPU (see report §16 on machine load); checkpoint 957 MB
+
+Artifacts: `{MODEL_DIR}/T06_muril_finetuned_hinglish_normalized_v1` (outside the repo); `results/metrics/tuning/T06.json`
+
+Observations: Learning rate 3e-5 (only change vs T05). DEGENERATE: predicts every validation meme as misogynistic (TP 375, FP 379); train macro-F1 0.3327; training loss stayed at ln 2 for both epochs; stopped by patience 1 after epoch 2. First epoch slowed by a VM sharing the machine.
+
+Error Analysis Notes: see `docs/HYPERPARAMETER_TUNING_REPORT.md`
+
+Limitations: validation-selected (optimistic); single split; untested on test
+
+Conclusion: Failed run (no learning); not registered for inference; T05 kept.
+
+Next Experiment: TASK 13 - Final Evaluation, Ablation Study & Result Analysis
+
+### Experiment ID: T07
+
+Date: 2026-10-13
+
+Status: COMPLETED (Task 12 tuned / selected configuration)
+
+Research Question: Task 12: does tuning improve the T05 baseline on VALIDATION?
+
+Dataset: MIMIC, cleaned (Task 4) + preprocessed text (Task 6 v1.0) + images (read-only)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (used for selection)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text
+
+Preprocessing: hinglish_normalized (Task 6 v1.0)
+
+Feature Representation: MuRIL WordPiece, max_length 64
+
+Model: fine-tuned MuRIL (T05 setup, learning rate 5e-05)
+
+Model Version / Pretrained Checkpoint: `google/muril-base-cased` @ `afd9f36c…`
+
+Hyperparameters: {"learning_rate": 5e-05, "weight_decay": 0.01, "batch_size": 16, "max_epochs": 4, "warmup_ratio": 0.1, "gradient_clip_norm": 1.0, "early_stopping_patience": 1, "freeze_word_embeddings": true, "max_length": 64, "seed": 42, "max_batches_per_epoch": null} (only learning_rate changed vs T05)
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H, no CUDA), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_text_transformers.py finetune --exp T05 --run-id T07 --learning-rate 5e-05 --out tuning`; 3 epochs, best epoch 2; epoch 1: train loss 0.693, val loss 0.693, val macro-F1 0.3322; epoch 2: train loss 0.693, val loss 0.693, val macro-F1 0.3345; epoch 3: train loss 0.693, val loss 0.693, val macro-F1 0.3345; train macro-F1 0.3346; save→reload reproduces predictions: True
+
+Validation Metrics: macro-F1 **0.3345** (95% bootstrap CI 0.318–0.350); accuracy 0.5027; precision (misogynistic) 0.0000; recall 0.0000; weighted-F1 0.3363; TN 379, FP 0, FN 375, TP 0
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: training 25.2 min on CPU (see report §16 on machine load); checkpoint 957 MB
+
+Artifacts: `{MODEL_DIR}/T07_muril_finetuned_hinglish_normalized_v1` (outside the repo); `results/metrics/tuning/T07.json`
+
+Observations: Learning rate 5e-5 (only change vs T05). DEGENERATE: predicts every validation meme as non-misogynistic; train macro-F1 0.3346; training loss at ln 2 for 3 epochs; stopped by patience 1 after epoch 3.
+
+Error Analysis Notes: see `docs/HYPERPARAMETER_TUNING_REPORT.md`
+
+Limitations: validation-selected (optimistic); single split; untested on test
+
+Conclusion: Failed run (no learning); not registered for inference; T05 kept as FINAL_TEXT_MODEL.
+
+Next Experiment: TASK 13 - Final Evaluation, Ablation Study & Result Analysis
+
+### Experiment ID: TUNE-C
+
+Date: 2026-10-13
+
+Status: COMPLETED
+
+Research Question: Task 12 hyperparameter search: classifier on frozen SigLIP embeddings (base I01). Selection on VALIDATION macro-F1.
+
+Dataset: MIMIC, cleaned (Task 4) + preprocessed text (Task 6 v1.0) + images (read-only)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (used for selection)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Image
+
+Preprocessing: fixed (Task 6 v1.0 / Task 10 v1.0), unchanged across trials
+
+Feature Representation: fixed across trials (see model)
+
+Model: StandardScaler + LR / Linear SVM on cached SigLIP pooler_output (768-d)
+
+Model Version / Pretrained Checkpoint: unchanged from the base experiment
+
+Hyperparameters: search space LR C {0.001..3} (8) + Linear SVM C {0.0003..1} (8) (grid, 16 + baseline)
+
+Random Seed: 42 (all search trials)
+
+Training Environment: Windows 11, CPU only (i5-13500H, no CUDA), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: 17 trials (`results/tables/tuning/hyperparameter_trials.csv`, search `image`); statuses {'COMPLETED': 17}; validation macro-F1 min 0.7507 / median 0.7652 / max 0.7997; best TI-001 {"C": 0.001, "classifier": "logistic_regression"}
+
+Validation Metrics: best trial TI-001: macro-F1 0.7997, accuracy 0.7997, weighted-F1 0.7997
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: sum of trial times 49.8 s
+
+Artifacts: trial log only; selected model in its own entry
+
+Observations: Baseline TI-000 reproduced I01 (0.7586) exactly. Validation macro-F1 increases steadily as C decreases for both LR and SVM; the best values (LR 0.001, SVM 0.0003) are at the lower edge of the pre-declared grid.
+
+Error Analysis Notes: see `docs/HYPERPARAMETER_TUNING_REPORT.md`
+
+Limitations: selection on the same validation set inflates the best score; single split
+
+Conclusion: see the selected-model entry.
+
+Next Experiment: TASK 13 - Final Evaluation, Ablation Study & Result Analysis
+
+### Experiment ID: I03
+
+Date: 2026-10-13
+
+Status: COMPLETED (Task 12 tuned / selected configuration)
+
+Research Question: Task 12: does tuning improve the I01 baseline on VALIDATION?
+
+Dataset: MIMIC, cleaned (Task 4) + preprocessed text (Task 6 v1.0) + images (read-only)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (used for selection)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Image only
+
+Preprocessing: load_image() v1.0 + SigLIP PIL processor (224x224 stretch)
+
+Feature Representation: SigLIP pooler_output, 768-d (Task 10 cache)
+
+Model: frozen SigLIP + logistic_regression (tuned)
+
+Model Version / Pretrained Checkpoint: `google/siglip-base-patch16-224` @ `7fd15f06…` (frozen)
+
+Hyperparameters: {"C": 0.001, "max_iter": 2000, "class_weight": null}
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H, no CUDA), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: selected trial TI-001; train macro-F1 0.8494; reload reproduces predictions: True
+
+Validation Metrics: macro-F1 **0.7997** (95% bootstrap CI 0.772–0.829); accuracy 0.7997; precision (misogynistic) 0.8043; recall 0.7893; weighted-F1 0.7997; TN 307, FP 72, FN 79, TP 296
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: fit 0.309 s on cached embeddings; artifact 25,937 bytes
+
+Artifacts: `models/image/I03_siglip_logistic_regression_tuned_v1.0.joblib` (git-ignored); `results/metrics/tuning/I03.json`
+
+Observations: +0.0411 vs I01 with the same embeddings and cost; train-validation gap shrinks from 0.14 to 0.05 (I01 was overfitted). Best C at the grid boundary (smaller C untested).
+
+Error Analysis Notes: see `docs/HYPERPARAMETER_TUNING_REPORT.md`
+
+Limitations: validation-selected (optimistic); single split; untested on test
+
+Conclusion: Selected as FINAL_IMAGE_MODEL.
+
+Next Experiment: TASK 13 - Final Evaluation, Ablation Study & Result Analysis
+
+### Experiment ID: TUNE-D
+
+Date: 2026-10-13
+
+Status: COMPLETED
+
+Research Question: Task 12 hyperparameter search: fusion MLP (base M02), random search + seed robustness. Selection on VALIDATION macro-F1.
+
+Dataset: MIMIC, cleaned (Task 4) + preprocessed text (Task 6 v1.0) + images (read-only)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (used for selection)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Image + text
+
+Preprocessing: fixed (Task 6 v1.0 / Task 10 v1.0), unchanged across trials
+
+Feature Representation: fixed across trials (see model)
+
+Model: fusion MLP on T05 pooled text + SigLIP image features
+
+Model Version / Pretrained Checkpoint: unchanged from the base experiment
+
+Hyperparameters: search space learning_rate {3e-4,1e-3,3e-3} x dropout {0.1,0.3,0.5} x hidden {128,256,512} x projection {128,256} x weight_decay {1e-3,1e-2,1e-1} x batch {32,64,128} (486 points; 30 sampled + baseline); early stopping on validation macro-F1, patience 5, min improvement 0.0
+
+Random Seed: 42 (all search trials)
+
+Training Environment: Windows 11, CPU only (i5-13500H, no CUDA), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: 31 trials (`results/tables/tuning/hyperparameter_trials.csv`, search `multimodal_random_search`); statuses {'EARLY_STOPPED': 31}; validation macro-F1 min 0.8050 / median 0.8101 / max 0.8183; best TM-007 {"batch_size": 64, "dropout": 0.1, "hidden_dim": 512, "learning_rate": 0.0003, "projection_dim": 256, "weight_decay": 0.1}
+
+Validation Metrics: best trial TM-007: macro-F1 0.8183, accuracy 0.8183, weighted-F1 0.8183
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: sum of trial times 234.6 s
+
+Artifacts: trial log only; selected model in its own entry
+
+Observations: Baseline TM-000 reproduced M02 (0.8076) exactly. Flat landscape: all 31 configurations 0.805-0.818 at seed 42; only learning rate 3e-4 is mildly better on average. All trials early-stopped (7-12 epochs, best epochs 2-7). Ran with 4 threads concurrently with the MuRIL sweep.
+
+Error Analysis Notes: see `docs/HYPERPARAMETER_TUNING_REPORT.md`
+
+Limitations: selection on the same validation set inflates the best score; single split
+
+Conclusion: see the selected-model entry.
+
+Next Experiment: TASK 13 - Final Evaluation, Ablation Study & Result Analysis
+
+### Experiment ID: M04
+
+Date: 2026-10-13
+
+Status: COMPLETED (Task 12 tuned / selected configuration)
+
+Research Question: Task 12: does tuning improve the M02 baseline on VALIDATION?
+
+Dataset: MIMIC, cleaned (Task 4) + preprocessed text (Task 6 v1.0) + images (read-only)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (used for selection)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Image + text
+
+Preprocessing: text hinglish_normalized (Task 6 v1.0); image load_image() v1.0 + SigLIP processor
+
+Feature Representation: T05 pooled [CLS] 768-d + SigLIP 768-d, train-standardised
+
+Model: fusion MLP (tuned configuration)
+
+Model Version / Pretrained Checkpoint: text MuRIL `afd9f36c…` fine-tuned as T05 (pooled features); image SigLIP `7fd15f06…` (frozen)
+
+Hyperparameters: {"projection_dim": 256, "hidden_dim": 512, "dropout": 0.1, "learning_rate": 0.0003, "weight_decay": 0.1, "batch_size": 64, "max_epochs": 50, "early_stopping_patience": 5, "min_improvement": 0.0, "seed": 42}
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H, no CUDA), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: selected trial TM-007; 8 epochs, best epoch 3; train macro-F1 0.9119; seeds: baseline config 0.8059 ± 0.0055, tuned config 0.8081 ± 0.0133 (seeds 42/123/2026); adopted by the pre-declared rule: tuned; reload reproduces predictions: True
+
+Validation Metrics: macro-F1 **0.8183** (95% bootstrap CI 0.790–0.846); accuracy 0.8183; precision (misogynistic) 0.8199; recall 0.8133; weighted-F1 0.8183; TN 312, FP 67, FN 70, TP 305
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: training 9.08 s on cached features (4 threads, concurrent with the MuRIL sweep); artifact 2,648,474 bytes
+
+Artifacts: `models/multimodal/M04_fusion_mlp_finetuned_pooled_tuned_v1.0` (git-ignored, safetensors + JSON); `results/metrics/tuning/M04.json`
+
+Observations: TM-007 (lr 3e-4, dropout 0.1, hidden 512, projection 256, weight decay 0.1, batch 64). Seed 42: 0.8183 (+0.0107), but 3-seed mean 0.8081 +/- 0.0133 vs baseline config 0.8059 +/- 0.0055 (+0.0022, within noise; less stable). Same config with frozen text: 0.8028 +/- 0.0020. Still overfits after epoch 2-3. Only +0.008 (seed mean) above the tuned image model I03.
+
+Error Analysis Notes: see `docs/HYPERPARAMETER_TUNING_REPORT.md`
+
+Limitations: validation-selected (optimistic); single split; untested on test
+
+Conclusion: Adopted by the pre-declared rule as FINAL_MULTIMODAL_MODEL; improvement over M02 not meaningful; M02 equivalent.
+
+Next Experiment: TASK 13 - Final Evaluation, Ablation Study & Result Analysis

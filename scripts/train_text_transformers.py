@@ -144,16 +144,17 @@ def cmd_frozen(args):
             "classifier_settings": fz["logistic_regression"]})
 
 
-def write_result(exp, model, mode, y_val, pred, scores, names, val, config, extra):
+def write_result(exp, model, mode, y_val, pred, scores, names, val, config, extra, metrics_dir=None):
+    metrics_dir = metrics_dir or METRICS
     m = classification_metrics(y_val, pred, names)
     subsets = {k: classification_metrics(y_val[mask], pred[mask], names)["macro_f1"] for k, mask in subset_masks(val).items()}
     record = {"experiment_id": exp, "model": model, "preprocessing": MODE_LABEL[mode], "preprocessing_mode": mode,
               "task": "misogyny_detection (binary)", "metrics": m, "subset_macro_f1": subsets,
               "macro_f1_ci95": bootstrap_macro_f1(y_val, pred, 1000, config["random_seed"]),
               "test_set": "NOT EVALUATED", **extra}
-    (METRICS / f"{exp}.json").write_text(json.dumps(record, indent=2), encoding="utf-8")
+    (metrics_dir / f"{exp}.json").write_text(json.dumps(record, indent=2), encoding="utf-8")
     pd.DataFrame({"sample_id": val["sample_id"], "true_label": y_val, "pred": pred, "score": np.round(scores, 6)}) \
-        .to_csv(METRICS / f"{exp}_validation_predictions.csv", index=False, lineterminator="\n")
+        .to_csv(metrics_dir / f"{exp}_validation_predictions.csv", index=False, lineterminator="\n")
     print(f"  {exp} {model:22s} {MODE_LABEL[mode]:20s} macro-F1 {m['macro_f1']:.4f} "
           f"CI {record['macro_f1_ci95']}  acc {m['accuracy']:.4f}")
 
@@ -217,23 +218,38 @@ def cmd_finetune(args):
     tok = load_tokenizer(tcfg)
     model = new_classifier(tcfg, config["random_seed"])
     cfg = ft_config(config, tcfg)
+    # Task 12 tuning runs: the same experiment with ONE overridden hyperparameter, written to
+    # results/*/tuning/ so the Task 9 result folders stay unchanged.
+    run_id = args.run_id or args.exp
+    metrics_dir, tables_dir = METRICS, TABLES
+    if args.out == "tuning":
+        metrics_dir = REPO_ROOT / "results" / "metrics" / "tuning"
+        tables_dir = REPO_ROOT / "results" / "tables" / "tuning"
+        metrics_dir.mkdir(parents=True, exist_ok=True)
+        tables_dir.mkdir(parents=True, exist_ok=True)
+    if args.learning_rate is not None:
+        cfg.learning_rate = args.learning_rate
     tr_texts, va_texts = texts_for(train, mode, opts), texts_for(val, mode, opts)
     y_tr, y_va = train["target_label"].astype(int).to_numpy(), val["target_label"].astype(int).to_numpy()
-    log_path = METRICS / f"{args.exp}_training.log"
+    log_path = metrics_dir / f"{run_id}_training.log"
     with open(log_path, "w", encoding="utf-8") as log_file:
         def log(msg):
             print(msg, flush=True)
             log_file.write(msg + "\n")
             log_file.flush()
-        log(f"{args.exp}: fine-tuning {tcfg['checkpoint']}@{revision(tcfg)[:8]} on {MODE_LABEL[mode]}; {cfg}")
+        log(f"{run_id}: fine-tuning {tcfg['checkpoint']}@{revision(tcfg)[:8]} on {MODE_LABEL[mode]}; {cfg}")
         result = tt.fine_tune(model, tok, tr_texts, y_tr, va_texts, y_va, cfg, log=log)
-    pd.DataFrame([vars(h) for h in result.history]).to_csv(TABLES / f"{args.exp}_training_history.csv",
+    pd.DataFrame([vars(h) for h in result.history]).to_csv(tables_dir / f"{run_id}_training_history.csv",
                                                           index=False, lineterminator="\n")
     t0 = time.perf_counter()
     logits = tt.predict_logits(model, tok, va_texts, cfg.max_length)
     infer = time.perf_counter() - t0
-    out_dir = model_dir(config) / f"{args.exp}_muril_finetuned_{mode}_v1"
-    meta = {"experiment_id": args.exp, "task": "misogyny_detection", "label_map": names,
+    extra = {}
+    if args.out == "tuning":        # training-set metric of the selected epoch, for the overfitting check
+        train_pred = tt.predict_logits(model, tok, tr_texts, cfg.max_length).argmax(1)
+        extra["train_macro_f1"] = classification_metrics(y_tr, train_pred, names)["macro_f1"]
+    out_dir = model_dir(config) / f"{run_id}_muril_finetuned_{mode}_v1"
+    meta = {"experiment_id": run_id, "base_experiment": args.exp, "task": "misogyny_detection", "label_map": names,
             "base_checkpoint": tcfg["checkpoint"], "base_revision": revision(tcfg), "preprocessing_mode": mode,
             "preprocessing_version": opts["version"], "preprocessing_options": opts, "max_length": cfg.max_length,
             "fine_tune_config": vars(cfg), "best_epoch": result.best_epoch,
@@ -243,12 +259,13 @@ def cmd_finetune(args):
     logits2 = tt.predict_logits(model2, tok2, va_texts, cfg.max_length)
     reload_ok = bool(np.allclose(logits, logits2, atol=1e-4) and np.array_equal(logits.argmax(1), logits2.argmax(1)))
     size = sum(p.stat().st_size for p in out_dir.rglob("*") if p.is_file())
-    write_result(args.exp, "fine-tuned MuRIL", mode, y_va, logits.argmax(1), tt.softmax(logits)[:, 1], names, val, config, {
+    write_result(run_id, "fine-tuned MuRIL", mode, y_va, logits.argmax(1), tt.softmax(logits)[:, 1], names, val, config, {
         "train_seconds": result.train_seconds, "inference_seconds_validation": infer, "best_epoch": result.best_epoch,
         "epochs_run": len(result.history), "trainable_parameters": result.trainable_parameters,
         "total_parameters": result.total_parameters, "artifact": "{MODEL_DIR}/" + out_dir.name,
         "artifact_bytes": size, "reload_reproduces_predictions": reload_ok, "encoder": tcfg["checkpoint"],
-        "encoder_revision": revision(tcfg), "max_length": cfg.max_length, "fine_tune_config": vars(cfg)})
+        "encoder_revision": revision(tcfg), "max_length": cfg.max_length, "fine_tune_config": vars(cfg),
+        "base_experiment": args.exp, **extra}, metrics_dir=metrics_dir)
     print(f"saved -> {out_dir} ({size / 1e6:.0f} MB); reload reproduces predictions: {reload_ok}")
 
 
@@ -259,6 +276,11 @@ def main() -> int:
         sub.add_parser(name)
     ft = sub.add_parser("finetune")
     ft.add_argument("--exp", required=True, choices=["T04", "T05"])
+    # Task 12 (optional): a tuning run of --exp with one changed hyperparameter, saved under its own id
+    ft.add_argument("--run-id", default=None, help="id for the outputs (default: --exp)")
+    ft.add_argument("--learning-rate", type=float, default=None, help="override fine_tune.learning_rate")
+    ft.add_argument("--out", choices=["task9", "tuning"], default="task9",
+                    help="tuning -> results/metrics/tuning and results/tables/tuning (Task 9 folders untouched)")
     args = parser.parse_args()
     {"tokens": cmd_tokens, "frozen": cmd_frozen, "benchmark": cmd_benchmark, "finetune": cmd_finetune}[args.cmd](args)
     return 0

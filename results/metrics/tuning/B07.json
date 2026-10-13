@@ -1,0 +1,65 @@
+{
+  "experiment_id": "B07",
+  "task": "misogyny_detection (binary)",
+  "model": "TF-IDF + Logistic Regression (tuned)",
+  "modality": "text",
+  "preprocessing_mode": "hinglish_normalized",
+  "preprocessing_version": "1.0",
+  "base_experiment": "B03",
+  "selected_trial": "TT-073",
+  "parameters": {
+    "C": 1.0,
+    "min_df": 2,
+    "ngram_range": [
+      1,
+      3
+    ],
+    "sublinear_tf": true
+  },
+  "fixed": {
+    "max_df": 1.0,
+    "max_features": null,
+    "class_weight": null
+  },
+  "random_seed": 42,
+  "train_seconds": 1.232,
+  "pipeline_matches_search_predictions": true,
+  "reload_reproduces_predictions": true,
+  "artifact": "models/text/B07_logistic_regression_tfidf_hinglish_normalized_tuned_v1.0.joblib",
+  "artifact_bytes": 204372,
+  "n_features": 6650,
+  "score_type": "uncalibrated logistic-regression probability of 'misogynistic'",
+  "metrics": {
+    "n": 754,
+    "accuracy": 0.6684,
+    "precision": 0.6694,
+    "recall": 0.6587,
+    "f1": 0.664,
+    "macro_precision": 0.6685,
+    "macro_recall": 0.6684,
+    "macro_f1": 0.6684,
+    "weighted_f1": 0.6684,
+    "precision_non_misogynistic": 0.6675,
+    "recall_non_misogynistic": 0.6781,
+    "f1_non_misogynistic": 0.6728,
+    "support_non_misogynistic": 379,
+    "precision_misogynistic": 0.6694,
+    "recall_misogynistic": 0.6587,
+    "f1_misogynistic": 0.664,
+    "support_misogynistic": 375,
+    "tn": 257,
+    "fp": 122,
+    "fn": 128,
+    "tp": 247
+  },
+  "subset_macro_f1": {
+    "all": 0.6684,
+    "with_text": 0.6606,
+    "without_watermark": 0.6656
+  },
+  "macro_f1_ci95": [
+    0.6339,
+    0.7012
+  ],
+  "test_set": "NOT EVALUATED"
+}

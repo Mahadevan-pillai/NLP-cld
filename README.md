@@ -163,14 +163,14 @@ checks connectivity (needs `MONGODB_URI` in `.env`), and
 │   ├── evaluation/  explainability/
 │   ├── database/         # MongoDB connection, schemas, repositories, indexes
 │   └── utils/            # config.py — config loader
-├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py, create_splits.py, train_text_baselines.py, train_text_transformers.py, report_text_models.py, train_image_models.py, report_image_models.py, train_multimodal.py, report_multimodal.py
+├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py, create_splits.py, train_text_baselines.py, train_text_transformers.py, report_text_models.py, train_image_models.py, report_image_models.py, train_multimodal.py, report_multimodal.py, tune_models.py, report_tuning.py
 ├── models/{text,image,multimodal}/   # model artifacts (git-ignored)
 ├── results/
 │   ├── figures/  metrics/  tables/  paper/   # versioned small outputs
 │   └── predictions/      # per-sample outputs (git-ignored)
 ├── app/                  # Streamlit app (later)
 ├── tests/                # pytest tests
-└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md, TEXT_BASELINE_REPORT.md, MULTICATEGORY_FEASIBILITY_REPORT.md, TRANSFORMER_TEXT_MODEL_REPORT.md, IMAGE_MODEL_REPORT.md, MULTIMODAL_MODEL_REPORT.md
+└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md, TEXT_BASELINE_REPORT.md, MULTICATEGORY_FEASIBILITY_REPORT.md, TRANSFORMER_TEXT_MODEL_REPORT.md, IMAGE_MODEL_REPORT.md, MULTIMODAL_MODEL_REPORT.md, HYPERPARAMETER_TUNING_REPORT.md
 ```
 
 ## 14. Setup Instructions
@@ -261,6 +261,7 @@ tests; live Atlas connectivity depends on your `.env`).
 **Task 9 — Pretrained / transformer text models: complete** (validation only; `docs/TRANSFORMER_TEXT_MODEL_REPORT.md`).
 **Task 10 — Image-only vision model: complete** (validation only; `docs/IMAGE_MODEL_REPORT.md`).
 **Task 11 — Multimodal image + text fusion: complete** (validation only; `docs/MULTIMODAL_MODEL_REPORT.md`).
+**Task 12 — Hyperparameter tuning: complete** (validation only; `docs/HYPERPARAMETER_TUNING_REPORT.md`).
 Only misogyny and its sub-categories are annotated, so the app will report *misogyny detected / not
 detected*, never "safe".
 - ✅ Repository structure, documentation, configuration, ignore rules,
@@ -288,6 +289,9 @@ detected*, never "safe".
 - ✅ Multimodal fusion (M02: T05 text + SigLIP image features, small MLP): best **validation** macro-F1 so far,
   0.8076, vs image-only 0.7586 and text-only 0.6869 on the same samples. Not yet tuned or test-evaluated;
   scores are uncalibrated. `predict_multimodal()` needs both the image and its caption (no OCR yet).
+- ✅ Hyperparameter tuning (validation only): tuned image model I03 0.7997 (+0.041); tuned fusion M04 0.8183
+  (seed 42; 3-seed mean 0.8081, not meaningfully above the baseline); TF-IDF and MuRIL did not improve.
+  Final development models: text T05, image I03, multimodal M04 (`config.yaml` `final_models`).
 - ❌ Final test-set results — **none exist** (test set locked).
 - ❌ OCR, explainability, Streamlit UI, deployment — not started.
 
@@ -303,14 +307,15 @@ detected*, never "safe".
 9. ✅ Task 9 — Pretrained / transformer text models (MuRIL), validation only
 10. ✅ Task 10 — Image-only vision model (frozen SigLIP), validation only
 11. ✅ Task 11 — Multimodal image + text fusion, validation only
-12. Hyperparameter tuning (validation only) and final test evaluation
+12. ✅ Task 12 — Hyperparameter tuning (validation only)
+13. Final test evaluation, ablation study and result analysis
 13. OCR evaluation and OCR-noise experiment (to be reframed: dataset text is already OCR output)
 14. Explainability
 15. Streamlit application, history, dashboard, feedback
 16. Deployment
 17. Research paper (IEEE format)
 
-The order after Task 11 is indicative and may change.
+The order after Task 12 is indicative and may change.
 
 ## 20. Disclaimer
 This repository is an academic research project in progress.

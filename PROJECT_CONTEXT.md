@@ -312,7 +312,7 @@ data, document what is persisted, avoid logging raw user input.
 
 ## 17. Current project stage
 
-**Task 11 — Multimodal Image + Text Fusion Model (complete, validation only).**
+**Task 12 — Hyperparameter Tuning & Model Optimization (complete, validation only).**
 
 IMPLEMENTED in Task 1: directory structure, documentation
 (`CLAUDE.md`, `PROJECT_CONTEXT.md`, `RESEARCH_LOG.md`, `README.md`),
@@ -501,10 +501,46 @@ IMPLEMENTED in Task 11 (binary task; MIMIC captions, no new OCR):
   is still disabled).
 - `docs/MULTIMODAL_MODEL_REPORT.md`; log entries M01–M03.
 
-NOT STARTED: tuning, final test evaluation, OCR, explainability,
-Streamlit UI, deployment, paper writing.
+DONE in Task 12 (validation only; spaces and rules fixed in advance in
+`config.yaml` `tuning`):
+- **Searches** (every baseline re-run reproduced its stored score
+  exactly):
+  - A: TF-IDF grid, 90 trials;
+  - B: MuRIL learning-rate sweep, 2 runs;
+  - C: image-classifier grid, 16 trials;
+  - D: fusion-MLP random search, 30 of 486 configurations, plus 7 seed
+    runs.
+- **Results:**
+  - **B07** TF-IDF: 0.6684 (+0.0013, not meaningful).
+  - **T06 / T07** (lr 3e-5 / 5e-5): **degenerate**, single-class
+    predictions. T05 is kept.
+  - **I03** SigLIP + LR with C = 0.001: **0.7997 (+0.041)**.
+  - **M04** fusion (TM-007): 0.8183 at seed 42, but the 3-seed mean is
+    0.8081 ± 0.0133 vs baseline 0.8059 ± 0.0055. **The gain is not
+    meaningful**; the flat landscape shows selection optimism.
+- **Final development models:**
+  - FINAL_TEXT_MODEL = **T05**;
+  - FINAL_IMAGE_MODEL = **I03**;
+  - FINAL_MULTIMODAL_MODEL = **M04** (M02 equivalent).
 
-Next planned task: **TASK 12 — Hyperparameter Tuning and Model Optimization.**
+  Recorded in `config.yaml` `final_models`.
+- **RQ2 caution:** after tuning, fusion is only about +0.008 (seed mean)
+  above the tuned image model.
+- **Artifacts:**
+  - `src/training/tuning.py`, `scripts/tune_models.py`,
+    `scripts/report_tuning.py`;
+  - fine-tune `--out tuning` option (Task 9 folders untouched);
+  - fusion `min_improvement` (default 0);
+  - append-only registry entries B07, I03, M04;
+  - `docs/HYPERPARAMETER_TUNING_REPORT.md`;
+  - log entries TUNE-A, B07, T06, T07, TUNE-C, I03, TUNE-D, M04.
+- **Test set NOT evaluated** (audit in
+  `results/tables/tuning/test_access_audit.csv`).
+
+NOT STARTED: final test evaluation, OCR, explainability, Streamlit UI,
+deployment, paper writing.
+
+Next planned task: **TASK 13 — Final Evaluation, Ablation Study & Result Analysis.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

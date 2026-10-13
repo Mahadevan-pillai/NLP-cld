@@ -36,6 +36,21 @@
         "resize": "stretch_to_square",
         "processor_backend": "pil"
       }
+    },
+    "I03": {
+      "kind": "frozen_logreg",
+      "artifact": "models/image/I03_siglip_logistic_regression_tuned_v1.0.joblib",
+      "encoder": "google/siglip-base-patch16-224",
+      "encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+      "embedding": "pooler_output",
+      "embedding_dim": 768,
+      "image_preprocessing_version": "1.0",
+      "image_preprocessing": {
+        "loader_version": "1.0",
+        "image_size": 224,
+        "resize": "stretch_to_square",
+        "processor_backend": "pil"
+      }
     }
   }
 }
