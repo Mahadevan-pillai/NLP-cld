@@ -1,0 +1,131 @@
+{
+  "note": "FINAL TEST RESULTS of the models frozen in results/final/model_freeze_manifest.json",
+  "freeze_commit_contains_manifest": true,
+  "label_map": {
+    "0": "non_misogynistic",
+    "1": "misogynistic"
+  },
+  "models": {
+    "FINAL_TEXT_MODEL": {
+      "model_version": "T05",
+      "description": "fine-tuned MuRIL, HINGLISH_NORMALIZED",
+      "registry_entry": {
+        "preprocessing_mode": "hinglish_normalized",
+        "preprocessing_version": "1.0",
+        "max_length": 64,
+        "encoder": "google/muril-base-cased",
+        "encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+        "artifact": "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1",
+        "kind": "fine_tuned"
+      },
+      "artifact_sha256": "697692cc1d9e111f05e584c8d7acee28bda32b51bf210f4d0d4fba89f467fd83",
+      "preprocessing": {
+        "text_version": "1.0",
+        "image_loader_version": "1.0",
+        "image_processor_backend": "pil"
+      },
+      "encoders": {
+        "text": "google/muril-base-cased@afd9f36c7923d54e97903922ff1b260d091d202f",
+        "image": "google/siglip-base-patch16-224@7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed"
+      },
+      "score_type": "uncalibrated softmax probability",
+      "validation_macro_f1": 0.6869,
+      "test_metrics": {
+        "accuracy": 0.6478,
+        "precision": 0.6373,
+        "recall": 0.6729,
+        "macro_f1": 0.6476,
+        "weighted_f1": 0.6476
+      },
+      "test_macro_f1_ci95": [
+        0.6133,
+        0.6815
+      ],
+      "test_n": 758
+    },
+    "FINAL_IMAGE_MODEL": {
+      "model_version": "I03",
+      "description": "frozen SigLIP + LR (C=0.001, tuned)",
+      "registry_entry": {
+        "kind": "frozen_logreg",
+        "artifact": "models/image/I03_siglip_logistic_regression_tuned_v1.0.joblib",
+        "encoder": "google/siglip-base-patch16-224",
+        "encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+        "embedding": "pooler_output",
+        "embedding_dim": 768,
+        "image_preprocessing_version": "1.0",
+        "image_preprocessing": {
+          "loader_version": "1.0",
+          "image_size": 224,
+          "resize": "stretch_to_square",
+          "processor_backend": "pil"
+        }
+      },
+      "artifact_sha256": "73c5497e95dad8f8e2e5428a3fdef8f8f99cc6918406d9e6235e9450268fb779",
+      "preprocessing": {
+        "text_version": "1.0",
+        "image_loader_version": "1.0",
+        "image_processor_backend": "pil"
+      },
+      "encoders": {
+        "text": "google/muril-base-cased@afd9f36c7923d54e97903922ff1b260d091d202f",
+        "image": "google/siglip-base-patch16-224@7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed"
+      },
+      "score_type": "uncalibrated LR probability",
+      "validation_macro_f1": 0.7997,
+      "test_metrics": {
+        "accuracy": 0.8047,
+        "precision": 0.8098,
+        "recall": 0.7926,
+        "macro_f1": 0.8047,
+        "weighted_f1": 0.8047
+      },
+      "test_macro_f1_ci95": [
+        0.7757,
+        0.8324
+      ],
+      "test_n": 758
+    },
+    "FINAL_MULTIMODAL_MODEL": {
+      "model_version": "M04",
+      "description": "fusion MLP, T05 text, tuned config TM-007",
+      "registry_entry": {
+        "kind": "fusion_mlp",
+        "artifact": "models/multimodal/M04_fusion_mlp_finetuned_pooled_tuned_v1.0",
+        "text_representation": "finetuned_pooled",
+        "text_source": "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1",
+        "text_encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+        "text_preprocessing_mode": "hinglish_normalized",
+        "text_preprocessing_version": "1.0",
+        "max_length": 64,
+        "image_encoder": "google/siglip-base-patch16-224",
+        "image_encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+        "image_preprocessing_version": "1.0"
+      },
+      "artifact_sha256": "5b132e127981eb73782b88dae2bc28cebfd8ed027581691c789ce63ab75a9c02",
+      "preprocessing": {
+        "text_version": "1.0",
+        "image_loader_version": "1.0",
+        "image_processor_backend": "pil"
+      },
+      "encoders": {
+        "text": "google/muril-base-cased@afd9f36c7923d54e97903922ff1b260d091d202f",
+        "image": "google/siglip-base-patch16-224@7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed"
+      },
+      "score_type": "uncalibrated softmax probability",
+      "validation_macro_f1": 0.8183,
+      "test_metrics": {
+        "accuracy": 0.8034,
+        "precision": 0.8215,
+        "recall": 0.7713,
+        "macro_f1": 0.8031,
+        "weighted_f1": 0.8032
+      },
+      "test_macro_f1_ci95": [
+        0.7741,
+        0.8308
+      ],
+      "test_n": 758
+    }
+  }
+}

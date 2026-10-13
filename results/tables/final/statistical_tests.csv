@@ -1,0 +1,10 @@
+comparison,question,type,difference,ci_low,ci_high,share_of_resamples_a_better,only_a_correct,only_b_correct,discordant,p_value,holm_p,significant_by_frozen_rule
+M04 vs T05,RQ2_multimodal_vs_text,PRIMARY (pre-specified),0.1555,0.1193,0.1911,1.0,164,46,210,9.820195428574457e-17,1.9640390857148914e-16,True
+M04 vs I03,RQ3_multimodal_vs_image,PRIMARY (pre-specified),-0.0015,-0.0249,0.0213,0.4371,40,41,81,1.0,1.0,False
+B03 vs B02,RQ1 (descriptive),"secondary, no significance claim",0.0013,-0.0067,0.0095,0.5987,6,5,11,1.0,,
+B06 vs B05,RQ1 (descriptive),"secondary, no significance claim",-0.0066,-0.0171,0.0027,0.0926,5,10,15,0.30175781249999994,,
+T03 vs T02,RQ1 (descriptive),"secondary, no significance claim",-0.0092,-0.0254,0.0075,0.1389,17,24,41,0.34888887944907765,,
+T05 vs T04,RQ1 (descriptive),"secondary, no significance claim",-0.026,-0.0545,0.0015,0.0334,49,69,118,0.07983431282819972,,
+M01 vs M04,fusion ablation (descriptive),"secondary, no significance claim",-0.0515,-0.0779,-0.0251,0.0001,34,73,107,0.00020637467419230582,,
+M02 vs M04,fusion ablation (descriptive),"secondary, no significance claim",-0.0016,-0.0198,0.0168,0.4219,24,25,49,1.0,,
+M03 vs M04,fusion ablation (descriptive),"secondary, no significance claim",-0.0103,-0.0353,0.015,0.2153,42,50,92,0.46570744577306195,,

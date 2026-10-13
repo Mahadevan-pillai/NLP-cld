@@ -163,14 +163,14 @@ checks connectivity (needs `MONGODB_URI` in `.env`), and
 │   ├── evaluation/  explainability/
 │   ├── database/         # MongoDB connection, schemas, repositories, indexes
 │   └── utils/            # config.py — config loader
-├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py, create_splits.py, train_text_baselines.py, train_text_transformers.py, report_text_models.py, train_image_models.py, report_image_models.py, train_multimodal.py, report_multimodal.py, tune_models.py, report_tuning.py
+├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py, create_splits.py, train_text_baselines.py, train_text_transformers.py, report_text_models.py, train_image_models.py, report_image_models.py, train_multimodal.py, report_multimodal.py, tune_models.py, report_tuning.py, final_evaluation.py, report_final_evaluation.py
 ├── models/{text,image,multimodal}/   # model artifacts (git-ignored)
 ├── results/
 │   ├── figures/  metrics/  tables/  paper/   # versioned small outputs
 │   └── predictions/      # per-sample outputs (git-ignored)
 ├── app/                  # Streamlit app (later)
 ├── tests/                # pytest tests
-└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md, TEXT_BASELINE_REPORT.md, MULTICATEGORY_FEASIBILITY_REPORT.md, TRANSFORMER_TEXT_MODEL_REPORT.md, IMAGE_MODEL_REPORT.md, MULTIMODAL_MODEL_REPORT.md, HYPERPARAMETER_TUNING_REPORT.md
+└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md, TEXT_BASELINE_REPORT.md, MULTICATEGORY_FEASIBILITY_REPORT.md, TRANSFORMER_TEXT_MODEL_REPORT.md, IMAGE_MODEL_REPORT.md, MULTIMODAL_MODEL_REPORT.md, HYPERPARAMETER_TUNING_REPORT.md, FINAL_EVALUATION_REPORT.md
 ```
 
 ## 14. Setup Instructions
@@ -262,6 +262,7 @@ tests; live Atlas connectivity depends on your `.env`).
 **Task 10 — Image-only vision model: complete** (validation only; `docs/IMAGE_MODEL_REPORT.md`).
 **Task 11 — Multimodal image + text fusion: complete** (validation only; `docs/MULTIMODAL_MODEL_REPORT.md`).
 **Task 12 — Hyperparameter tuning: complete** (validation only; `docs/HYPERPARAMETER_TUNING_REPORT.md`).
+**Task 13 — Final evaluation: complete** (TEST evaluated once after a committed model freeze; `docs/FINAL_EVALUATION_REPORT.md`).
 Only misogyny and its sub-categories are annotated, so the app will report *misogyny detected / not
 detected*, never "safe".
 - ✅ Repository structure, documentation, configuration, ignore rules,
@@ -292,7 +293,9 @@ detected*, never "safe".
 - ✅ Hyperparameter tuning (validation only): tuned image model I03 0.7997 (+0.041); tuned fusion M04 0.8183
   (seed 42; 3-seed mean 0.8081, not meaningfully above the baseline); TF-IDF and MuRIL did not improve.
   Final development models: text T05, image I03, multimodal M04 (`config.yaml` `final_models`).
-- ❌ Final test-set results — **none exist** (test set locked).
+- ✅ Final TEST results (758 memes, frozen models): image-only I03 macro-F1 **0.8047**, multimodal M04 **0.8031**
+  (statistically indistinguishable), text T05 0.6476, TF-IDF B07 0.6359. Multimodal beats text-only but **not**
+  image-only; Hinglish normalization did not help. See `docs/FINAL_EVALUATION_REPORT.md`.
 - ❌ OCR, explainability, Streamlit UI, deployment — not started.
 
 ## 19. Planned Development Roadmap
@@ -308,19 +311,19 @@ detected*, never "safe".
 10. ✅ Task 10 — Image-only vision model (frozen SigLIP), validation only
 11. ✅ Task 11 — Multimodal image + text fusion, validation only
 12. ✅ Task 12 — Hyperparameter tuning (validation only)
-13. Final test evaluation, ablation study and result analysis
+13. ✅ Task 13 — Final test evaluation, ablation study and result analysis
 13. OCR evaluation and OCR-noise experiment (to be reframed: dataset text is already OCR output)
 14. Explainability
 15. Streamlit application, history, dashboard, feedback
 16. Deployment
 17. Research paper (IEEE format)
 
-The order after Task 12 is indicative and may change.
+The order after Task 13 is indicative and may change.
 
 ## 20. Disclaimer
 This repository is an academic research project in progress.
-**Only validation (development) results exist; no final test-set
-results exist.** Any future predictions will be
+**Final test results exist for the frozen models (Task 13); they are
+research measurements on one dataset, not guarantees.** Any future predictions will be
 outputs of statistical models, which can be wrong and are not
 definitive judgements about people or content. Explanations, when
 added, are model attributions and not proof of how a model "reasons".

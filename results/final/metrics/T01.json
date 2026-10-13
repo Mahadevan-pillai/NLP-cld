@@ -1,0 +1,62 @@
+{
+  "experiment_id": "T01",
+  "evaluation": "FINAL TEST EVALUATION",
+  "split": "test",
+  "split_assignments_sha256": "47fb02a87b36a22d20b9fd8bbb023fb1efa05361739211933a259caa9ff24894",
+  "artifact_sha256": "d7ee193d71eb6beb060d5a465d036caacab41ce8e9f739ee254d7fcd674e263f",
+  "role": "ablation: RQ1 (frozen MuRIL)",
+  "modality": "text",
+  "description": "frozen MuRIL + LR, RAW",
+  "score_type": "uncalibrated LR probability",
+  "metrics": {
+    "n": 758,
+    "accuracy": 0.6332,
+    "precision": 0.6225,
+    "recall": 0.6622,
+    "f1": 0.6418,
+    "macro_precision": 0.6339,
+    "macro_recall": 0.6335,
+    "macro_f1": 0.633,
+    "weighted_f1": 0.633,
+    "precision_non_misogynistic": 0.6453,
+    "recall_non_misogynistic": 0.6047,
+    "f1_non_misogynistic": 0.6243,
+    "support_non_misogynistic": 382,
+    "precision_misogynistic": 0.6225,
+    "recall_misogynistic": 0.6622,
+    "f1_misogynistic": 0.6418,
+    "support_misogynistic": 376,
+    "tn": 231,
+    "fp": 151,
+    "fn": 127,
+    "tp": 249
+  },
+  "subsets": {
+    "all": {
+      "n": 758,
+      "accuracy": 0.6332,
+      "precision": 0.6225,
+      "recall": 0.6622,
+      "macro_f1": 0.633,
+      "weighted_f1": 0.633
+    },
+    "with_text": {
+      "n": 737,
+      "accuracy": 0.6391,
+      "precision": 0.6332,
+      "recall": 0.654,
+      "macro_f1": 0.639,
+      "weighted_f1": 0.639
+    },
+    "without_watermark": {
+      "n": 744,
+      "accuracy": 0.6263,
+      "precision": 0.6088,
+      "recall": 0.6492,
+      "macro_f1": 0.6263,
+      "weighted_f1": 0.6263
+    }
+  },
+  "validation_macro_f1_at_freeze": 0.6151,
+  "evaluated_utc": "2026-10-13T11:13:03+00:00"
+}

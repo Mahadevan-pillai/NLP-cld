@@ -1,0 +1,3 @@
+comparison,question,diff_macro_f1,diff_accuracy,diff_precision,diff_recall,diff_weighted_f1
+M04 - T05,RQ2_multimodal_vs_text,0.1555,0.1557,0.1843,0.0984,0.1556
+M04 - I03,RQ3_multimodal_vs_image,-0.0015,-0.0013,0.0117,-0.0213,-0.0015

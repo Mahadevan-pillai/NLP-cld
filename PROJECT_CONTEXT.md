@@ -312,7 +312,7 @@ data, document what is persisted, avoid logging raw user input.
 
 ## 17. Current project stage
 
-**Task 12 — Hyperparameter Tuning & Model Optimization (complete, validation only).**
+**Task 13 — Final Evaluation, Ablation Study & Result Analysis (complete; TEST evaluated once).**
 
 IMPLEMENTED in Task 1: directory structure, documentation
 (`CLAUDE.md`, `PROJECT_CONTEXT.md`, `RESEARCH_LOG.md`, `README.md`),
@@ -537,10 +537,33 @@ DONE in Task 12 (validation only; spaces and rules fixed in advance in
 - **Test set NOT evaluated** (audit in
   `results/tables/tuning/test_access_audit.csv`).
 
-NOT STARTED: final test evaluation, OCR, explainability, Streamlit UI,
-deployment, paper writing.
+DONE in Task 13 (FINAL TEST EVALUATION, 758 test memes):
+- **Freeze before unlock:** 19 models were frozen (artifact/config/code
+  checksums plus the evaluation plan) in commit `ed0de53`, after
+  reproducing every validation result with the evaluation code. Test was
+  evaluated once afterwards. Audit: `results/final/research_integrity_audit.md`.
+- **Results** (macro-F1, 95% CI):
+  - image-only **I03 0.8047** (0.776–0.832);
+  - multimodal **M04 0.8031** (0.774–0.831);
+  - text T05 0.6476; TF-IDF B07 0.6359.
+- **Research questions** (frozen rules):
+  - RQ2 multimodal > text: **SUPPORTED** (+0.156, Holm p 2e-16);
+  - RQ3 multimodal > image: **NOT SUPPORTED** (−0.0015);
+  - RQ1 normalization: **INCONCLUSIVE**, leaning negative (3 of 4 contrasts
+    negative; fine-tuned MuRIL −0.026);
+  - RQ4: not evaluated.
+- **Mechanism:** with the image removed, M04 reproduces T05's predictions
+  exactly; the image carries the usable signal. Projection-MLP fusion beats
+  concatenation (+0.05).
+- **Not changed:** the final models (T05 / I03 / M04), although T04 > T05
+  on test. `results/final/final_model_registry.json` holds the test
+  metrics; the report is `docs/FINAL_EVALUATION_REPORT.md`.
+- **The TEST set is now spent.** It must not influence any further
+  development. Any new model is a separate, post-hoc experiment.
 
-Next planned task: **TASK 13 — Final Evaluation, Ablation Study & Result Analysis.**
+NOT STARTED: OCR, explainability, Streamlit UI, deployment, paper writing.
+
+Next planned task: **TASK 14 — OCR Pipeline & OCR Robustness Experiment.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

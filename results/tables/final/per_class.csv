@@ -1,0 +1,9 @@
+model,class,precision,recall,f1,support
+B07,non_misogynistic,0.6395,0.6361,0.6378,382
+B07,misogynistic,0.6323,0.6356,0.634,376
+T05,non_misogynistic,0.6593,0.623,0.6406,382
+T05,misogynistic,0.6373,0.6729,0.6546,376
+I03,non_misogynistic,0.8,0.8168,0.8083,382
+I03,misogynistic,0.8098,0.7926,0.8011,376
+M04,non_misogynistic,0.7877,0.8351,0.8107,382
+M04,misogynistic,0.8215,0.7713,0.7956,376

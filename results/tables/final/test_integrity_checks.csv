@@ -1,0 +1,16 @@
+check,passed,detail
+canonical split assignment verified against its manifest (SHA-256),True,"{'train': 3532, 'test': 758, 'validation': 754}"
+test split size = 758,True,758
+test sample_ids unique,True,
+no train/test sample_id overlap,True,
+no identical image (SHA-256) shared by train and test,True,
+no leakage group (Task 7 group_id) shared by train and test,True,
+no validation/test sample_id overlap,True,
+no identical image (SHA-256) shared by validation and test,True,
+no leakage group (Task 7 group_id) shared by validation and test,True,
+no near-duplicate image pair crosses into test (Task 5 pairs),True,0 of 55
+test labels valid (0/1),True,"{'0': 382, '1': 376}"
+all test images exist,True,758/758
+test images unchanged since Task 4 (SHA-256),True,758/758
+all test images decode with load_image(),True,758/758
+test caption field present for every sample (empty OCR captions counted),True,21 empty captions
