@@ -1,0 +1,69 @@
+# ==================================================================
+# config/categories.yaml - PROPOSED category configuration (Task 8.5)
+# ==================================================================
+# Machine-readable result of docs/MULTICATEGORY_FEASIBILITY_REPORT.md.
+# It maps VERIFIED dataset labels to canonical categories; it never
+# renames or replaces the original labels.
+#
+# status:
+#   VERIFIED_DATASET_LABEL  - annotation present in MIMIC (Tasks 3-4)
+#   UNSUPPORTED             - no dataset annotation exists; must stay disabled
+# enabled:
+#   true  - used by the project now
+#   false - not used (unsupported, or supported but awaiting a decision)
+#
+# Only the primary binary task is enabled. Sub-category models are
+# feasible but need an explicit decision before any training.
+# ==================================================================
+
+version: "0.1-proposed"
+source_dataset: "MIMIC"
+label_semantics: "Misogyny: 1 = misogynistic, 0 = non-misogynistic (dataset card). 0 does NOT mean 'safe'."
+
+tasks:
+  misogyny_detection:
+    stage: 1
+    task_type: "binary"
+    enabled: true                       # Task 8 baselines B01-B06
+    categories:
+      misogyny:
+        canonical: "MISOGYNY"
+        source_column: "Misogyny"
+        positive_value: "1"
+        status: "VERIFIED_DATASET_LABEL"
+        feasibility: "STRONG"
+
+  misogyny_subcategories:
+    stage: 2
+    task_type: "multilabel"             # NOT multiclass: 11.45% of misogynistic memes have >1 sub-label
+    conditional_on: "misogyny_detection == 1"   # sub-labels are annotated only for misogynistic memes
+    enabled: false                      # feasible; awaiting project decision (see report section 17)
+    categories:
+      objectification:
+        canonical: "OBJECTIFICATION"
+        source_column: "Objectification"
+        positive_value: "1"
+        status: "VERIFIED_DATASET_LABEL"
+        feasibility: "STRONG"
+      prejudice:
+        canonical: "PREJUDICE"
+        source_column: "Prejudice"
+        positive_value: "1"
+        status: "VERIFIED_DATASET_LABEL"
+        feasibility: "MODERATE"
+      humiliation:
+        canonical: "HUMILIATION"
+        source_column: "Humiliation"
+        positive_value: "1"
+        status: "VERIFIED_DATASET_LABEL"
+        feasibility: "WEAK"             # 262 train / 55 validation positives
+
+# Investigated candidate categories with NO supporting annotation.
+# They must stay disabled; do not create them from other labels.
+unsupported:
+  SAFE: "MIMIC label 0 means non-misogynistic, not 'safe' (other harms were never annotated)"
+  HATE: "no hate / identity-attack annotation (Prejudice covers gender prejudice within misogynistic memes only)"
+  ABUSE: "no insult / abuse annotation (Humiliation covers humiliation of women within misogynistic memes only)"
+  THREAT: "no threat / violence annotation"
+  OBSCENE: "no obscenity annotation (Objectification is not equivalent to sexual / obscene content)"
+  SARCASM: "no sarcasm annotation"

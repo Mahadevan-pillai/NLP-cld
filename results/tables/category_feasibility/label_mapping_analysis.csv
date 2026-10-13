@@ -1,0 +1,39 @@
+source_dataset,original_label,proposed_concept,status,confidence,evidence,semantic_difference
+MIMIC,Misogyny=1,SAFE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Misogyny=1,MISOGYNY,SUPPORTED,high,Dataset card: 1 = Misogynistic; binary task of MIMIC.,"Annotated as misogyny in memes (image + text), Hindi-English context."
+MIMIC,Misogyny=1,HATE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Misogyny=1,ABUSE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Misogyny=1,THREAT,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Misogyny=1,OBSCENE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Misogyny=1,SARCASM,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Misogyny=0,SAFE,NOT_SUPPORTED,high,0 = 'Non Misogynistic' (dataset card). Other harms were never annotated.,"Non-misogynistic memes may still contain hate, insults, threats or obscenity."
+MIMIC,Misogyny=0,MISOGYNY,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Misogyny=0,HATE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Misogyny=0,ABUSE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Misogyny=0,THREAT,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Misogyny=0,OBSCENE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Misogyny=0,SARCASM,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Objectification,SAFE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Objectification,MISOGYNY,SUPPORTED,high,"Sub-category of misogyny (dataset card, sub-task 2).","A misogyny subcategory, not a separate harm category."
+MIMIC,Objectification,HATE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Objectification,ABUSE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Objectification,THREAT,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Objectification,OBSCENE,AMBIGUOUS,low,Sub-label of misogyny; no definition of obscenity/sexual explicitness in the release.,Objectification (treating women as objects) is not the same as obscene/sexual content; it is also only annotated within misogynistic memes.
+MIMIC,Objectification,SARCASM,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Prejudice,SAFE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Prejudice,MISOGYNY,SUPPORTED,high,"Sub-category of misogyny (dataset card, sub-task 2).",A misogyny subcategory.
+MIMIC,Prejudice,HATE,PARTIALLY_SUPPORTED,low,Gender prejudice is one form of identity-based hostility.,"Covers only prejudice against women, only within misogynistic memes; cannot represent hate against other groups (religion, caste, ethnicity...)."
+MIMIC,Prejudice,ABUSE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Prejudice,THREAT,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Prejudice,OBSCENE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Prejudice,SARCASM,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Humiliation,SAFE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Humiliation,MISOGYNY,SUPPORTED,high,"Sub-category of misogyny (dataset card, sub-task 2).",A misogyny subcategory.
+MIMIC,Humiliation,HATE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Humiliation,ABUSE,PARTIALLY_SUPPORTED,low,Humiliation overlaps with insulting/degrading content.,"Covers humiliation of women only, within misogynistic memes; not general personal insult/abuse."
+MIMIC,Humiliation,THREAT,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Humiliation,OBSCENE,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+MIMIC,Humiliation,SARCASM,NOT_SUPPORTED,high,No annotation in MIMIC corresponds to this concept.,-
+DATASET 00.csv (sha256 dc0beb6901e7),result,ALL,NOT_SUPPORTED,high,"Unrelated domain: agriculture (crop, soil, moisture, temperature).",-
+DATASET 01.csv (sha256 59e8a76ac5ce),(none: numeric statistics; 'Sex' is a demographic field),ALL,NOT_SUPPORTED,high,Unrelated domain: mortality statistics by country/age/sex.,-
+DATASET 02.xlsx (sha256 dbad641c16c9),(none),ALL,NOT_SUPPORTED,high,Unrelated domain: FIFA World Cup match results (3 sheets).,-

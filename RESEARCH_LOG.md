@@ -763,3 +763,350 @@ Limitations: untuned; small validation set (CI about ±3.4 pp); shortcut feature
 Conclusion: Within the uncertainty of the best baseline.
 
 Next Experiment: TASK 9: Transformer / Pretrained Text Model.
+
+### Experiment ID: INS-20261012-03
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: Not an experiment. Task 8.5: can the available annotations support multi-category / hierarchical harmful-content classification? (Feasibility and design only.)
+
+Dataset: MIMIC (cleaned, 5,044). Three other local files (`Downloads/DATASET 00.csv`, `DATASET 01.csv`, `DATASET 02.xlsx`) inspected read-only with the developer's approval: agriculture, mortality statistics and football data. They are not content datasets.
+
+Dataset Version: cleaned SHA-256 `1ff17281346f…`; canonical split `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: label counts only (no training)
+
+Validation Split: label counts only
+
+Test Split: label counts only (descriptive). NO EVALUATION.
+
+Input Modality: Annotations only
+
+Preprocessing: NOT_APPLICABLE
+
+Feature Representation: NOT_APPLICABLE
+
+Model: NOT_APPLICABLE (nothing trained; Task 8 B01–B06 untouched)
+
+Model Version / Pretrained Checkpoint: NOT_APPLICABLE
+
+Hyperparameters: NOT_APPLICABLE
+
+Random Seed: NOT_USED
+
+Training Environment: Windows 11, Python 3.10.0, pandas 2.3.3
+
+Training Details: `python scripts/analyze_category_feasibility.py`
+
+Validation Metrics: NOT_APPLICABLE
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: < 5 s
+
+Artifacts: `results/tables/category_feasibility/` (`all_dataset_labels`, `label_mapping_analysis`, `category_sufficiency`, `subcategory_structure`, `modality_support`), `config/categories.yaml` (proposed), `docs/MULTICATEGORY_FEASIBILITY_REPORT.md`
+
+Observations (measured):
+- **Verified labels:** only `Misogyny` (binary) plus `Objectification`, `Prejudice` and `Humiliation`.
+- **Nesting:** the sub-labels are strictly nested (0 positives among non-misogynistic memes).
+- **Co-occurrence:** 11.45% of misogynistic memes have more than one sub-label, so the formulation is MULTILABEL.
+- **Positives (train/validation):** Misogyny 1,756/375 (STRONG); Objectification 1,049/214 (STRONG); Prejudice 642/152 (MODERATE); Humiliation 262/55 (WEAK).
+- **Unsupported:** SAFE, HATE, ABUSE, THREAT, OBSCENE and SARCASM have no annotation.
+
+Error Analysis Notes: NOT_APPLICABLE
+
+Limitations:
+- Single dataset.
+- The meaning of sub-label values is inferred (1 = present) from the dataset card and the nesting.
+- Sufficiency tiers are a project judgment.
+
+Conclusion:
+- A general safe/harmful or multi-harm hierarchy is NOT supported.
+- A two-stage misogyny hierarchy is supported: binary detection, then a conditional multilabel sub-category stage.
+- Stage 2 and a narrowed RQ4 await the developer's decision.
+
+Next Experiment: TO BE DECIDED AFTER REVIEW OF MULTICATEGORY_FEASIBILITY_REPORT.md
+
+### Experiment ID: T01
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: RQ1 (text-only; pretrained model vs TF-IDF; effect of Hinglish normalization). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned + preprocessed (Task 6 v1.0)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text only (empty texts included)
+
+Preprocessing: `raw` (Task 6 v1.0), applied with `preprocess()` from `text_raw`
+
+Feature Representation: MuRIL last-layer attention-mask mean pooling, 768 dimensions, encoder frozen; embeddings cached per variant/split outside the repo
+
+Model: Frozen MuRIL embeddings + StandardScaler + Logistic Regression
+
+Model Version / Pretrained Checkpoint: `google/muril-base-cased` @ `afd9f36c7923d54e97903922ff1b260d091d202f` (weights SHA-256 `e65e3b7aaa3c…`); tokenizer from the same revision
+
+Hyperparameters: {"C": 1.0, "max_iter": 2000, "class_weight": null}; max_length 64 (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H, 12 threads), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_text_transformers.py frozen`; classifier fit 0.48 s; embedding train+validation 165 s; converged: True; save→reload reproduces predictions: True
+
+Validation Metrics: macro-F1 **0.6151** (95% bootstrap CI 0.580–0.651); accuracy 0.6154; precision (misogynistic) 0.6184; recall 0.5920; weighted-F1 0.6152; TN 242, FP 137, FN 153, TP 222; macro-F1 with text only 0.6054; without watermark 0.6118
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: classifier prediction 0.006 s (embeddings precomputed); artifact 25,937 bytes (+ the shared 953 MB encoder)
+
+Artifacts: `models/text/T01_muril_frozen_logreg_raw_v1.joblib` (git-ignored); embedding cache outside the repo; `results/metrics/text_models/T01.json`; `results/figures/text_models/T01_confusion_matrix.png`
+
+Observations: Frozen mean-pooled MuRIL + LR on RAW text is 0.0387 below the weakest TF-IDF baseline counterpart (B01 0.6538). Lowest of the three frozen variants. FN > FP (153 vs 137).
+
+Error Analysis Notes: see `docs/TRANSFORMER_TEXT_MODEL_REPORT.md` §15
+
+Limitations: untuned; single seed and split; small validation set (CI about ±3.5 pp); OCR text; shortcut features (watermark, empty text) present
+
+Conclusion: Frozen MuRIL embeddings do not beat TF-IDF on RAW text.
+
+Next Experiment: T02 (BASIC) / T03 (HINGLISH_NORMALIZED) frozen; then T04/T05 fine-tuning.
+
+### Experiment ID: T02
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: RQ1 (text-only; pretrained model vs TF-IDF; effect of Hinglish normalization). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned + preprocessed (Task 6 v1.0)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text only (empty texts included)
+
+Preprocessing: `basic` (Task 6 v1.0), applied with `preprocess()` from `text_raw`
+
+Feature Representation: MuRIL last-layer attention-mask mean pooling, 768 dimensions, encoder frozen; embeddings cached per variant/split outside the repo
+
+Model: Frozen MuRIL embeddings + StandardScaler + Logistic Regression
+
+Model Version / Pretrained Checkpoint: `google/muril-base-cased` @ `afd9f36c7923d54e97903922ff1b260d091d202f` (weights SHA-256 `e65e3b7aaa3c…`); tokenizer from the same revision
+
+Hyperparameters: {"C": 1.0, "max_iter": 2000, "class_weight": null}; max_length 64 (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H, 12 threads), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_text_transformers.py frozen`; classifier fit 0.62 s; embedding train+validation 129 s; converged: True; save→reload reproduces predictions: True
+
+Validation Metrics: macro-F1 **0.6298** (95% bootstrap CI 0.595–0.661); accuracy 0.6300; precision (misogynistic) 0.6319; recall 0.6133; weighted-F1 0.6299; TN 245, FP 134, FN 145, TP 230; macro-F1 with text only 0.6207; without watermark 0.6267
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: classifier prediction 0.010 s (embeddings precomputed); artifact 25,937 bytes (+ the shared 953 MB encoder)
+
+Artifacts: `models/text/T02_muril_frozen_logreg_basic_v1.joblib` (git-ignored); embedding cache outside the repo; `results/metrics/text_models/T02.json`; `results/figures/text_models/T02_confusion_matrix.png`
+
+Observations: Best frozen variant (+0.0147 vs RAW, +0.0107 vs HINGLISH_NORMALIZED); therefore selected automatically as the T04 text variant. Still 0.0373 below B03 (0.6671). FN > FP (145 vs 134).
+
+Error Analysis Notes: see `docs/TRANSFORMER_TEXT_MODEL_REPORT.md` §15
+
+Limitations: untuned; single seed and split; small validation set (CI about ±3.5 pp); OCR text; shortcut features (watermark, empty text) present
+
+Conclusion: Best frozen configuration, but weaker than every Task 8 baseline; BASIC chosen for T04 by validation.
+
+Next Experiment: T04: fine-tuned MuRIL on BASIC.
+
+### Experiment ID: T03
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: RQ1 (text-only; pretrained model vs TF-IDF; effect of Hinglish normalization). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned + preprocessed (Task 6 v1.0)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text only (empty texts included)
+
+Preprocessing: `hinglish_normalized` (Task 6 v1.0), applied with `preprocess()` from `text_raw`
+
+Feature Representation: MuRIL last-layer attention-mask mean pooling, 768 dimensions, encoder frozen; embeddings cached per variant/split outside the repo
+
+Model: Frozen MuRIL embeddings + StandardScaler + Logistic Regression
+
+Model Version / Pretrained Checkpoint: `google/muril-base-cased` @ `afd9f36c7923d54e97903922ff1b260d091d202f` (weights SHA-256 `e65e3b7aaa3c…`); tokenizer from the same revision
+
+Hyperparameters: {"C": 1.0, "max_iter": 2000, "class_weight": null}; max_length 64 (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H, 12 threads), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_text_transformers.py frozen`; classifier fit 0.54 s; embedding train+validation 127 s; converged: True; save→reload reproduces predictions: True
+
+Validation Metrics: macro-F1 **0.6191** (95% bootstrap CI 0.585–0.652); accuracy 0.6194; precision (misogynistic) 0.6222; recall 0.5973; weighted-F1 0.6192; TN 243, FP 136, FN 151, TP 224; macro-F1 with text only 0.6095; without watermark 0.6159
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: classifier prediction 0.010 s (embeddings precomputed); artifact 25,937 bytes (+ the shared 953 MB encoder)
+
+Artifacts: `models/text/T03_muril_frozen_logreg_hinglish_normalized_v1.joblib` (git-ignored); embedding cache outside the repo; `results/metrics/text_models/T03.json`; `results/figures/text_models/T03_confusion_matrix.png`
+
+Observations: Hinglish normalization is -0.0107 vs BASIC and +0.0040 vs RAW at the frozen level (single run; within CIs).
+
+Error Analysis Notes: see `docs/TRANSFORMER_TEXT_MODEL_REPORT.md` §15
+
+Limitations: untuned; single seed and split; small validation set (CI about ±3.5 pp); OCR text; shortcut features (watermark, empty text) present
+
+Conclusion: No benefit from normalization for frozen MuRIL embeddings (not significant either way).
+
+Next Experiment: T05: fine-tuned MuRIL on HINGLISH_NORMALIZED.
+
+### Experiment ID: T04
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: RQ1 (text-only; pretrained model vs TF-IDF; effect of Hinglish normalization). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned + preprocessed (Task 6 v1.0)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text only (empty texts included)
+
+Preprocessing: `basic` (Task 6 v1.0), applied with `preprocess()` from `text_raw`
+
+Feature Representation: MuRIL WordPiece tokens, max_length 64, dynamic padding
+
+Model: Fine-tuned MuRIL (AutoModelForSequenceClassification, 2-logit head, cross-entropy, softmax score)
+
+Model Version / Pretrained Checkpoint: `google/muril-base-cased` @ `afd9f36c7923d54e97903922ff1b260d091d202f` (weights SHA-256 `e65e3b7aaa3c…`); tokenizer from the same revision
+
+Hyperparameters: {"learning_rate": 2e-05, "weight_decay": 0.01, "batch_size": 16, "max_epochs": 4, "warmup_ratio": 0.1, "gradient_clip_norm": 1.0, "early_stopping_patience": 1, "freeze_word_embeddings": true, "max_length": 64} (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H, 12 threads), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_text_transformers.py finetune --exp T04`; 4 epochs run, best epoch 4 (validation macro-F1); epoch 1: train loss 0.6924, val loss 0.6930, val macro-F1 0.3322; epoch 2: train loss 0.6761, val loss 0.6496, val macro-F1 0.6483; epoch 3: train loss 0.6098, val loss 0.6286, val macro-F1 0.6721; epoch 4: train loss 0.5612, val loss 0.6302, val macro-F1 0.6751; trainable parameters 86,042,882 of 237,557,762; save→reload reproduces predictions: True
+
+Validation Metrics: macro-F1 **0.6751** (95% bootstrap CI 0.641–0.707); accuracy 0.6751; precision (misogynistic) 0.6693; recall 0.6853; weighted-F1 0.6750; TN 252, FP 127, FN 118, TP 257; macro-F1 with text only 0.6679; without watermark 0.6738
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: training 44.5 min on CPU; validation inference 24.8 s for 754 texts; checkpoint 957 MB
+
+Artifacts: `{MODEL_DIR}/T04_muril_finetuned_basic_v1` (outside the repo, `$NLP_CLD_MODEL_DIR`); `results/tables/text_models/T04_training_history.csv`; `results/metrics/text_models/T04_training.log` (local only, git-ignored); `results/figures/text_models/T04_training_curves.png`; `results/metrics/text_models/T04.json`; `results/figures/text_models/T04_confusion_matrix.png`
+
+Observations: Epoch 1 predicted almost only one class (val macro-F1 0.3322, train loss about ln 2); learning started in epoch 2. Best epoch = last epoch (4); training loss still falling, so not clearly converged. +0.0453 vs frozen BASIC (T02), +0.0080 vs B03 (CIs overlap). Recall > precision (0.685 vs 0.669). Empty text -> misogynistic (all 22).
+
+Error Analysis Notes: see `docs/TRANSFORMER_TEXT_MODEL_REPORT.md` §15
+
+Limitations: untuned; single seed and split; small validation set (CI about ±3.5 pp); OCR text; shortcut features (watermark, empty text) present; word embeddings frozen during fine-tuning
+
+Conclusion: Fine-tuning clearly beats frozen embeddings; roughly on par with the best TF-IDF baseline.
+
+Next Experiment: T05 (same settings, HINGLISH_NORMALIZED).
+
+### Experiment ID: T05
+
+Date: 2026-10-13
+
+Status: COMPLETED
+
+Research Question: RQ1 (text-only; pretrained model vs TF-IDF; effect of Hinglish normalization). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned + preprocessed (Task 6 v1.0)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text only (empty texts included)
+
+Preprocessing: `hinglish_normalized` (Task 6 v1.0), applied with `preprocess()` from `text_raw`
+
+Feature Representation: MuRIL WordPiece tokens, max_length 64, dynamic padding
+
+Model: Fine-tuned MuRIL (AutoModelForSequenceClassification, 2-logit head, cross-entropy, softmax score)
+
+Model Version / Pretrained Checkpoint: `google/muril-base-cased` @ `afd9f36c7923d54e97903922ff1b260d091d202f` (weights SHA-256 `e65e3b7aaa3c…`); tokenizer from the same revision
+
+Hyperparameters: {"learning_rate": 2e-05, "weight_decay": 0.01, "batch_size": 16, "max_epochs": 4, "warmup_ratio": 0.1, "gradient_clip_norm": 1.0, "early_stopping_patience": 1, "freeze_word_embeddings": true, "max_length": 64} (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H, 12 threads), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_text_transformers.py finetune --exp T05`; 4 epochs run, best epoch 3 (validation macro-F1); epoch 1: train loss 0.6930, val loss 0.6915, val macro-F1 0.6133; epoch 2: train loss 0.6773, val loss 0.6512, val macro-F1 0.6554; epoch 3: train loss 0.6329, val loss 0.6247, val macro-F1 0.6869; epoch 4: train loss 0.5921, val loss 0.6217, val macro-F1 0.6788; trainable parameters 86,042,882 of 237,557,762; save→reload reproduces predictions: True
+
+Validation Metrics: macro-F1 **0.6869** (95% bootstrap CI 0.654–0.719); accuracy 0.6870; precision (misogynistic) 0.6759; recall 0.7120; weighted-F1 0.6868; TN 251, FP 128, FN 108, TP 267; macro-F1 with text only 0.6803; without watermark 0.6858
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: training 33.1 min on CPU; validation inference 24.1 s for 754 texts; checkpoint 957 MB
+
+Artifacts: `{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1` (outside the repo, `$NLP_CLD_MODEL_DIR`); `results/tables/text_models/T05_training_history.csv`; `results/metrics/text_models/T05_training.log` (local only, git-ignored); `results/figures/text_models/T05_training_curves.png`; `results/metrics/text_models/T05.json`; `results/figures/text_models/T05_confusion_matrix.png`
+
+Observations: Best Task 9 and best overall validation text model. +0.0118 vs T04 (BASIC), +0.0198 vs B03, +0.0678 vs frozen T03; CIs overlap with B03 and T04, no significance claimed. Best epoch 3 of 4. Lower error rate than B03 on Devanagari (31.8% vs 39.6%) but higher on negation (39.4% vs 30.3%) and on texts with mentions. Fixes 126 of B03's 251 errors and adds 111 new ones. Softmax scores compressed to 0.33-0.68 and barely separate errors from correct predictions. Empty text -> misogynistic (all 22, score 0.526).
+
+Error Analysis Notes: see `docs/TRANSFORMER_TEXT_MODEL_REPORT.md` §15
+
+Limitations: untuned; single seed and split; small validation set (CI about ±3.5 pp); OCR text; shortcut features (watermark, empty text) present; word embeddings frozen during fine-tuning
+
+Conclusion: Best development text model (validation only). Normalization helps the fine-tuned model by +1.2 pp in this single run; not established.
+
+Next Experiment: TASK 10 - Image-Only Vision Model (text tuning, if any, in Task 12 on validation only).

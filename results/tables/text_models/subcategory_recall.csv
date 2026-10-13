@@ -1,0 +1,6 @@
+group,validation_samples,recall_T01,recall_T02,recall_T03,recall_T04,recall_T05,recall_B03
+Objectification,214,0.6075,0.6075,0.6028,0.6682,0.6869,0.6542
+Prejudice,152,0.5592,0.5855,0.5658,0.6776,0.7039,0.6513
+Humiliation,55,0.6,0.6727,0.6,0.7636,0.8364,0.7636
+any misogynistic,375,0.592,0.6133,0.5973,0.6853,0.712,0.6587
+multiple sub-labels,46,0.5652,0.5652,0.5217,0.6739,0.7174,0.7391

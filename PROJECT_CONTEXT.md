@@ -180,6 +180,12 @@ Listing a model here does not finalize it.
 These may be refined after dataset inspection and literature review.
 Novelty must not be claimed until relevant literature is reviewed.
 
+**RQ4 (PROPOSED in Task 8.5, not adopted):** how effectively can
+hierarchical multilabel models identify misogyny sub-categories
+(objectification, prejudice, humiliation)? It is supported by MIMIC
+sub-task 2; Humiliation has weak sample support. RQ1–RQ3 stay specific
+to misogyny: the data cannot support a broader "harmful content" claim.
+
 **RQ3 / OCR experiment: TO BE REFRAMED (finding from Task 4).** The
 dataset text is itself OCR output (EasyOCR per the dataset card), so
 there is no human "reference text". Options to decide before the OCR
@@ -306,7 +312,7 @@ data, document what is persisted, avoid logging raw user input.
 
 ## 17. Current project stage
 
-**Task 4 — Dataset Cleaning and Final Dataset Strategy (complete).**
+**Task 9 — Pretrained / Transformer Text Models (complete, validation only).**
 
 IMPLEMENTED in Task 1: directory structure, documentation
 (`CLAUDE.md`, `PROJECT_CONTEXT.md`, `RESEARCH_LOG.md`, `README.md`),
@@ -389,10 +395,51 @@ IMPLEMENTED in Task 8:
   - the OCR token `meः`.
 - **Test set NOT evaluated.** `docs/TEXT_BASELINE_REPORT.md`.
 
-NOT STARTED: transformer/image/multimodal models, tuning, final test
-evaluation, OCR, explainability, Streamlit UI, deployment, paper writing.
+DONE in Task 8.5 (feasibility study; nothing trained):
+- The only content annotations are MIMIC `Misogyny` plus the sub-labels
+  `Objectification`, `Prejudice` and `Humiliation`. These are
+  multilabel and nested under misogyny.
+- A general safe/harmful or multi-harm system (hate, abuse, threat,
+  obscene, sarcasm) is **NOT supported** by any available annotation.
+- PROPOSED, awaiting decision: a stage-2 multilabel misogyny
+  sub-category task, and a narrowed RQ4.
+- See `docs/MULTICATEGORY_FEASIBILITY_REPORT.md` and
+  `config/categories.yaml`.
 
-Next planned task: **Task 9 — Transformer / Pretrained Text Model.**
+IMPLEMENTED in Task 9 (binary misogyny task only, developer's choice):
+- One encoder: **MuRIL** (`google/muril-base-cased`, pinned revision
+  `afd9f36c…`), max length 64 (≤ 1% of train texts truncated).
+- Frozen embeddings + LR (T01–T03): **0.615–0.630**, below every TF-IDF
+  baseline.
+- Fine-tuned MuRIL: **T04 BASIC 0.6751**, **T05 HINGLISH_NORMALIZED
+  0.6869** (95% CI 0.654–0.719). T05 is the best validation text model
+  so far, +0.020 over B03 with overlapping CIs; no significance claimed.
+  - Plain PyTorch loop; word embeddings frozen to fit CPU RAM; untuned
+    settings.
+- Normalization (RQ1): +1.2 pp when fine-tuned, −1.1 pp when frozen.
+  The effect is **not established** (single seed, within CIs).
+- Findings that matter later:
+  - **softmax scores are compressed (0.33–0.68) and uncalibrated**: never
+    display them as confidence;
+  - empty text is still predicted misogynistic;
+  - most false negatives look image-dependent;
+  - possible gender-topic false positives.
+- **New architecture pieces:**
+  - `src/inference/text.py` `predict_text(text, model_version)` with the
+    model registry `results/metrics/text_model_registry.json` (B01–B06,
+    T01–T05). It uses the Task 6 `preprocess()` with each model's
+    recorded mode.
+  - Large checkpoints live outside the repo/OneDrive in
+    `$NLP_CLD_MODEL_DIR` (registry prefix `{MODEL_DIR}`).
+  - CI installs CPU-only torch + transformers; tests use a tiny random
+    BERT, offline.
+- **Test set NOT evaluated.** `docs/TRANSFORMER_TEXT_MODEL_REPORT.md`;
+  log entries T01–T05.
+
+NOT STARTED: image/multimodal models, tuning, final test evaluation,
+OCR, explainability, Streamlit UI, deployment, paper writing.
+
+Next planned task: **TASK 10 — Image-Only Vision Model.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

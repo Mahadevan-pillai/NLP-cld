@@ -1,0 +1,56 @@
+{
+  "experiment_id": "T01",
+  "model": "frozen MuRIL + LR",
+  "preprocessing": "RAW",
+  "preprocessing_mode": "raw",
+  "task": "misogyny_detection (binary)",
+  "metrics": {
+    "n": 754,
+    "accuracy": 0.6154,
+    "precision": 0.6184,
+    "recall": 0.592,
+    "f1": 0.6049,
+    "macro_precision": 0.6155,
+    "macro_recall": 0.6153,
+    "macro_f1": 0.6151,
+    "weighted_f1": 0.6152,
+    "precision_non_misogynistic": 0.6127,
+    "recall_non_misogynistic": 0.6385,
+    "f1_non_misogynistic": 0.6253,
+    "support_non_misogynistic": 379,
+    "precision_misogynistic": 0.6184,
+    "recall_misogynistic": 0.592,
+    "f1_misogynistic": 0.6049,
+    "support_misogynistic": 375,
+    "tn": 242,
+    "fp": 137,
+    "fn": 153,
+    "tp": 222
+  },
+  "subset_macro_f1": {
+    "all": 0.6151,
+    "with_text": 0.6054,
+    "without_watermark": 0.6118
+  },
+  "macro_f1_ci95": [
+    0.5795,
+    0.6511
+  ],
+  "test_set": "NOT EVALUATED",
+  "train_seconds": 0.478844699999172,
+  "embedding_seconds_train_val": 165.34399340000164,
+  "inference_seconds_classifier_only": 0.005642500000249129,
+  "embedding_dim": 768,
+  "artifact": "models/text/T01_muril_frozen_logreg_raw_v1.joblib",
+  "artifact_bytes": 25937,
+  "reload_reproduces_predictions": true,
+  "converged": true,
+  "encoder": "google/muril-base-cased",
+  "encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+  "max_length": 64,
+  "classifier_settings": {
+    "C": 1.0,
+    "max_iter": 2000,
+    "class_weight": null
+  }
+}

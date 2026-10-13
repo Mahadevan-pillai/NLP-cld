@@ -1,0 +1,9 @@
+combination,misogynistic_samples,percent,n_labels
+Objectification,1276,50.9,1
+Prejudice,676,26.96,1
+Humiliation,267,10.65,1
+Objectification+Prejudice,162,6.46,2
+Prejudice+Humiliation,75,2.99,2
+Objectification+Humiliation,47,1.87,2
+Objectification+Prejudice+Humiliation,3,0.12,3
+(none),1,0.04,0

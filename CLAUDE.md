@@ -163,7 +163,7 @@ hyperparameters across modules.
   - Add new test dependencies to `requirements-ci.txt`.
 
 ## 7. Current stage
-Tasks 1–5 done:
+Tasks 1–9 done:
 - repository foundation;
 - the MongoDB database layer (`src/database/`, see `docs/database.md`);
 - the read-only dataset inventory (`docs/DATASET_REPORT.md`);
@@ -178,6 +178,24 @@ Tasks 1–5 done:
 - TF-IDF text baselines B01–B06 (`src/models/text_baselines.py`,
   `src/training/text_baselines.py`, see `docs/TEXT_BASELINE_REPORT.md`),
   validation only.
+- the multi-category feasibility study (Task 8.5, see below);
+- MuRIL text models T01–T05 (`src/models/transformer_text.py`,
+  `scripts/train_text_transformers.py`, see
+  `docs/TRANSFORMER_TEXT_MODEL_REPORT.md`), validation only. Best:
+  fine-tuned MuRIL on HINGLISH_NORMALIZED (T05).
+
+**Text inference (Task 9):**
+- Use `src.inference.text.predict_text(text, model_version)` for any text
+  prediction. It reads `results/metrics/text_model_registry.json` and
+  applies the model's own preprocessing mode.
+- Large checkpoints live in `$NLP_CLD_MODEL_DIR` (outside the repo and
+  OneDrive); the registry writes them as `{MODEL_DIR}/...`. Never commit
+  them.
+- Load MuRIL only at the pinned revision in `config.yaml`, with
+  `HF_HUB_OFFLINE=1` in scripts and tests. Tests use a tiny random BERT
+  and never download models.
+- Scores are **uncalibrated** (SVM scores are not probabilities at all).
+  Never present them as confidence percentages.
 
 **Model pipelines:**
 - Models take RAW text and apply `TextPreprocessor(mode)` (the Task 6
@@ -188,6 +206,17 @@ Tasks 1–5 done:
 - Evaluate with `src/evaluation/metrics.py` (macro-F1 is the development
   metric).
 - Joblib artifacts are pickles: only load files this project created.
+
+**Categories (Task 8.5):**
+- Only MIMIC `Misogyny` and its sub-labels (`Objectification`,
+  `Prejudice`, `Humiliation`; multilabel, nested under misogyny) are
+  annotated.
+- Never train or display SAFE, HATE, ABUSE, THREAT, OBSCENE or SARCASM
+  predictions, and never create them by relabelling.
+- `Misogyny = 0` means "non-misogynistic", **not** "safe".
+- Enabled tasks are defined in `config/categories.yaml`.
+- Moderation outputs are limited to ALLOW / WARNING / HUMAN REVIEW (no
+  automatic BLOCK).
 
 **Splits (mandatory for every experiment):**
 - Use only `data/splits/split_assignments.csv` via

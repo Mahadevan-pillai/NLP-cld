@@ -59,12 +59,14 @@ jobs:
       - name: Install test dependencies
         run: |
           python -m pip install --upgrade pip
+          python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
           python -m pip install -r requirements-ci.txt
       - name: Show versions
-        run: python -m pip list --format=freeze | grep -iE '^(numpy|pandas|scikit-learn|matplotlib|pyyaml|pymongo|pillow|pytest)=='
+        run: python -m pip list --format=freeze | grep -iE '^(numpy|pandas|scikit-learn|matplotlib|pyyaml|pymongo|pillow|pytest|torch|transformers)=='
       - name: Compile all Python files
         run: python -m compileall -q src scripts tests
       - name: Run tests
         env:
           MPLBACKEND: Agg
+          HF_HUB_OFFLINE: "1"   # tests must never download models
         run: python -m pytest -q -rs
