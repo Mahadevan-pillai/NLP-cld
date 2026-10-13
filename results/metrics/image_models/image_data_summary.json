@@ -1,0 +1,14 @@
+{
+  "train": 3532,
+  "validation": 754,
+  "test_ids_counted_not_opened": 758,
+  "formats": {
+    "JPEG": 4286
+  },
+  "modes": {
+    "RGB": 4286
+  },
+  "exif_orientation_not_1": 0,
+  "min_side_px": 107,
+  "checks_passed": "9/9"
+}

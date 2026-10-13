@@ -1,0 +1,2 @@
+image_model,text_model,both_correct,only_image_correct,only_text_correct,both_wrong,prediction_agreement,error_correlation_phi
+I01,T05,413,159,105,77,0.6499,0.1339

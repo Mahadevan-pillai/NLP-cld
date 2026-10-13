@@ -177,15 +177,71 @@ text_model:
       T05: ["fine_tune", "hinglish_normalized"]
 
 image_model:
-  checkpoint: null              # TBD: vision or vision-language encoder
-  image_size: null
+  # Task 10. Image-only baseline: frozen pretrained vision tower + linear
+  # classifier. See docs/IMAGE_MODEL_REPORT.md. No text / OCR is used.
+  version: "1.0"
+  encoder:
+    checkpoint: "google/siglip-base-patch16-224"   # Apache-2.0; vision tower only (text tower unused)
+    revision: "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed"   # pinned commit (model.safetensors sha256 2c63cb7d1f2e...)
+    embedding: "pooler_output"  # SigLIP attention-pooling head output
+    embedding_dim: 768
+    batch_size: 32
+  preprocessing:
+    # Loading (src/preprocessing/image.py, version 1.0): decode, EXIF
+    # orientation, RGB. Then the encoder's own processor (from the pinned
+    # revision): resize to 224x224 bicubic WITHOUT crop (aspect ratio not
+    # kept), rescale 1/255, normalise mean 0.5 / std 0.5.
+    loader_version: "1.0"
+    image_size: 224
+    resize: "stretch_to_square"
+    processor_backend: "pil"    # SiglipImageProcessorPil, pinned (torchvision backend would differ slightly)
+  # Embedding cache: <dir of $NLP_CLD_MODEL_DIR>/../cache/image_embeddings
+  # (outside the repo); fallback models/image/cache (git-ignored).
+  cache_dir_env: "NLP_CLD_MODEL_DIR"
+  cache_dir_default: "models/image/cache"
+  artifact_dir: "models/image"  # small classifier .joblib files (git-ignored)
+  logistic_regression: {C: 1.0, max_iter: 2000, class_weight: null}   # classes balanced: no weighting
+  linear_svm: {C: 1.0, loss: "squared_hinge", dual: "auto", max_iter: 10000, class_weight: null}
+  experiments:                  # id: classifier on the frozen embeddings (fixed defaults, NOT tuned)
+    I01: "logistic_regression"
+    I02: "linear_svm"
+  fine_tune: "DEFERRED TO GPU"  # no CUDA GPU on the development laptop (Task 10 hardware check)
+  selection_metric: "macro_f1"
 
 multimodal_model:
-  # PROPOSED: start with a simple fusion (e.g. concatenation of image
-  # and text embeddings + classifier) before complex architectures.
-  fusion: null
-  hidden_dim: null
-  dropout: null
+  # Task 11. See docs/MULTIMODAL_MODEL_REPORT.md. Fixed baseline settings,
+  # NOT tuned (Task 12 tunes, on validation only).
+  version: "1.0"
+  text_representations:
+    finetuned_pooled:           # T05 pooled [CLS] (input of T05's classifier head), 768-d
+      source_experiment: "T05"
+      artifact: "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1"
+      preprocessing_mode: "hinglish_normalized"
+    frozen_mean:                # frozen MuRIL mean pooling (T03 representation), 768-d; never saw labels
+      source_experiment: "T03"
+      preprocessing_mode: "hinglish_normalized"
+  image_representation:         # Task 10 frozen SigLIP pooler_output (cached), 768-d
+    source_experiment: "I01"
+  # Text features are cached outside the repo next to the Task 9/10 caches:
+  # <dir of $NLP_CLD_MODEL_DIR>/../cache/multimodal_text (fallback models/multimodal/cache).
+  cache_dir_default: "models/multimodal/cache"
+  artifact_dir: "models/multimodal"
+  logistic_regression: {C: 1.0, max_iter: 3000, class_weight: null}   # M01; classes balanced
+  fusion_mlp:                   # M02 / M03
+    projection_dim: 256         # each modality: Linear(768 -> 256) + LayerNorm
+    hidden_dim: 256
+    dropout: 0.3
+    learning_rate: 1.0e-3
+    weight_decay: 1.0e-2
+    batch_size: 64
+    max_epochs: 50
+    early_stopping_patience: 5  # epochs without validation macro-F1 improvement
+    class_weight: null          # classes balanced (50.3 / 49.7): plain cross-entropy
+  experiments:                  # id: [classifier, text representation]
+    M01: ["logistic_regression", "finetuned_pooled"]
+    M02: ["fusion_mlp", "finetuned_pooled"]
+    M03: ["fusion_mlp", "frozen_mean"]     # control: text features that never saw the labels
+  selection_metric: "macro_f1"
 
 training:
   device: null                  # "cpu" / "cuda", TBD per environment

@@ -45,7 +45,7 @@ opencv-python-headless>=4.9
 
 # Deep learning / NLP
 torch>=2.2
-transformers>=4.40
+transformers>=5.19      # Task 10 uses the 5.x image-processor backend API (backend="pil"); tested with 5.19.0
 sentence-transformers>=3.0
 
 # Application

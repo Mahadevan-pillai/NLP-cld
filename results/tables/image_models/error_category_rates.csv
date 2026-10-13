@@ -1,0 +1,9 @@
+category,samples,errors,error_rate
+ALL,754,182,0.2414
+source_resolution_in_train,53,9,0.1698
+low_resolution_min_side_lt_400,15,4,0.2667
+extreme_aspect_lt_0_5_or_gt_2,2,0,0.0
+caption_empty,22,5,0.2273
+caption_20plus_words,79,24,0.3038
+has_watermark_caption,6,0,0.0
+in_multi_sample_leakage_group,8,2,0.25

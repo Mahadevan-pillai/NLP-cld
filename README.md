@@ -159,18 +159,18 @@ checks connectivity (needs `MONGODB_URI` in `.env`), and
 ├── notebooks/            # 02_eda.ipynb (reproduces the EDA)
 ├── src/
 │   ├── data/  preprocessing/  features/  models/  training/
-│   ├── inference/        # predict_text(text, model_version): shared text-model interface
+│   ├── inference/        # predict_text, predict_image, predict_multimodal: shared model interfaces
 │   ├── evaluation/  explainability/
 │   ├── database/         # MongoDB connection, schemas, repositories, indexes
 │   └── utils/            # config.py — config loader
-├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py, create_splits.py, train_text_baselines.py, train_text_transformers.py, report_text_models.py
+├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py, create_splits.py, train_text_baselines.py, train_text_transformers.py, report_text_models.py, train_image_models.py, report_image_models.py, train_multimodal.py, report_multimodal.py
 ├── models/{text,image,multimodal}/   # model artifacts (git-ignored)
 ├── results/
 │   ├── figures/  metrics/  tables/  paper/   # versioned small outputs
 │   └── predictions/      # per-sample outputs (git-ignored)
 ├── app/                  # Streamlit app (later)
 ├── tests/                # pytest tests
-└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md, TEXT_BASELINE_REPORT.md, MULTICATEGORY_FEASIBILITY_REPORT.md, TRANSFORMER_TEXT_MODEL_REPORT.md
+└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md, TEXT_BASELINE_REPORT.md, MULTICATEGORY_FEASIBILITY_REPORT.md, TRANSFORMER_TEXT_MODEL_REPORT.md, IMAGE_MODEL_REPORT.md, MULTIMODAL_MODEL_REPORT.md
 ```
 
 ## 14. Setup Instructions
@@ -259,6 +259,8 @@ tests; live Atlas connectivity depends on your `.env`).
 **Task 8 — Traditional Text Baselines: complete** (validation only).
 **Task 8.5 — Multi-category feasibility study: complete** (`docs/MULTICATEGORY_FEASIBILITY_REPORT.md`).
 **Task 9 — Pretrained / transformer text models: complete** (validation only; `docs/TRANSFORMER_TEXT_MODEL_REPORT.md`).
+**Task 10 — Image-only vision model: complete** (validation only; `docs/IMAGE_MODEL_REPORT.md`).
+**Task 11 — Multimodal image + text fusion: complete** (validation only; `docs/MULTIMODAL_MODEL_REPORT.md`).
 Only misogyny and its sub-categories are annotated, so the app will report *misogyny detected / not
 detected*, never "safe".
 - ✅ Repository structure, documentation, configuration, ignore rules,
@@ -280,7 +282,12 @@ detected*, never "safe".
 - ✅ MuRIL text models (T01–T05): frozen embeddings + LR (0.615–0.630) are below TF-IDF; fine-tuned
   MuRIL on HINGLISH_NORMALIZED text is the best **validation** text model so far (macro-F1 0.6869,
   95% CI 0.654–0.719, overlapping B03). Scores are uncalibrated. `predict_text()` serves all text models.
-- ❌ Image and multimodal models — not started.
+- ✅ Image-only model (frozen SigLIP + LR, I01): best **validation** macro-F1 so far, 0.7586 (95% CI 0.731–0.789),
+  above the text models. It may partly rely on a "woman pictured" shortcut; its scores are overconfident and
+  must not be shown as confidence. `predict_image()` serves it. Vision fine-tuning is deferred to a GPU.
+- ✅ Multimodal fusion (M02: T05 text + SigLIP image features, small MLP): best **validation** macro-F1 so far,
+  0.8076, vs image-only 0.7586 and text-only 0.6869 on the same samples. Not yet tuned or test-evaluated;
+  scores are uncalibrated. `predict_multimodal()` needs both the image and its caption (no OCR yet).
 - ❌ Final test-set results — **none exist** (test set locked).
 - ❌ OCR, explainability, Streamlit UI, deployment — not started.
 
@@ -294,15 +301,16 @@ detected*, never "safe".
 7. ✅ Task 7 — Leakage-safe train/validation/test split
 8. ✅ Task 8 — Text baselines (TF-IDF + LR / SVM), validation only
 9. ✅ Task 9 — Pretrained / transformer text models (MuRIL), validation only
-10. Image model, multimodal fusion
-11. Hyperparameter tuning (validation only) and final test evaluation
-12. OCR evaluation and OCR-noise experiment (to be reframed: dataset text is already OCR output)
-13. Explainability
-14. Streamlit application, history, dashboard, feedback
-15. Deployment
-16. Research paper (IEEE format)
+10. ✅ Task 10 — Image-only vision model (frozen SigLIP), validation only
+11. ✅ Task 11 — Multimodal image + text fusion, validation only
+12. Hyperparameter tuning (validation only) and final test evaluation
+13. OCR evaluation and OCR-noise experiment (to be reframed: dataset text is already OCR output)
+14. Explainability
+15. Streamlit application, history, dashboard, feedback
+16. Deployment
+17. Research paper (IEEE format)
 
-The order after Task 9 is indicative and may change.
+The order after Task 11 is indicative and may change.
 
 ## 20. Disclaimer
 This repository is an academic research project in progress.

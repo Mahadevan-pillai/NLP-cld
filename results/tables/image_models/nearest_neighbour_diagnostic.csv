@@ -1,0 +1,5 @@
+nearest_train_cosine_bin,validation_samples,nearest_train_same_label_rate
+<0.80,540,0.7481481481481481
+0.80-0.90,211,0.7440758293838863
+0.90-0.95,3,1.0
+>=0.95,0,
