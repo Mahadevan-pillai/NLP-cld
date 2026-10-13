@@ -238,6 +238,29 @@ retention period for history; whether submitted text should be stored
 for every analysis or only with consent. `image_reference` is optional
 so the "temporary only" option remains possible.
 
+**Decided in Task 16 (application integration):**
+- **Text is stored only with consent.** Each analysis has a "Save this
+  analysis to history" checkbox, off by default (`config/app.yaml`
+  `history.consent_default: false`). Without consent nothing is written.
+- **Images are temporary only.** Uploads are processed in memory and
+  never written to disk or MongoDB; `image_reference` is not used. Only
+  `image_metadata` (width, height, format, mode, size_bytes) is stored.
+- **Retention period:** still open (no automatic deletion yet).
+
+**New optional analysis fields (Task 16).** Older documents stay valid.
+
+| Field | Content |
+|---|---|
+| `moderation` | `{recommendation: ALLOW / WARNING / HUMAN_REVIEW / null, rule_id, reason}`; no BLOCK value exists |
+| `ocr` | memes only: `{status, route, confidence, engine, engine_version}` (Task 14 route) |
+| `app_version` | application version, e.g. `"1.0.0"` |
+| `source` | `"app"` or `"e2e_test"` (end-to-end test records) |
+
+`AnalysisHistoryRepository.list_recent_analyses()` also accepts
+`final_label` (predictions.final.label) and `since` (created_at ≥).
+The application uses these through `src/application/history.py`
+(`HistoryService`); `app/` never calls PyMongo.
+
 ## 10. Future integration
 
 - **Streamlit (later task):** create the connection once per app

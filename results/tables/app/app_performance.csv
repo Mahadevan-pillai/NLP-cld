@@ -1,0 +1,15 @@
+measure,seconds,runs
+import application modules,4.03,1
+start-up audit incl. SHA-256 of all final artifacts,7.73,1
+"model loading (warm-up: T05+B07, I03+SigLIP, M04, EasyOCR)",22.4,1
+  loading: text models (T05 + B07),8.55,1
+  loading: image model (I03 + SigLIP),1.9,1
+  loading: multimodal model (M04),4.99,1
+  loading: OCR reader (EasyOCR),6.96,1
+"meme explanation, first call (includes one-off set-up)",10.07,1
+"meme explanation on demand, warm (occlusion 9 copies + IG on OCR text)",9.91,2
+text analysis (prediction + second opinion + moderation),0.085,5
+"text explanation (T05 Integrated Gradients, 32 steps)",2.108,5
+"meme OCR (EasyOCR, CPU)",8.97,2
+meme analysis total (validation + OCR + 3 models + ablation + moderation),11.65,2
+Streamlit first page render in this process (models already loaded; includes the cached start-up audit),4.99,1

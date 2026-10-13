@@ -1,0 +1,18 @@
+# Streamlit settings for the local research application (Task 16). No secrets here
+# (.streamlit/secrets.toml is git-ignored and not used: secrets come from .env / the environment).
+
+[server]
+headless = true
+maxUploadSize = 10            # MB; must match config/app.yaml upload.max_upload_mb
+enableXsrfProtection = true
+
+[browser]
+gatherUsageStats = false      # privacy: do not send usage statistics
+
+[client]
+showErrorDetails = "type"     # never show stack traces or raw exception messages to users
+toolbarMode = "minimal"
+
+[theme]
+base = "light"
+primaryColor = "#2b6cb0"

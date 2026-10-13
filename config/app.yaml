@@ -1,0 +1,62 @@
+# ==================================================================
+# config/app.yaml - Streamlit application settings (Task 16)
+# ==================================================================
+# Kept separate from config.yaml because config.yaml is checksum-frozen by the Task 13 final
+# evaluation (like config/ocr.yaml and config/explainability.yaml). The `application:` section of
+# config.yaml is therefore stale; THIS file is authoritative for the app.
+# No secrets here: MONGODB_URI / MONGODB_DATABASE / HF_TOKEN / NLP_CLD_MODEL_DIR come from the environment.
+# ==================================================================
+
+app_version: "1.0.0"
+title: "Hinglish Misogynistic Meme Detection"
+subtitle: "Explainable text, image and multimodal analysis (research prototype)"
+
+# Models: the FINAL models come from config.yaml `final_models` (FINAL_TEXT_MODEL / FINAL_IMAGE_MODEL /
+# FINAL_MULTIMODAL_MODEL). They are never substituted: a missing artifact disables the affected mode.
+second_opinion_text_model: "B07"          # TF-IDF baseline used only by the text-mode moderation rule
+verify_artifact_checksums: true           # compare artifacts with the Task 13 freeze manifest at start-up
+
+text_input:
+  max_chars: 2000                         # longer input is rejected with a message
+  min_letters: 1                          # at least one letter (Latin or Devanagari) after cleaning
+  # T05 reads at most 64 tokens (registry max_length); the app warns when the text is longer.
+
+upload:
+  allowed_formats: ["JPEG", "PNG"]        # decided by decoding the file, never by the file name
+  allowed_extensions: ["jpg", "jpeg", "png"]
+  max_upload_mb: 10                       # also set in .streamlit/config.toml (server.maxUploadSize)
+  max_pixels: 40000000                    # e.g. 8000 x 5000; larger images are rejected
+  processing: "in_memory"                 # uploads are never written to disk
+  persist_uploads: false
+
+history:
+  enabled: true
+  consent_default: false                  # nothing is saved unless the user ticks the consent box
+  store_text_with_consent: true           # submitted text / OCR text is stored only with consent
+  store_image_binary: false               # never; only width / height / format / mode / size_bytes
+  list_limit: 50
+
+feedback:
+  enabled: true
+  comment_max_chars: 500                  # feedback never retrains anything automatically
+
+xai:
+  text_explanation: "automatic"           # T05 Integrated Gradients (about 1.5 s on CPU)
+  image_explanation: "on_demand"          # occlusion behind an "Explain prediction" button
+  image_window: 112                       # UI setting from config/explainability.yaml (9 occlusions)
+  image_stride: 56
+  disclaimer: "Explanations show model attribution and may not reflect human reasoning or causality."
+
+labels:                                   # responsible display wording (the model classifies content, not people)
+  misogynistic: "Potentially misogynistic"
+  non_misogynistic: "Not flagged as misogynistic"
+score_label: "Model score (uncalibrated)"
+
+logging:
+  file: "logs/app.log"                    # git-ignored
+  level: "INFO"
+  log_user_text: false                    # never log submitted text, OCR text or images
+
+dashboard:                                # research artefacts shown read-only (no metric is typed by hand)
+  hide_figures_with_dataset_terms: ["05_top_terms_overall.png", "06_distinctive_terms_by_class.png",
+                                    "13_mention_handles_by_class.png"]

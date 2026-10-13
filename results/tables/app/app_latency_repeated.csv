@@ -1,0 +1,6 @@
+measure,median_s,min_s,max_s,runs
+text analysis (prediction + second opinion + moderation),0.07,0.06,0.16,6
+"text explanation (T05 IG, 32 steps)",2.21,1.8,3.43,6
+meme analysis total (validation + OCR + 3 models + ablation + moderation),12.23,11.59,12.59,6
+"  of which OCR (EasyOCR, CPU)",9.65,8.94,9.97,6
+meme explanation on demand (occlusion 9 copies + IG on OCR text),7.93,7.57,8.16,4

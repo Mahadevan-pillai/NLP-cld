@@ -1,0 +1,28 @@
+check,passed,detail
+all components available and checksums match the Task 13 freeze,True,[]
+"verify_freeze(): Task 13 models, code and configs unchanged",True,
+MongoDB reachable,True,MongoDB connected
+text: result schema complete,True,None
+text: FINAL_TEXT_MODEL T05 used,True,
+text: normalised text == Task 6 preprocess(hinglish_normalized),True,
+text: explanation computed (Integrated Gradients),True,
+text: moderation is ALLOW / WARNING / HUMAN_REVIEW,True,
+text: saved to MongoDB and read back,True,Saved to history.
+text: feedback stored,True,"Thank you, your feedback was saved."
+text: no consent -> nothing saved,True,
+meme: analysis ok,True,None
+meme: OCR read the caption,True,JAB EXAM KAL HO aur syllabus pura baki ho
+meme: multimodal route; T05 / I03 / M04 all ran,True,
+meme: primary prediction is the multimodal model,True,
+meme: image model did not use text,True,
+meme: moderation + agreement present,True,
+meme: explanation (image heatmap + text attribution),True,
+meme: saved without image binary (metadata only),True,Saved to history.
+meme: OCR status and moderation stored,True,
+meme: feedback stored,True,"Thank you, your feedback was saved."
+meme without text: image-only fallback (limited),True,image_only
+corrupt upload rejected safely,True,
+Streamlit: all six pages render with real services,True,[]
+Streamlit: Analyze Text shows FINAL ANALYSIS with the real model,True,
+"Streamlit: Analyze Meme shows OCR text, three models and moderation with the real models",True,
+Streamlit: Explain prediction renders the heatmap,True,

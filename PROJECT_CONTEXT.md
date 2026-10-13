@@ -261,7 +261,7 @@ Every run is recorded in `RESEARCH_LOG.md`.
 
 Streamlit app with pages: Home, Analyze Text, Analyze Meme, Analysis
 History, Research Dashboard, About, plus user feedback where
-appropriate. OCR engine: **EasyOCR 1.7.2** (selected in Task 14;
+appropriate (IMPLEMENTED in Task 16: `app/`, `src/application/`). OCR engine: **EasyOCR 1.7.2** (selected in Task 14;
 `config/ocr.yaml`, `src/ocr/`), with the fallback and privacy design in
 `docs/OCR_ROBUSTNESS_REPORT.md` §15–16.
 Explainability is DONE in Task 15 with methods matched to the actual models
@@ -621,9 +621,30 @@ written first):
     (in memory, never cached).
 - Report: `docs/EXPLAINABILITY_ERROR_ANALYSIS_REPORT.md`; log entry XAI-T15.
 
-NOT STARTED: Streamlit UI, deployment, paper writing.
+DONE in Task 16 (local application; nothing trained or changed):
+- **Structure:**
+  - `app/` is UI only: six pages, components, cached services;
+  - `src/application/` is the service layer: `AnalysisService`, consent-based
+    `HistoryService`, validation, start-up audit, research loaders, safe logging;
+  - settings in `config/app.yaml` (`config.yaml` is frozen).
+- **Models:** T05 / I03 / M04 (+ B07 second opinion), checked against the Task 13
+  freeze at start-up and never substituted.
+- **Meme flow:** Task 14 OCR with its fallback (image-only when no reliable text).
+- **Explanations and moderation:** Task 15 XAI (text automatic, image on
+  demand) and moderation rules (ALLOW / WARNING / HUMAN REVIEW).
+- **Storage decisions:**
+  - text is stored only with per-analysis consent (off by default);
+  - images are never stored.
+- **Schema:** optional `moderation` / `ocr` / `app_version` / `source` fields added
+  to `analysis_history`.
+- **Checks:** end-to-end 27/27 with the real models and Atlas; 37 application tests.
+- **Integrity fix:** `.gitattributes` pins line endings, because a checkout had
+  rewritten frozen files with CRLF.
+- Report: `docs/APPLICATION_INTEGRATION_REPORT.md`; log entry APP-T16.
 
-Next planned task: **TASK 16 — Complete Application Integration: Inference + MongoDB + Streamlit.**
+NOT STARTED: deployment, paper writing.
+
+Next planned task: **TASK 17 — Deployment, Production Hardening & End-to-End Acceptance Testing.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

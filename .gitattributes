@@ -1,0 +1,29 @@
+# Keep LF line endings in the working tree on every OS (Task 16 fix).
+# The Task 13 freeze checksums and the canonical split SHA-256 are computed on the exact bytes of the
+# files; with core.autocrlf=true, a Windows checkout rewrote them with CRLF and broke verify_freeze().
+* text=auto eol=lf
+
+# binary files: never converted
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.joblib binary
+*.npz binary
+*.npy binary
+*.safetensors binary
+*.pth binary
+*.pt binary
+*.bin binary
+
+# Files that were CRLF when the Task 13 freeze manifest was written (verified by matching
+# results/final/model_freeze_manifest.json). Pinned so every checkout reproduces the frozen bytes.
+# Do not re-save these files; any edit (even line endings) breaks verify_freeze().
+config.yaml text eol=crlf
+data/splits/split_manifest.json text eol=crlf
+results/metrics/text_model_registry.json text eol=crlf
+results/metrics/image_model_registry.json text eol=crlf
+results/metrics/multimodal_model_registry.json text eol=crlf
+src/models/image_encoder.py text eol=crlf
