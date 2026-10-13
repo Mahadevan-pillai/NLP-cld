@@ -25,3 +25,4 @@ pytest>=8.0
 # torch itself is installed by the workflow from the CPU-only PyTorch index
 # (the default Linux wheel pulls in GBs of CUDA libraries).
 transformers>=5.19      # Task 10 uses the 5.x image-processor backend API (backend="pil"); tested with 5.19.0
+streamlit>=1.40          # Task 16: headless page tests (streamlit.testing.v1.AppTest); no server is started

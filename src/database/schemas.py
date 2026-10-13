@@ -42,7 +42,13 @@ IMAGE_METADATA_KEYS = ("width", "height", "format", "mode", "size_bytes")
 ANALYSIS_FIELDS = {
     "analysis_id", "analysis_type", "created_at", "processing_time_ms",
     "model_versions", "input", "predictions",
+    # optional, added in Task 16 (application integration); older documents stay valid
+    "moderation", "ocr", "app_version", "source",
 }
+MODERATION_OUTPUTS = ("ALLOW", "WARNING", "HUMAN_REVIEW")      # no BLOCK (project policy)
+MODERATION_KEYS = ("recommendation", "rule_id", "reason")
+OCR_KEYS = ("status", "route", "confidence", "engine", "engine_version")
+SOURCES = ("app", "e2e_test")             # e2e_test = documented Task 16 end-to-end test record
 FEEDBACK_FIELDS = {"feedback_id", "analysis_id", "rating", "comment", "created_at"}
 MODEL_VERSION_FIELDS = {
     "model_id", "model_type", "model_name", "architecture", "version",
@@ -193,6 +199,29 @@ def validate_analysis(doc: dict, allowed_labels=None) -> None:
         if pred is not None:
             _check_prediction(pred, f"predictions.{key}", allowed_labels)
 
+    # optional Task 16 fields
+    mod = doc.get("moderation")
+    if mod is not None:
+        if not isinstance(mod, dict):
+            raise ValidationError("moderation must be an object.")
+        _check_known_fields(mod, MODERATION_KEYS, "moderation")
+        if mod.get("recommendation") is not None and mod["recommendation"] not in MODERATION_OUTPUTS:
+            raise ValidationError(f"moderation.recommendation must be one of {MODERATION_OUTPUTS} or null.")
+        for key in ("rule_id", "reason"):
+            _check_optional_str(mod.get(key), f"moderation.{key}")
+    ocr = doc.get("ocr")
+    if ocr is not None:
+        if analysis_type != "meme" or not isinstance(ocr, dict):
+            raise ValidationError("ocr must be an object and is allowed for meme analyses only.")
+        _check_known_fields(ocr, OCR_KEYS, "ocr")
+        for key in ("status", "route", "engine", "engine_version"):
+            _check_optional_str(ocr.get(key), f"ocr.{key}")
+        if ocr.get("confidence") is not None:
+            _check_number(ocr["confidence"], "ocr.confidence", minimum=0)
+    _check_optional_str(doc.get("app_version"), "app_version")
+    if doc.get("source") is not None and doc["source"] not in SOURCES:
+        raise ValidationError(f"source must be one of {SOURCES}.")
+
     # model_versions: which model_id/version produced each prediction
     versions = doc.get("model_versions") or {}
     if not isinstance(versions, dict):
@@ -209,7 +238,9 @@ def build_analysis(
     model_versions: dict | None = None,
     processing_time_ms: float | None = None,
     allowed_labels=None,
+    extra: dict | None = None,
 ) -> dict:
+    """extra: optional Task 16 fields (moderation, ocr, app_version, source)."""
     doc = {
         "analysis_id": new_id(),
         "analysis_type": analysis_type,
@@ -219,6 +250,10 @@ def build_analysis(
         "input": input_data,
         "predictions": predictions or {},
     }
+    extra = extra or {}
+    if set(extra) - {"moderation", "ocr", "app_version", "source"}:
+        raise ValidationError(f"unknown extra fields: {sorted(set(extra) - {'moderation', 'ocr', 'app_version', 'source'})}")
+    doc.update({k: v for k, v in extra.items() if v is not None})
     validate_analysis(doc, allowed_labels)
     return doc
 

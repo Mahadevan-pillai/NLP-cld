@@ -46,7 +46,20 @@ class FakeCollection:
 
     @staticmethod
     def _matches(doc, query):
-        return all(doc.get(k) == v for k, v in query.items())
+        """Equality on (dotted) keys, plus {"$gte": x} - the subset the repositories use."""
+        def get(d, dotted):
+            for part in dotted.split("."):
+                if not isinstance(d, dict) or part not in d:
+                    return None
+                d = d[part]
+            return d
+
+        def ok(value, cond):
+            if isinstance(cond, dict) and "$gte" in cond:
+                return value is not None and value >= cond["$gte"]
+            return value == cond
+
+        return all(ok(get(doc, k), v) for k, v in query.items())
 
     @staticmethod
     def _project(doc, projection):

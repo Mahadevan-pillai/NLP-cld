@@ -163,7 +163,7 @@ hyperparameters across modules.
   - Add new test dependencies to `requirements-ci.txt`.
 
 ## 7. Current stage
-Tasks 1–15 done:
+Tasks 1–16 done:
 - repository foundation;
 - the MongoDB database layer (`src/database/`, see `docs/database.md`);
 - the read-only dataset inventory (`docs/DATASET_REPORT.md`);
@@ -213,6 +213,29 @@ Tasks 1–15 done:
 - Explainability and advanced error analysis of the frozen models (Task 15;
   `src/explainability/`, `config/explainability.yaml`, see
   `docs/EXPLAINABILITY_ERROR_ANALYSIS_REPORT.md`).
+
+- the local Streamlit application (Task 16; `app/`, `src/application/`,
+  `config/app.yaml`, see `docs/APPLICATION_INTEGRATION_REPORT.md`).
+
+**Application (Task 16):**
+- `app/` is UI only. Every prediction, explanation, moderation decision and
+  database call goes through `src.application`.
+  - `AnalysisService.analyze_text()` / `analyze_meme()` / `explain_*()` for models;
+  - `HistoryService` for MongoDB.
+- Start the app with `python -m streamlit run app/app.py`. Settings live in
+  `config/app.yaml`; the `application:` section of the frozen `config.yaml`
+  is stale.
+- Models are checked against the freeze at start-up and never substituted:
+  a missing artifact disables the mode.
+- History is saved only with per-analysis consent (off by default).
+  Uploads stay in memory; image binaries are never stored or logged.
+- Never log user text, OCR text, images or raw exception messages: use
+  `log_event()`, which drops non-whitelisted keys.
+- **Line endings of frozen files are pinned in `.gitattributes`.**
+  - `verify_freeze()` hashes exact bytes, and Python's `write_text` on
+    Windows writes CRLF.
+  - Never re-save frozen files, and do not remove those `.gitattributes`
+    rules.
 
 **Explainability (Task 15):**
 - Explain with `src.explainability`:
@@ -354,5 +377,5 @@ Rules for later tasks:
   never overwrites it.
 
 The test set was evaluated once in Task 13 (frozen models) and reused only for the
-post-hoc Task 14 OCR measurement and Task 15 explanations (nothing changed); no UI is built. See
+post-hoc Task 14 OCR measurement and Task 15 explanations (nothing changed); the Task 16 app only displays results. See
 `PROJECT_CONTEXT.md` Section 17 for the up-to-date stage.

@@ -44,11 +44,13 @@ class AnalysisHistoryRepository:
         predictions: dict | None = None,
         model_versions: dict | None = None,
         processing_time_ms: float | None = None,
+        extra: dict | None = None,
     ) -> dict:
-        """Validate and store a new analysis. Returns the stored document."""
+        """Validate and store a new analysis. Returns the stored document.
+        extra: optional moderation / ocr / app_version / source fields (Task 16)."""
         doc = schemas.build_analysis(
             analysis_type, input_data, predictions, model_versions,
-            processing_time_ms, allowed_labels=self.allowed_labels,
+            processing_time_ms, allowed_labels=self.allowed_labels, extra=extra,
         )
         # insert_one adds "_id" to the dict it is given, so pass a copy.
         self.collection.insert_one(dict(doc))
@@ -57,12 +59,21 @@ class AnalysisHistoryRepository:
     def get_analysis_by_id(self, analysis_id: str) -> dict | None:
         return self.collection.find_one({"analysis_id": analysis_id}, HIDE_ID)
 
-    def list_recent_analyses(self, limit: int = 20, analysis_type: str | None = None) -> list[dict]:
+    def list_recent_analyses(self, limit: int = 20, analysis_type: str | None = None,
+                             final_label: str | None = None, since=None) -> list[dict]:
+        """Newest first. Optional filters: analysis type, final predicted label, created_at >= since."""
         query = {}
         if analysis_type is not None:
             if analysis_type not in schemas.ANALYSIS_TYPES:
                 raise ValueError(f"analysis_type must be one of {schemas.ANALYSIS_TYPES}.")
             query["analysis_type"] = analysis_type
+        if final_label is not None:
+            if not isinstance(final_label, str) or not final_label.strip():
+                raise ValueError("final_label must be a non-empty string.")
+            query["predictions.final.label"] = final_label
+        if since is not None:
+            schemas._check_timestamp(since, "since")
+            query["created_at"] = {"$gte": since}
         cursor = self.collection.find(query, HIDE_ID).sort("created_at", DESCENDING)
         return list(cursor.limit(_check_limit(limit)))
 

@@ -2342,3 +2342,59 @@ Limitations: attribution is not causation (baseline/fill dependent, no interacti
 Conclusion: explanations are consistent with the frozen models and pass the faithfulness checks; they reveal gender-presence / female-term shortcuts (fairness risks) that are reported, not fixed; a conservative ALLOW / WARNING / HUMAN_REVIEW design and a structured explanation object are ready for Task 16
 
 Next Experiment: TASK 16 - Complete Application Integration: Inference + MongoDB + Streamlit
+
+### Experiment ID: APP-T16
+
+Date: 2026-10-13
+
+Status: COMPLETED: application integration (not a research experiment; no training, tuning or evaluation; research metrics unchanged)
+
+Research Question: none (engineering). Integrate the frozen final system into a local Streamlit application with OCR, explanations, moderation suggestions, consent-based MongoDB history and a research dashboard
+
+Dataset: none used by the application tests (safe synthetic text and generated meme images); the dashboard displays stored Task 5-15 results only
+
+Dataset Version: n/a (canonical split unchanged, SHA-256 `47fb02a87b36…`)
+
+Dataset Source: n/a
+
+Train Split: not used
+
+Validation Split: not used
+
+Test Split: not used (the Task 13 TEST metrics are only displayed)
+
+Input Modality: text, image, image + text
+
+Preprocessing: frozen Task 6 v1.0 inside each model's path (HINGLISH_NORMALIZED for T05 / B07 / M04 text); Task 10 v1.0 images; Task 14 OCR (EasyOCR 1.7.2, `["en", "hi"]`, preparation `none`, fallback policy unchanged)
+
+Feature Representation: as frozen
+
+Model: FINAL_TEXT_MODEL T05, FINAL_IMAGE_MODEL I03, FINAL_MULTIMODAL_MODEL M04 (from config.yaml `final_models`), B07 as text-mode second opinion; artifact SHA-256 verified at start-up against the Task 13 freeze manifest (T05 `697692cc1d9e`, I03 `73c5497e95da`, M04 `5b132e127981`, B07 `a2aaae391288`)
+
+Model Version / Pretrained Checkpoint: `google/muril-base-cased@afd9f36c`, `google/siglip-base-patch16-224@7fd15f06` (PIL processor)
+
+Hyperparameters: none; application v1.0.0 (`config/app.yaml`); XAI in the UI: T05 Integrated Gradients (32 steps, automatic), I03 occlusion 112/56 px (9 copies, on demand), modality agreement + train-mean ablation; moderation rules from `config/explainability.yaml` (no thresholds, no BLOCK)
+
+Random Seed: n/a
+
+Training Environment: no training; CPU i5-13500H (12 threads), 15.7 GB RAM, Windows 11 (on battery during the latency repeats), Python 3.10.0, torch 2.14.1+cpu, transformers 5.19.0, streamlit 1.65.0, pymongo 4.18.3
+
+Training Details: none
+
+Validation Metrics: unchanged
+
+Test Metrics: unchanged (Task 13). Application checks: `scripts/app_e2e.py` 27/27 passed with the real frozen models and MongoDB Atlas (records tagged `source = "e2e_test"`); `tests/test_application.py` 37 passed (models mocked)
+
+Runtime / Resource Notes: cold start about 35-40 s (imports 4.0 s, checksum audit 7.7 s, model loading 22.4 s); warm text analysis 0.07 s; text explanation 2.2 s; meme analysis 12.2 s median on battery (OCR 9.7 s; 3.3 s / 2.5 s in an earlier run); meme explanation 7.9 s (`results/tables/app/`)
+
+Artifacts: `app/`, `src/application/`, `config/app.yaml`, `.streamlit/config.toml`, `.gitattributes`, `scripts/app_e2e.py`, `tests/test_application.py`, `results/tables/app/app_performance.csv`, `app_e2e_checks.csv`, `app_latency_repeated.csv`, `docs/APPLICATION_INTEGRATION_REPORT.md`; schema extension in `src/database/schemas.py` / `repositories.py` (optional moderation / ocr / app_version / source fields)
+
+Observations: all components available and verified; known shortcuts surface in the app (a harmless synthetic sentence with a feminine verb form was flagged WARNING by both text models); OCR dominates meme latency. Integrity incident: branch checkouts with core.autocrlf=true rewrote tracked files with CRLF and broke verify_freeze(); no content changed (git diff vs the freeze commit empty); fixed with `.gitattributes` (LF default; six files that were CRLF at freeze pinned to CRLF), verify_freeze() passes 34/34
+
+Error Analysis Notes: n/a (no evaluation)
+
+Limitations: CPU latency; uncalibrated scores; binary misogyny only; no retention policy / authentication yet; uploads cannot be re-explained after the session (never stored)
+
+Conclusion: the local application integrates the frozen research system end to end without changing any model or result
+
+Next Experiment: TASK 17 - Deployment, Production Hardening & End-to-End Acceptance Testing

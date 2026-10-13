@@ -37,16 +37,16 @@ detect misogynistic content in such memes and text reliably.
 - Real uploads require OCR, which introduces noise.
 - Moderation tools benefit from honest, model-faithful explanations.
 
-## 5. Application Modes (PLANNED)
+## 5. Application Modes (IMPLEMENTED, Task 16)
 | Mode | Input | Primary output |
 |---|---|---|
 | **Analyze Text** | English/Hinglish text | Text-model prediction |
 | **Analyze Meme** | Meme image | Multimodal prediction (text-only and image-only shown for comparison) |
 
-Planned pages: Home, Analyze Text, Analyze Meme, Analysis History,
-Research Dashboard, About, plus user feedback.
+Pages: Home, Analyze Text, Analyze Meme, Analysis History, Research Dashboard,
+Feedback / About (`app/`; see `docs/APPLICATION_INTEGRATION_REPORT.md`).
 
-## 6. Text Analysis Pipeline (PLANNED)
+## 6. Text Analysis Pipeline (IMPLEMENTED, Task 16)
 ```
 User Text -> Input Validation -> Text Preprocessing
           -> Hinglish Normalization -> Text Model -> Prediction
@@ -55,7 +55,7 @@ Shown to the user: original text, normalized text, predicted class,
 confidence (where meaningful), explanation (where appropriate), model
 version.
 
-## 7. Meme Analysis Pipeline (PLANNED)
+## 7. Meme Analysis Pipeline (IMPLEMENTED, Task 16)
 ```
                        Uploaded Meme
                   +----------+----------+
@@ -148,7 +148,8 @@ checks connectivity (needs `MONGODB_URI` in `.env`), and
 ├── PROJECT_CONTEXT.md    # stable project context and decisions
 ├── RESEARCH_LOG.md       # experiment log + template
 ├── README.md
-├── config.yaml           # central configuration (no secrets)
+├── config.yaml           # central configuration (no secrets; checksum-frozen since Task 13)
+├── config/               # categories.yaml, ocr.yaml (Task 14), explainability.yaml (Task 15), app.yaml (Task 16)
 ├── .env.example          # environment variable names (no values)
 ├── requirements.txt
 ├── pytest.ini
@@ -160,7 +161,8 @@ checks connectivity (needs `MONGODB_URI` in `.env`), and
 ├── src/
 │   ├── data/  preprocessing/  features/  models/  training/
 │   ├── inference/        # predict_text, predict_image, predict_multimodal: shared model interfaces
-│   ├── evaluation/  explainability/
+│   ├── evaluation/  explainability/  ocr/
+│   ├── application/      # Task 16 service layer: AnalysisService, HistoryService, validation, audit
 │   ├── database/         # MongoDB connection, schemas, repositories, indexes
 │   └── utils/            # config.py — config loader
 ├── scripts/              # check_mongodb.py, init_database.py, inspect_datasets.py, clean_dataset.py, run_eda.py, preprocess_text.py, create_splits.py, train_text_baselines.py, train_text_transformers.py, report_text_models.py, train_image_models.py, report_image_models.py, train_multimodal.py, report_multimodal.py, tune_models.py, report_tuning.py, final_evaluation.py, report_final_evaluation.py
@@ -168,9 +170,9 @@ checks connectivity (needs `MONGODB_URI` in `.env`), and
 ├── results/
 │   ├── figures/  metrics/  tables/  paper/   # versioned small outputs
 │   └── predictions/      # per-sample outputs (git-ignored)
-├── app/                  # Streamlit app (later)
+├── app/                  # Streamlit app: app.py, pages/, components/, services/ (UI only)
 ├── tests/                # pytest tests
-└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md, TEXT_BASELINE_REPORT.md, MULTICATEGORY_FEASIBILITY_REPORT.md, TRANSFORMER_TEXT_MODEL_REPORT.md, IMAGE_MODEL_REPORT.md, MULTIMODAL_MODEL_REPORT.md, HYPERPARAMETER_TUNING_REPORT.md, FINAL_EVALUATION_REPORT.md
+└── docs/                 # database.md, DATASET_REPORT.md, DATA_CLEANING_REPORT.md, EDA_REPORT.md, TEXT_PREPROCESSING_REPORT.md, DATA_SPLIT_REPORT.md, TEXT_BASELINE_REPORT.md, MULTICATEGORY_FEASIBILITY_REPORT.md, TRANSFORMER_TEXT_MODEL_REPORT.md, IMAGE_MODEL_REPORT.md, MULTIMODAL_MODEL_REPORT.md, HYPERPARAMETER_TUNING_REPORT.md, FINAL_EVALUATION_REPORT.md, OCR_ROBUSTNESS_REPORT.md, EXPLAINABILITY_ERROR_ANALYSIS_REPORT.md, APPLICATION_INTEGRATION_REPORT.md
 ```
 
 ## 14. Setup Instructions
@@ -196,6 +198,44 @@ python -m pytest
 
 For an NVIDIA GPU, install PyTorch first with the command from
 <https://pytorch.org/get-started/locally/>, then install the rest.
+
+### Run the application (Task 16)
+```bash
+python -m streamlit run app/app.py
+```
+Then open <http://localhost:8501>. The first start takes about 35-40 s on CPU: it checks every model file against
+the Task 13 freeze manifest, then loads the models once.
+
+**Model artifacts needed (not in git; produced by Tasks 9-14):**
+- `$NLP_CLD_MODEL_DIR/T05_muril_finetuned_hinglish_normalized_v1/` (fine-tuned MuRIL, about 950 MB);
+- `models/text/B07_*.joblib`, `models/image/I03_*.joblib`, `models/multimodal/M04_*/`;
+- Hugging Face cache: `google/siglip-base-patch16-224` at the pinned revision (the app runs offline);
+- EasyOCR weights in `~/.EasyOCR/model` (`craft_mlt_25k.pth`, `devanagari.pth`; 285 MB).
+
+A missing or changed artifact disables the affected mode with a message (no other model is substituted).
+
+**MongoDB (optional):**
+- `MONGODB_URI` / `MONGODB_DATABASE` in `.env`, and your IP on the Atlas allow-list.
+- Without MongoDB the app still analyses; only history and feedback are unavailable.
+- An analysis is saved **only if the user ticks "Save this analysis to history"** (off by default).
+- Images are never stored.
+
+**Supported input:**
+- **Analyze Text:** English / Hinglish / Hindi text, at most 2,000 characters; the model reads the first 64 tokens.
+- **Analyze Meme:** JPG or PNG, at most 10 MB. The text is read with OCR. The multimodal model gives the main result;
+  if no reliable text is found, the image model is used alone.
+
+**Output:** misogyny detection only (binary). Sub-categories are not available. Scores are uncalibrated. Moderation
+suggestions are ALLOW / WARNING / HUMAN REVIEW; nothing is blocked automatically.
+
+*Screenshots: placeholder; add images of the Home, Analyze Meme and Dashboard pages before submission.*
+
+**Limitations:**
+- Known model shortcuts: the text model over-reacts to words referring to women and to feminine verb forms; the
+  image model reacts to pictured women.
+- CPU-only: a meme analysis takes about 3-12 s, mostly OCR.
+
+See `docs/APPLICATION_INTEGRATION_REPORT.md`.
 
 ### Continuous integration (GitHub Actions)
 `.github/workflows/ci.yml` runs on every pull request and on pushes to
@@ -265,6 +305,7 @@ tests; live Atlas connectivity depends on your `.env`).
 **Task 13 — Final evaluation: complete** (TEST evaluated once after a committed model freeze; `docs/FINAL_EVALUATION_REPORT.md`).
 **Task 14 — OCR pipeline & OCR robustness: complete** (frozen models only; `docs/OCR_ROBUSTNESS_REPORT.md`).
 **Task 15 — Explainability & advanced error analysis: complete** (frozen models only; `docs/EXPLAINABILITY_ERROR_ANALYSIS_REPORT.md`).
+**Task 16 — Application integration: complete** (local Streamlit app; `docs/APPLICATION_INTEGRATION_REPORT.md`).
 Only misogyny and its sub-categories are annotated, so the app will report *misogyny detected / not
 detected*, never "safe".
 - ✅ Repository structure, documentation, configuration, ignore rules,
@@ -306,7 +347,10 @@ detected*, never "safe".
   occlusion maps, text-vs-image-vs-multimodal comparison and a moderation design (ALLOW / WARNING / HUMAN REVIEW, no
   automatic blocking). It found fairness risks: the text model reacts to words referring to women and ignores negation,
   and the image model reacts to pictured women. Explanations are model attribution, not proof of reasoning.
-- ❌ Streamlit UI, deployment — not started.
+- ✅ Streamlit application (`app/` + `src/application/`): Analyze Text and Analyze Meme with the frozen final models (T05 / I03 /
+  M04), OCR with the Task 14 fallback, explanations, moderation suggestions, consent-based MongoDB history and feedback, and a
+  research dashboard read from the stored results. End-to-end checks: 27/27 passed (synthetic inputs).
+- ❌ Deployment — not started.
 
 ## 19. Planned Development Roadmap
 1. ✅ Task 1 — Project foundation and repository initialization
@@ -324,11 +368,11 @@ detected*, never "safe".
 13. ✅ Task 13 — Final test evaluation, ablation study and result analysis
 14. ✅ Task 14 — OCR pipeline and OCR robustness experiment (frozen models)
 15. ✅ Task 15 — Explainability and advanced error analysis (frozen models)
-16. Streamlit application, history, dashboard, feedback
-17. Deployment
+16. ✅ Task 16 — Application integration: Streamlit + inference + OCR + XAI + MongoDB
+17. Deployment, production hardening and acceptance testing
 18. Research paper (IEEE format)
 
-The order after Task 15 is indicative and may change.
+The order after Task 16 is indicative and may change.
 
 ## 20. Disclaimer
 This repository is an academic research project in progress.
