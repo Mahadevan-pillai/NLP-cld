@@ -163,7 +163,7 @@ hyperparameters across modules.
   - Add new test dependencies to `requirements-ci.txt`.
 
 ## 7. Current stage
-Tasks 1–12 done:
+Tasks 1–13 done:
 - repository foundation;
 - the MongoDB database layer (`src/database/`, see `docs/database.md`);
 - the read-only dataset inventory (`docs/DATASET_REPORT.md`);
@@ -199,6 +199,14 @@ Tasks 1–12 done:
     `tuning.selected`.
   - Task 12 outputs go to `results/*/tuning/`. Never write tuning runs into
     earlier tasks' result folders.
+- **FINAL TEST EVALUATION (Task 13)** of the frozen models
+  (`results/final/model_freeze_manifest.json`, freeze commit `ed0de53`; see
+  `docs/FINAL_EVALUATION_REPORT.md`).
+  - **The test set is now spent.** Never use test results to tune,
+    retrain, change preprocessing / thresholds / architecture or re-select
+    models.
+  - A new model is a separate, clearly labelled post-hoc experiment.
+  - Final TEST metrics live in `results/final/final_model_registry.json`.
 
 **Multimodal (Task 11):**
 - Join modalities on `sample_id` only (`src.features.multimodal.align`),
@@ -301,5 +309,5 @@ Rules for later tasks:
 - `original_text` is raw OCR text; preprocessing writes new columns and
   never overwrites it.
 
-No test-set evaluation has been done and no UI built. See
+The test set was evaluated once in Task 13 (frozen models); no UI is built. See
 `PROJECT_CONTEXT.md` Section 17 for the up-to-date stage.

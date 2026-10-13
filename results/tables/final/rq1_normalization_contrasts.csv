@@ -1,0 +1,5 @@
+family,contrast,difference,ci_low,ci_high,share_of_resamples_a_better
+TF-IDF LR,B03 (HINGLISH) - B02 (BASIC),0.0013,-0.0067,0.0095,0.5987
+TF-IDF SVM,B06 (HINGLISH) - B05 (BASIC),-0.0066,-0.0171,0.0027,0.0926
+frozen MuRIL,T03 (HINGLISH) - T02 (BASIC),-0.0092,-0.0254,0.0075,0.1389
+fine-tuned MuRIL,T05 (HINGLISH) - T04 (BASIC),-0.026,-0.0545,0.0015,0.0334

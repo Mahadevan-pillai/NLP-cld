@@ -1,0 +1,5 @@
+system,model,modality,description,test_sample_count,accuracy,precision,recall,macro_f1,weighted_f1,macro_f1_ci95,result_type
+Traditional Text Baseline,B07,text,"TF-IDF + LR, HINGLISH_NORMALIZED (tuned)",758,0.6359,0.6323,0.6356,0.6359,0.6359,0.6015-0.6700,FINAL TEST RESULT
+Pretrained Text Model (FINAL_TEXT_MODEL),T05,text,"fine-tuned MuRIL, HINGLISH_NORMALIZED",758,0.6478,0.6373,0.6729,0.6476,0.6476,0.6133-0.6815,FINAL TEST RESULT
+Image-Only Model (FINAL_IMAGE_MODEL),I03,image,"frozen SigLIP + LR (C=0.001, tuned)",758,0.8047,0.8098,0.7926,0.8047,0.8047,0.7757-0.8324,FINAL TEST RESULT
+Multimodal Model (FINAL_MULTIMODAL_MODEL),M04,image+text,"fusion MLP, T05 text, tuned config TM-007",758,0.8034,0.8215,0.7713,0.8031,0.8032,0.7741-0.8308,FINAL TEST RESULT

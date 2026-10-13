@@ -1,0 +1,62 @@
+{
+  "experiment_id": "I01",
+  "evaluation": "FINAL TEST EVALUATION",
+  "split": "test",
+  "split_assignments_sha256": "47fb02a87b36a22d20b9fd8bbb023fb1efa05361739211933a259caa9ff24894",
+  "artifact_sha256": "e35caa80af0757029b6e835aaaae0cc2129d36fad93d4d489a394b059caa2dee",
+  "role": "ablation: image classifier (untuned)",
+  "modality": "image",
+  "description": "frozen SigLIP + LR (C=1)",
+  "score_type": "uncalibrated LR probability",
+  "metrics": {
+    "n": 758,
+    "accuracy": 0.777,
+    "precision": 0.7915,
+    "recall": 0.7473,
+    "f1": 0.7688,
+    "macro_precision": 0.7779,
+    "macro_recall": 0.7768,
+    "macro_f1": 0.7768,
+    "weighted_f1": 0.7768,
+    "precision_non_misogynistic": 0.7643,
+    "recall_non_misogynistic": 0.8063,
+    "f1_non_misogynistic": 0.7847,
+    "support_non_misogynistic": 382,
+    "precision_misogynistic": 0.7915,
+    "recall_misogynistic": 0.7473,
+    "f1_misogynistic": 0.7688,
+    "support_misogynistic": 376,
+    "tn": 308,
+    "fp": 74,
+    "fn": 95,
+    "tp": 281
+  },
+  "subsets": {
+    "all": {
+      "n": 758,
+      "accuracy": 0.777,
+      "precision": 0.7915,
+      "recall": 0.7473,
+      "macro_f1": 0.7768,
+      "weighted_f1": 0.7768
+    },
+    "with_text": {
+      "n": 737,
+      "accuracy": 0.7748,
+      "precision": 0.793,
+      "recall": 0.7411,
+      "macro_f1": 0.7745,
+      "weighted_f1": 0.7745
+    },
+    "without_watermark": {
+      "n": 744,
+      "accuracy": 0.7728,
+      "precision": 0.783,
+      "recall": 0.7376,
+      "macro_f1": 0.7722,
+      "weighted_f1": 0.7725
+    }
+  },
+  "validation_macro_f1_at_freeze": 0.7586,
+  "evaluated_utc": "2026-10-13T11:13:03+00:00"
+}

@@ -1894,3 +1894,283 @@ Limitations: validation-selected (optimistic); single split; untested on test
 Conclusion: Adopted by the pre-declared rule as FINAL_MULTIMODAL_MODEL; improvement over M02 not meaningful; M02 equivalent.
 
 Next Experiment: TASK 13 - Final Evaluation, Ablation Study & Result Analysis
+
+### Experiment ID: FINAL-T05
+
+Date: 2026-10-13
+
+Status: COMPLETED: **FINAL TEST EVALUATION** (FINAL_TEXT_MODEL)
+
+Research Question: RQ2/RQ3 (final modality comparison) and RQ1 (preprocessing ablation), evaluated once on TEST with a frozen model
+
+Dataset: MIMIC (cleaned, Task 4) with Task 6 v1.0 text and the original images
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (used only to fit the frozen models, before Task 13)
+
+Validation Split: 754 (used only to reproduce stored results at the freeze)
+
+Test Split: 758 (382 non-misogynistic / 376 misogynistic). **EVALUATED ONCE (FINAL TEST EVALUATION)** after the freeze commit `ed0de53`
+
+Input Modality: text
+
+Preprocessing: frozen (text v1.0, image loader v1.0, pil backend)
+
+Feature Representation: as in the frozen model (fine-tuned MuRIL, HINGLISH_NORMALIZED)
+
+Model: T05: fine-tuned MuRIL, HINGLISH_NORMALIZED
+
+Model Version / Pretrained Checkpoint: artifact SHA-256 `697692cc1d9e111f…`; encoders google/muril-base-cased@afd9f36c7923d54e97903922ff1b260d091d202f / google/siglip-base-patch16-224@7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed (as applicable)
+
+Hyperparameters: frozen (see `results/final/model_freeze_manifest.json` and `config.yaml` tuning.selected)
+
+Random Seed: 42 (bootstrap: 10,000 resamples, seed 42)
+
+Training Environment: no training in Task 13 (evaluation only; CPU, Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2)
+
+Training Details: none; decision rule argmax (frozen)
+
+Validation Metrics: macro-F1 0.6869 (reproduced by the evaluation code at the freeze)
+
+Test Metrics: **macro-F1 0.6476 (95% bootstrap CI 0.6133–0.6815)**; accuracy 0.6478; precision (misogynistic) 0.6373; recall 0.6729; weighted-F1 0.6476; TN 238, FP 144, FN 123, TP 253; macro-F1 with non-empty caption 0.6540 (n 737); without watermark 0.6425 (n 744)
+
+Runtime / Resource Notes: evaluation of all 19 frozen models about 8 min on CPU
+
+Artifacts: `results/final/metrics/T05.json`; `results/predictions/final/T05_test_predictions.csv` (git-ignored); `results/figures/final/T05_test_confusion_matrix.png`; `results/final/final_model_registry.json`
+
+Observations: Validation 0.6869 -> test 0.6476 (-3.9 pp). On TEST its BASIC twin T04 scores 0.6736 (T05 - T04 = -0.026, CI -0.055 to +0.002); T05 is kept as the frozen final model. Leans misogynistic (FP 144 > FN 123).
+
+Error Analysis Notes: see `docs/FINAL_EVALUATION_REPORT.md` §12–14
+
+Limitations: single split and seed; MIMIC OCR captions; uncalibrated scores; known shortcuts not removed
+
+Conclusion: reported as the frozen final result; no development after TEST
+
+Next Experiment: TASK 14 - OCR Pipeline & OCR Robustness Experiment
+
+### Experiment ID: FINAL-I03
+
+Date: 2026-10-13
+
+Status: COMPLETED: **FINAL TEST EVALUATION** (FINAL_IMAGE_MODEL)
+
+Research Question: RQ2/RQ3 (final modality comparison) and RQ1 (preprocessing ablation), evaluated once on TEST with a frozen model
+
+Dataset: MIMIC (cleaned, Task 4) with Task 6 v1.0 text and the original images
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (used only to fit the frozen models, before Task 13)
+
+Validation Split: 754 (used only to reproduce stored results at the freeze)
+
+Test Split: 758 (382 non-misogynistic / 376 misogynistic). **EVALUATED ONCE (FINAL TEST EVALUATION)** after the freeze commit `ed0de53`
+
+Input Modality: image
+
+Preprocessing: frozen (text v1.0, image loader v1.0, pil backend)
+
+Feature Representation: as in the frozen model (frozen SigLIP + LR (C=0.001, tuned))
+
+Model: I03: frozen SigLIP + LR (C=0.001, tuned)
+
+Model Version / Pretrained Checkpoint: artifact SHA-256 `73c5497e95dad8f8…`; encoders google/muril-base-cased@afd9f36c7923d54e97903922ff1b260d091d202f / google/siglip-base-patch16-224@7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed (as applicable)
+
+Hyperparameters: frozen (see `results/final/model_freeze_manifest.json` and `config.yaml` tuning.selected)
+
+Random Seed: 42 (bootstrap: 10,000 resamples, seed 42)
+
+Training Environment: no training in Task 13 (evaluation only; CPU, Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2)
+
+Training Details: none; decision rule argmax (frozen)
+
+Validation Metrics: macro-F1 0.7997 (reproduced by the evaluation code at the freeze)
+
+Test Metrics: **macro-F1 0.8047 (95% bootstrap CI 0.7757–0.8324)**; accuracy 0.8047; precision (misogynistic) 0.8098; recall 0.7926; weighted-F1 0.8047; TN 312, FP 70, FN 78, TP 298; macro-F1 with non-empty caption 0.8045 (n 737); without watermark 0.8008 (n 744)
+
+Runtime / Resource Notes: evaluation of all 19 frozen models about 8 min on CPU
+
+Artifacts: `results/final/metrics/I03.json`; `results/predictions/final/I03_test_predictions.csv` (git-ignored); `results/figures/final/I03_test_confusion_matrix.png`; `results/final/final_model_registry.json`
+
+Observations: Best TEST macro-F1 of all 19 models. Validation 0.7997 -> test 0.8047 (stable). Tuning generalised: I03 - I01 = +0.028 (CI +0.003 to +0.054). Balanced errors (FP 70, FN 78).
+
+Error Analysis Notes: see `docs/FINAL_EVALUATION_REPORT.md` §12–14
+
+Limitations: single split and seed; MIMIC OCR captions; uncalibrated scores; known shortcuts not removed
+
+Conclusion: reported as the frozen final result; no development after TEST
+
+Next Experiment: TASK 14 - OCR Pipeline & OCR Robustness Experiment
+
+### Experiment ID: FINAL-M04
+
+Date: 2026-10-13
+
+Status: COMPLETED: **FINAL TEST EVALUATION** (FINAL_MULTIMODAL_MODEL)
+
+Research Question: RQ2/RQ3 (final modality comparison) and RQ1 (preprocessing ablation), evaluated once on TEST with a frozen model
+
+Dataset: MIMIC (cleaned, Task 4) with Task 6 v1.0 text and the original images
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (used only to fit the frozen models, before Task 13)
+
+Validation Split: 754 (used only to reproduce stored results at the freeze)
+
+Test Split: 758 (382 non-misogynistic / 376 misogynistic). **EVALUATED ONCE (FINAL TEST EVALUATION)** after the freeze commit `ed0de53`
+
+Input Modality: image+text
+
+Preprocessing: frozen (text v1.0, image loader v1.0, pil backend)
+
+Feature Representation: as in the frozen model (fusion MLP, T05 text, tuned config TM-007)
+
+Model: M04: fusion MLP, T05 text, tuned config TM-007
+
+Model Version / Pretrained Checkpoint: artifact SHA-256 `5b132e127981eb73…`; encoders google/muril-base-cased@afd9f36c7923d54e97903922ff1b260d091d202f / google/siglip-base-patch16-224@7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed (as applicable)
+
+Hyperparameters: frozen (see `results/final/model_freeze_manifest.json` and `config.yaml` tuning.selected)
+
+Random Seed: 42 (bootstrap: 10,000 resamples, seed 42)
+
+Training Environment: no training in Task 13 (evaluation only; CPU, Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2)
+
+Training Details: none; decision rule argmax (frozen)
+
+Validation Metrics: macro-F1 0.8183 (reproduced by the evaluation code at the freeze)
+
+Test Metrics: **macro-F1 0.8031 (95% bootstrap CI 0.7741–0.8308)**; accuracy 0.8034; precision (misogynistic) 0.8215; recall 0.7713; weighted-F1 0.8032; TN 319, FP 63, FN 86, TP 290; macro-F1 with non-empty caption 0.8056 (n 737); without watermark 0.7991 (n 744)
+
+Runtime / Resource Notes: evaluation of all 19 frozen models about 8 min on CPU
+
+Artifacts: `results/final/metrics/M04.json`; `results/predictions/final/M04_test_predictions.csv` (git-ignored); `results/figures/final/M04_test_confusion_matrix.png`; `results/final/final_model_registry.json`
+
+Observations: Validation 0.8183 (seed 42; 3-seed mean 0.8081) -> test 0.8031. vs T05 +0.1555 (CI +0.119 to +0.191; Holm-adjusted McNemar p 2e-16: significant by the frozen rule). vs I03 -0.0015 (CI -0.025 to +0.021; p 1.0). With image replaced by its train mean it reproduces T05's test predictions exactly (758/758); with text replaced it scores 0.8021. Precision-oriented (FP 63, FN 86).
+
+Error Analysis Notes: see `docs/FINAL_EVALUATION_REPORT.md` §12–14
+
+Limitations: single split and seed; MIMIC OCR captions; uncalibrated scores; known shortcuts not removed
+
+Conclusion: reported as the frozen final result; no development after TEST
+
+Next Experiment: TASK 14 - OCR Pipeline & OCR Robustness Experiment
+
+### Experiment ID: FINAL-B07
+
+Date: 2026-10-13
+
+Status: COMPLETED: **FINAL TEST EVALUATION** (traditional text baseline)
+
+Research Question: RQ2/RQ3 (final modality comparison) and RQ1 (preprocessing ablation), evaluated once on TEST with a frozen model
+
+Dataset: MIMIC (cleaned, Task 4) with Task 6 v1.0 text and the original images
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (used only to fit the frozen models, before Task 13)
+
+Validation Split: 754 (used only to reproduce stored results at the freeze)
+
+Test Split: 758 (382 non-misogynistic / 376 misogynistic). **EVALUATED ONCE (FINAL TEST EVALUATION)** after the freeze commit `ed0de53`
+
+Input Modality: text
+
+Preprocessing: frozen (text v1.0, image loader v1.0, pil backend)
+
+Feature Representation: as in the frozen model (TF-IDF + LR, HINGLISH_NORMALIZED (tuned))
+
+Model: B07: TF-IDF + LR, HINGLISH_NORMALIZED (tuned)
+
+Model Version / Pretrained Checkpoint: artifact SHA-256 `a2aaae3912886379…`; encoders google/muril-base-cased@afd9f36c7923d54e97903922ff1b260d091d202f / google/siglip-base-patch16-224@7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed (as applicable)
+
+Hyperparameters: frozen (see `results/final/model_freeze_manifest.json` and `config.yaml` tuning.selected)
+
+Random Seed: 42 (bootstrap: 10,000 resamples, seed 42)
+
+Training Environment: no training in Task 13 (evaluation only; CPU, Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2)
+
+Training Details: none; decision rule argmax (frozen)
+
+Validation Metrics: macro-F1 0.6684 (reproduced by the evaluation code at the freeze)
+
+Test Metrics: **macro-F1 0.6359 (95% bootstrap CI 0.6015–0.6700)**; accuracy 0.6359; precision (misogynistic) 0.6323; recall 0.6356; weighted-F1 0.6359; TN 243, FP 139, FN 137, TP 239; macro-F1 with non-empty caption 0.6417 (n 737); without watermark 0.6288 (n 744)
+
+Runtime / Resource Notes: evaluation of all 19 frozen models about 8 min on CPU
+
+Artifacts: `results/final/metrics/B07.json`; `results/predictions/final/B07_test_predictions.csv` (git-ignored); `results/figures/final/B07_test_confusion_matrix.png`; `results/final/final_model_registry.json`
+
+Observations: Validation 0.6684 -> test 0.6359 (identical to untuned B03 on test: tuning did not generalise).
+
+Error Analysis Notes: see `docs/FINAL_EVALUATION_REPORT.md` §12–14
+
+Limitations: single split and seed; MIMIC OCR captions; uncalibrated scores; known shortcuts not removed
+
+Conclusion: reported as the frozen final result; no development after TEST
+
+Next Experiment: TASK 14 - OCR Pipeline & OCR Robustness Experiment
+
+### Experiment ID: FINAL-ABLATIONS
+
+Date: 2026-10-13
+
+Status: COMPLETED: **FINAL TEST EVALUATION** (pre-specified ablation models)
+
+Research Question: RQ1 (RAW / BASIC / HINGLISH_NORMALIZED), fusion ablation, image classifier ablation
+
+Dataset: MIMIC (cleaned, Task 4) with Task 6 v1.0 text and the original images
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (used only to fit the frozen models, before Task 13)
+
+Validation Split: 754 (used only to reproduce stored results at the freeze)
+
+Test Split: 758 (382 non-misogynistic / 376 misogynistic). **EVALUATED ONCE (FINAL TEST EVALUATION)** after the freeze commit `ed0de53`
+
+Input Modality: text (B01–B06, T01–T04), image (I01, I02), image + text (M01–M03)
+
+Preprocessing: frozen per model (Task 6 v1.0 modes)
+
+Feature Representation: as frozen in Tasks 8–11
+
+Model: 15 frozen ablation models listed in the freeze manifest
+
+Model Version / Pretrained Checkpoint: artifact checksums in `results/final/model_freeze_manifest.json`
+
+Hyperparameters: frozen (Tasks 8–11 baseline settings)
+
+Random Seed: 42 (bootstrap 10,000 resamples, seed 42)
+
+Training Environment: no training in Task 13
+
+Training Details: none
+
+Validation Metrics: each reproduced exactly by the evaluation code at the freeze
+
+Test Metrics: macro-F1 [95% CI]: B01 0.6319 [0.598–0.666]; B02 0.6346 [0.600–0.669]; B03 0.6359 [0.601–0.670]; B04 0.6187 [0.584–0.653]; B05 0.6238 [0.589–0.658]; B06 0.6172 [0.583–0.651]; T01 0.6330 [0.598–0.667]; T02 0.6264 [0.591–0.660]; T03 0.6172 [0.582–0.652]; T04 0.6736 [0.639–0.707]; I01 0.7768 [0.747–0.805]; I02 0.7793 [0.749–0.808]; M01 0.7517 [0.720–0.781]; M02 0.8016 [0.773–0.829]; M03 0.7929 [0.763–0.822]
+
+Runtime / Resource Notes: included in the single evaluation run
+
+Artifacts: `results/final/metrics/*.json`; `results/tables/final/preprocessing_ablation.csv`, `rq1_normalization_contrasts.csv`, `fusion_ablation.csv`, `statistical_tests.csv`
+
+Observations: RQ1 controlled contrasts HINGLISH - BASIC: TF-IDF LR +0.0013, SVM -0.0066, frozen MuRIL -0.0092, fine-tuned MuRIL -0.0260 (all CIs include 0) -> INCONCLUSIVE. Fusion: M01 concatenation -0.0515 vs M04 (CI excludes 0); M02 and M03 within CI of M04. Image: I02 0.7793 and I01 0.7768 below tuned I03.
+
+Error Analysis Notes: see `docs/FINAL_EVALUATION_REPORT.md`
+
+Limitations: descriptive (no significance claims outside the two primary comparisons)
+
+Conclusion: normalization not beneficial on TEST; projection-MLP fusion > concatenation; tuning of fusion not beneficial
+
+Next Experiment: TASK 14 - OCR Pipeline & OCR Robustness Experiment

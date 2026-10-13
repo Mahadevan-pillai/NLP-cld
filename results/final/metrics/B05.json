@@ -1,0 +1,62 @@
+{
+  "experiment_id": "B05",
+  "evaluation": "FINAL TEST EVALUATION",
+  "split": "test",
+  "split_assignments_sha256": "47fb02a87b36a22d20b9fd8bbb023fb1efa05361739211933a259caa9ff24894",
+  "artifact_sha256": "02618a7e4bd2cb6729943f81e512a0477f69078d17716ea94bb8ac48c59ff563",
+  "role": "ablation: RQ1 (TF-IDF SVM)",
+  "modality": "text",
+  "description": "TF-IDF + Linear SVM, BASIC",
+  "score_type": "SVM margin (NOT a probability)",
+  "metrics": {
+    "n": 758,
+    "accuracy": 0.624,
+    "precision": 0.6247,
+    "recall": 0.6064,
+    "f1": 0.6154,
+    "macro_precision": 0.624,
+    "macro_recall": 0.6239,
+    "macro_f1": 0.6238,
+    "weighted_f1": 0.6239,
+    "precision_non_misogynistic": 0.6234,
+    "recall_non_misogynistic": 0.6414,
+    "f1_non_misogynistic": 0.6323,
+    "support_non_misogynistic": 382,
+    "precision_misogynistic": 0.6247,
+    "recall_misogynistic": 0.6064,
+    "f1_misogynistic": 0.6154,
+    "support_misogynistic": 376,
+    "tn": 245,
+    "fp": 137,
+    "fn": 148,
+    "tp": 228
+  },
+  "subsets": {
+    "all": {
+      "n": 758,
+      "accuracy": 0.624,
+      "precision": 0.6247,
+      "recall": 0.6064,
+      "macro_f1": 0.6238,
+      "weighted_f1": 0.6239
+    },
+    "with_text": {
+      "n": 737,
+      "accuracy": 0.6296,
+      "precision": 0.6366,
+      "recall": 0.5967,
+      "macro_f1": 0.6291,
+      "weighted_f1": 0.6292
+    },
+    "without_watermark": {
+      "n": 744,
+      "accuracy": 0.6169,
+      "precision": 0.6097,
+      "recall": 0.5912,
+      "macro_f1": 0.6163,
+      "weighted_f1": 0.6167
+    }
+  },
+  "validation_macro_f1_at_freeze": 0.6525,
+  "evaluated_utc": "2026-10-13T11:13:03+00:00"
+}

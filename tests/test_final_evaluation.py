@@ -122,3 +122,65 @@ def test_only_the_final_evaluation_script_opens_the_test_split():
     users = sorted(p.relative_to(REPO_ROOT).as_posix() for folder in ("src", "scripts", "app")
                    for p in (REPO_ROOT / folder).rglob("*.py") if needle in p.read_text(encoding="utf-8"))
     assert users == ["scripts/final_evaluation.py"]
+
+
+# ---------------- report outputs (read committed tables; skip until the final evaluation exists) ----------------
+
+FINAL_DIR = REPO_ROOT / "results/final"
+TABLES = REPO_ROOT / "results/tables/final"
+
+
+def _need_final():
+    if not (FINAL_DIR / "metrics" / "M04.json").exists() or not (TABLES / "main_results.csv").exists():
+        pytest.skip("final evaluation outputs not present")
+
+
+def test_rq_verdict_rule():
+    rf = load_script("report_final_evaluation")
+    assert rf.rq_verdict(-0.001, -0.02, False) == "NOT SUPPORTED"
+    assert rf.rq_verdict(0.0, -0.02, False) == "NOT SUPPORTED"
+    assert rf.rq_verdict(0.02, -0.01, False) == "PARTIALLY SUPPORTED"
+    assert rf.rq_verdict(0.15, 0.12, True) == "SUPPORTED"
+
+
+def test_final_tables_match_metric_files_and_counts():
+    _need_final()
+    import pandas as pd
+
+    metrics = {p.stem: json.loads(p.read_text(encoding="utf-8")) for p in (FINAL_DIR / "metrics").glob("[BTIM]0[0-9].json")}
+    assert len(metrics) == 19
+    for mid, r in metrics.items():
+        m = r["metrics"]
+        assert r["evaluation"] == "FINAL TEST EVALUATION" and m["n"] == 758
+        assert final.confusion_consistent(m, 758), mid
+    main = pd.read_csv(TABLES / "main_results.csv").set_index("model")
+    assert list(main.index) == ["B07", "T05", "I03", "M04"] and (main["test_sample_count"] == 758).all()
+    for mid in main.index:
+        for k in ("accuracy", "precision", "recall", "macro_f1", "weighted_f1"):
+            assert main.loc[mid, k] == metrics[mid]["metrics"][k], (mid, k)
+    assert (main["result_type"] == "FINAL TEST RESULT").all()
+    assert pd.read_csv(TABLES / "consistency_checks.csv").drop(columns=["model"]).astype(bool).all().all()
+    assert (pd.read_csv(TABLES / "preprocessing_ablation.csv")["sample_count"] == 758).all()
+    mod = pd.read_csv(TABLES / "modality_ablation.csv")
+    assert (mod[mod.population == "all test"]["test_sample_count"] == 758).all()     # identical samples
+
+
+def test_final_registry_and_rq_answers_are_consistent():
+    _need_final()
+    import pandas as pd
+
+    reg = json.loads((FINAL_DIR / "final_model_registry.json").read_text(encoding="utf-8"))
+    assert {k: v["model_version"] for k, v in reg["models"].items()} == load_config()["final_models"]
+    for v in reg["models"].values():
+        r = json.loads((FINAL_DIR / "metrics" / f"{v['model_version']}.json").read_text(encoding="utf-8"))
+        assert v["test_metrics"]["macro_f1"] == r["metrics"]["macro_f1"] and v["test_n"] == 758
+    rf = load_script("report_final_evaluation")
+    st = pd.read_csv(TABLES / "statistical_tests.csv")
+    answers = pd.read_csv(TABLES / "research_question_answers.csv").set_index("question")
+    for q, key in (("RQ2", "RQ2_multimodal_vs_text"), ("RQ3", "RQ3_multimodal_vs_image")):
+        r = st[st.question == key].iloc[0]
+        verdict = answers[answers.index.str.startswith(q)]["verdict"].iloc[0]
+        assert verdict == rf.rq_verdict(r["difference"], r["ci_low"], bool(r["significant_by_frozen_rule"]))
+    gain = pd.read_csv(TABLES / "multimodal_gain.csv").set_index("comparison")
+    for comp, (a, b) in (("M04 - T05", ("M04", "T05")), ("M04 - I03", ("M04", "I03"))):
+        assert gain.loc[comp, "diff_macro_f1"] == st[st.comparison == f"{a} vs {b}"]["difference"].iloc[0]

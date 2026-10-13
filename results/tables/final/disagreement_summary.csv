@@ -1,0 +1,7 @@
+category,samples,share,mm_correct,mm_follows_text,mm_follows_image
+A_text_correct_image_wrong_mm_correct,37,0.0488,,,
+B_image_correct_text_wrong_mm_correct,161,0.2124,,,
+C_text_wrong_image_wrong_mm_correct,3,0.004,,,
+D_text_correct_image_correct_mm_wrong,2,0.0026,,,
+E_text_and_image_predictions_disagree,281,0.3707,198.0,76.0,205.0
+F_all_three_wrong,64,0.0844,,,

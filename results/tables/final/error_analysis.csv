@@ -1,0 +1,150 @@
+sample_id,true_label,text_prediction,image_prediction,multimodal_prediction,error_category,review_notes,no_text,very_short_1_3_words,long_20plus_words,has_negation,has_devanagari,has_hinglish_rule_variant,has_watermark,has_mention,low_resolution_min_side_lt_400,disagreement_category
+mimic_72b3011df838,1,0,0,0,not manually reviewed,,False,False,True,False,True,False,False,True,False,F
+mimic_b5fe1c33b782,0,1,0,1,not manually reviewed,,False,False,False,True,False,False,False,False,False,
+mimic_8d850df13bc6,1,0,1,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_b802eba681e4,1,0,0,0,sarcasm,QUALITATIVE: proposal photo with sarcastic dialogue implying women ruin lives,False,False,False,False,False,False,False,False,False,F
+mimic_95cf020c3d24,1,1,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_33d0c6b88358,1,0,1,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_958afaaea70c,1,0,1,0,not manually reviewed,,False,False,False,False,True,False,False,False,False,
+mimic_1cc5b56f2df0,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_859b33bf5da1,0,0,1,1,not manually reviewed,,False,False,False,False,True,True,False,False,False,
+mimic_2a376ab527bf,1,1,0,0,not manually reviewed,,False,False,True,False,True,False,False,True,False,
+mimic_025438b1c8d5,0,0,1,1,ambiguous content,QUALITATIVE: cartoon dog meme about a sister's wedding and a crush; teasing a man's looks,False,False,True,False,True,False,False,False,False,
+mimic_ec148d34473e,1,0,1,0,not manually reviewed,,False,False,True,True,False,True,False,False,False,
+mimic_39a5cd571dd6,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,True,False,F
+mimic_22c53d87502e,0,1,1,1,not manually reviewed,,False,True,False,False,False,False,False,False,False,F
+mimic_4d755821aec3,0,1,1,1,not manually reviewed,,True,False,False,False,False,False,False,False,False,F
+mimic_0f9d6df8f9cd,1,0,1,0,not manually reviewed,,False,True,False,False,False,False,False,False,False,
+mimic_2647d630477a,0,1,1,1,not manually reviewed,,False,False,False,False,True,False,False,False,False,F
+mimic_3ac1892e26e2,1,0,1,0,not manually reviewed,,False,False,True,True,True,False,False,False,False,
+mimic_35a48e8db087,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_247c87574e20,0,1,0,1,not manually reviewed,,False,True,False,False,False,False,False,False,False,
+mimic_de2b5881139e,1,0,0,0,not manually reviewed,,False,False,True,True,False,False,False,False,False,F
+mimic_be7128df581f,1,1,0,0,not manually reviewed,,False,False,False,True,False,False,False,False,False,
+mimic_46b490c7af54,0,1,1,1,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_b6c9a71db1a4,0,1,0,1,not manually reviewed,,False,False,True,True,True,False,False,False,False,
+mimic_5fa6b8141009,1,0,0,0,not manually reviewed,,False,True,False,False,False,False,False,False,False,F
+mimic_cf880685d3ee,1,1,0,0,not manually reviewed,,False,False,False,False,True,False,False,False,False,
+mimic_0b2c73a28f30,0,1,0,1,ambiguous content,QUALITATIVE: family joke about a child losing its mother at a party; gender/family topic flagged by text,False,False,True,False,False,False,False,False,False,
+mimic_6599a11ef2db,1,1,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_6582664cd228,0,0,1,1,not manually reviewed,,False,True,False,False,True,False,False,False,False,
+mimic_bce448f01656,1,0,0,0,not manually reviewed,,False,False,False,True,False,False,False,False,False,F
+mimic_5ebcf3c1add7,1,0,0,0,not manually reviewed,,False,False,False,False,False,True,False,False,False,F
+mimic_b94d53892871,0,0,1,1,not manually reviewed,,False,False,False,True,False,False,False,False,False,
+mimic_f61833d58764,1,0,1,0,slang,QUALITATIVE: crying actress + caption mocking a teenage girl's sexual naivety using a slang term,False,False,False,False,False,False,False,False,False,
+mimic_1a7824070888,0,1,1,1,not manually reviewed,,False,False,False,False,True,False,False,False,False,F
+mimic_c9b49eed553c,1,1,0,0,not manually reviewed,,False,True,False,False,False,False,False,False,False,
+mimic_82b0efb9b02c,1,1,0,0,not manually reviewed,,False,False,True,False,False,True,False,False,False,
+mimic_78205350f08d,1,1,0,0,not manually reviewed,,False,False,True,False,False,True,False,False,False,
+mimic_3a1b1aa91302,0,1,1,1,not manually reviewed,,False,False,False,False,True,False,False,False,False,F
+mimic_a5ec292872b2,0,1,1,1,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_260726df95b6,0,1,1,1,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_e0be2d931592,1,0,1,0,not manually reviewed,,False,False,False,False,True,False,False,False,False,
+mimic_3deb8409320b,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_35400a8eca17,0,1,1,1,not manually reviewed,,False,False,False,True,False,False,False,False,False,F
+mimic_caf25fd83c0b,1,1,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_cfca02f1ccd1,0,1,1,1,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_4dc3fdf9007d,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_2c5b53cca200,0,1,1,1,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_fa10e7293740,1,1,0,0,text-dependent meaning,QUALITATIVE: tweet screenshot stereotyping girls (face vs attitude); screenshot layout,False,False,False,False,False,False,False,True,False,
+mimic_d83b0df20bd8,1,0,0,0,slang,QUALITATIVE: male film still; body-shaming Hinglish slang about women carries the meaning; image neutral,False,False,False,True,False,False,False,False,False,F
+mimic_af14ae7f1bed,0,0,1,1,slang,QUALITATIVE: chat-template meme with profanity not aimed at women; image flagged the pictured woman,False,False,True,True,False,False,False,False,False,
+mimic_fc572548e221,1,1,1,0,slang,QUALITATIVE: woman on phone + crude sexual insinuation in Hinglish slang from an ex-partner,False,False,False,False,False,False,False,False,False,D
+mimic_73c98a363f6a,0,1,0,1,not manually reviewed,,False,False,False,False,True,False,False,False,False,
+mimic_686907983984,1,1,0,0,not manually reviewed,,False,False,False,True,False,False,False,False,False,
+mimic_872fff8e4ada,1,0,1,0,not manually reviewed,,False,False,False,True,False,False,False,False,False,
+mimic_e6a73a650505,1,1,0,0,not manually reviewed,,False,True,False,False,False,False,False,False,True,
+mimic_24d6d81429f9,1,1,0,0,not manually reviewed,,False,False,False,False,True,False,False,False,False,
+mimic_d3ce033728c4,0,1,1,1,other: woman pictured (gender-presence false alarm),QUALITATIVE: man and woman with sparklers + harmless caption; both models flagged,False,False,False,False,False,False,False,False,False,F
+mimic_32ba6ad3925d,0,1,1,1,possible annotation ambiguity,QUALITATIVE: marriage-market joke about which men 'get' brides; label non-misogynistic is debatable,False,False,False,False,False,True,False,False,False,F
+mimic_a78c7c5add67,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_3c59294cd2be,1,0,0,0,not manually reviewed,,False,False,False,True,False,False,False,False,False,F
+mimic_7f652479ccfc,1,1,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_d6d023a49b6b,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_908fe50fca7b,0,1,1,1,not manually reviewed,,False,False,False,False,True,False,False,False,False,F
+mimic_fa9f2a8a8c66,0,0,1,1,not manually reviewed,,False,False,False,False,False,False,False,True,False,
+mimic_da60d0e7699d,0,1,1,1,not manually reviewed,,False,False,False,True,False,False,False,False,False,F
+mimic_0cfc3d308d25,0,1,1,1,not manually reviewed,,True,False,False,False,False,False,False,False,False,F
+mimic_b807f18624c9,1,1,0,0,image-text interaction,QUALITATIVE: woman selfie + double-meaning caption about her pendant,False,False,False,False,False,False,False,False,False,
+mimic_e77ca4562d9c,0,0,1,1,not manually reviewed,,False,False,False,False,True,False,False,False,False,
+mimic_540178a5d1b4,0,1,1,1,not manually reviewed,,False,True,False,False,False,False,False,False,False,F
+mimic_09290fbba51a,1,1,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_b1ba28c7a398,1,1,0,0,image-text interaction,QUALITATIVE: street photo of a woman from behind + mocking caption; objectifying only in combination,False,False,False,False,True,False,False,False,False,
+mimic_35ec60b98af8,0,1,1,1,possible annotation ambiguity,QUALITATIVE: athletic woman photo + suggestive caption labelled non-misogynistic,False,False,False,False,False,False,False,False,False,F
+mimic_9988302b1314,0,1,0,1,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_dd25bf0c9396,1,1,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_4f17f56e07b1,0,0,1,1,not manually reviewed,,False,False,False,False,True,True,False,True,False,
+mimic_4ba95b7caa85,0,0,1,1,not manually reviewed,,False,True,False,False,False,False,False,False,False,
+mimic_c3ff4fb3c87e,0,1,1,1,not manually reviewed,,False,False,True,True,True,False,False,True,False,F
+mimic_89dff3d9636a,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_a0c7478470ce,0,1,0,1,not manually reviewed,,False,False,False,False,False,False,False,True,False,
+mimic_c4151571fa90,0,0,1,1,cultural/contextual reference,QUALITATIVE: actress social-media post + political news joke; topical reference,False,False,False,False,False,False,False,False,False,
+mimic_44270e995929,1,0,1,0,not manually reviewed,,False,False,False,True,False,False,False,False,False,
+mimic_6b3daa7781f8,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_beb020871993,0,1,1,1,not manually reviewed,,False,True,False,False,True,False,False,False,False,F
+mimic_702ce987bcbc,0,1,1,1,not manually reviewed,,False,True,False,False,False,False,False,True,False,F
+mimic_c875649f3d38,0,1,0,1,short text,QUALITATIVE: OCR caption empty although the picture contains English text; text model's empty-caption shortcut,True,False,False,False,False,False,False,False,False,
+mimic_fc188ac3cde9,0,1,1,1,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_e1cebca845cb,1,0,0,0,cultural/contextual reference,QUALITATIVE: celebrity film still with sexual innuendo built on a film-title reference,False,False,False,True,False,False,False,False,False,F
+mimic_9c9d8d92bafe,0,1,1,1,not manually reviewed,,False,False,False,False,True,False,False,False,False,F
+mimic_c69392f3bb85,1,0,0,0,not manually reviewed,,False,False,False,True,False,False,False,False,False,F
+mimic_121cce0cf43f,0,1,1,1,not manually reviewed,,False,False,False,False,False,True,False,False,False,F
+mimic_06ede1e8d13e,1,0,1,0,not manually reviewed,,False,False,False,False,True,False,False,False,False,
+mimic_f1a62edcf1ed,0,1,0,1,possible annotation ambiguity,QUALITATIVE: husband/wife 'morning after the wedding' innuendo labelled non-misogynistic,False,False,False,False,False,False,False,False,False,
+mimic_52b2bf892c03,0,1,1,1,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_0a25751ba31a,1,0,0,0,not manually reviewed,,False,False,False,False,False,True,False,False,False,F
+mimic_f99ba6373db7,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_ceacdd71492b,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_27312e5bde60,1,0,1,0,not manually reviewed,,False,False,False,False,True,False,False,False,True,
+mimic_150caa8f593f,1,1,0,0,cultural/contextual reference,QUALITATIVE: ominous film still + 'a woman can do anything' stereotype; needs film/cultural context,False,False,False,False,False,False,False,False,False,
+mimic_503b13877bca,1,1,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_2de748b4a175,0,1,0,1,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_c2e40d31601f,1,1,0,0,not manually reviewed,,False,True,False,False,False,False,False,False,False,
+mimic_9c8164054060,0,1,0,1,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_7483691f795b,1,0,1,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_ae7a9a0e130a,1,0,1,0,not manually reviewed,,False,False,False,False,True,False,False,False,False,
+mimic_65823e95c514,1,1,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_81737b901267,0,1,1,1,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_46a93f5ad1bb,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_64073c8426b3,1,1,0,0,not manually reviewed,,False,False,False,False,True,False,False,False,False,
+mimic_1fa649a166bc,1,0,1,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_eb1ceca76ac2,0,0,1,1,other: woman pictured (gender-presence false alarm),QUALITATIVE: older couple photo + harmless fake-ID joke; image model flagged the pictured woman,False,False,False,False,True,False,False,False,False,
+mimic_e22abf24e5cf,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_288f8dbc0b08,1,1,0,0,not manually reviewed,,False,False,False,False,True,False,False,False,False,
+mimic_e34e7da43494,1,0,1,0,not manually reviewed,,False,False,True,True,True,False,False,False,False,
+mimic_77b526604c2f,1,0,1,0,not manually reviewed,,False,False,False,False,True,False,False,False,False,
+mimic_6c73c637fe43,0,1,1,1,not manually reviewed,,False,False,False,False,True,True,False,False,False,F
+mimic_e089dc9447bb,1,1,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_a224141e3e00,0,1,1,1,not manually reviewed,,True,False,False,False,False,False,False,False,True,F
+mimic_b00f635384e2,1,0,1,0,cultural/contextual reference,QUALITATIVE: bride-branded product + 'set life on fire' caption; dark cultural reference,False,False,False,False,True,False,False,True,True,
+mimic_71dbdbbce0f7,1,0,1,0,not manually reviewed,,False,False,True,False,False,True,False,False,False,
+mimic_1dfcec7b4c52,0,1,0,1,not manually reviewed,,True,False,False,False,False,False,False,False,True,
+mimic_490a52743207,1,0,1,0,not manually reviewed,,False,False,False,True,False,False,False,False,False,
+mimic_7c7b083e8efe,0,1,1,1,not manually reviewed,,True,False,False,False,False,False,False,False,False,F
+mimic_dd1d81469eb1,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,True,False,F
+mimic_2d4d01fc7b85,1,1,0,0,not manually reviewed,,False,False,False,False,True,False,False,False,False,
+mimic_e0932880211d,0,1,1,1,not manually reviewed,,False,True,False,False,True,False,False,True,False,F
+mimic_a744158a1243,1,1,0,0,not manually reviewed,,False,False,False,True,True,False,False,False,False,
+mimic_190c218f5768,0,1,1,1,not manually reviewed,,False,False,False,False,True,True,False,False,False,F
+mimic_c775b7ca2eda,1,0,0,0,text-dependent meaning,QUALITATIVE: grid of male faces; caption about paying for sex work with OCR-damaged numbers,False,False,True,False,True,False,False,False,False,F
+mimic_a4e3ba496ce2,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_cd5604f34dbb,0,0,1,1,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_592fc1636755,0,1,1,1,not manually reviewed,,False,False,False,False,False,True,False,False,False,F
+mimic_1c0b9c011c4d,0,1,1,1,not manually reviewed,,False,True,False,False,False,False,False,False,False,F
+mimic_1a40d8eb2d6b,0,1,0,1,ambiguous content,QUALITATIVE: birds and moon 'true love' joke mentioning a girlfriend; gender-topic false alarm by text,False,False,False,False,True,False,False,False,False,
+mimic_85dc19495abe,0,1,1,1,cultural/contextual reference,QUALITATIVE: celebrity couple + joke about the husband and a hair-oil advert,False,False,True,False,True,False,False,False,False,F
+mimic_aaa42e988a83,1,1,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_be06a10bffcf,1,0,0,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_8567cdd5188b,1,0,1,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_e5fa7ea86145,1,1,1,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,D
+mimic_0ce9695899ca,1,0,1,0,not manually reviewed,,False,False,False,True,False,True,False,False,False,
+mimic_4ba9f2e29bc5,1,0,1,0,not manually reviewed,,False,False,False,False,True,False,False,False,False,
+mimic_1000e89c75df,1,0,1,0,not manually reviewed,,False,False,False,False,False,False,False,False,False,
+mimic_f0a5daa49de5,0,1,1,1,not manually reviewed,,False,False,False,False,True,False,False,False,False,F
+mimic_4b64fd67e66b,1,1,0,0,not manually reviewed,,False,False,False,True,False,False,False,False,False,
+mimic_063a90fa398e,0,0,1,1,not manually reviewed,,False,False,True,False,True,False,False,False,False,
+mimic_54e619206fac,1,0,1,0,image-text interaction,QUALITATIVE: woman and man posing; innuendo caption only harmful together with the picture,False,False,False,True,False,False,False,False,False,
+mimic_778678798ad3,0,0,1,1,not manually reviewed,,False,False,False,False,True,True,False,False,False,
+mimic_ad8576b51013,1,0,1,0,not manually reviewed,,False,False,False,False,True,False,False,True,False,
+mimic_ddc18c37c013,0,1,1,1,not manually reviewed,,False,False,False,False,False,False,False,False,False,F
+mimic_5ff45fd154bc,1,1,0,0,not manually reviewed,,False,False,False,True,False,False,False,False,False,

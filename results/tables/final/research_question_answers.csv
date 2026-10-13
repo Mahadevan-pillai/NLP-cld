@@ -1,0 +1,5 @@
+question,verdict,evidence
+RQ1: Does Hinglish normalization improve classification?,INCONCLUSIVE,"TF-IDF LR: +0.0013 [-0.0067, +0.0095]; TF-IDF SVM: -0.0066 [-0.0171, +0.0027]; frozen MuRIL: -0.0092 [-0.0254, +0.0075]; fine-tuned MuRIL: -0.0260 [-0.0545, +0.0015]"
+RQ2: Does multimodal modelling outperform text-only (M04 vs T05)?,SUPPORTED,"macro-F1 difference +0.1555 [+0.1193, +0.1911]; McNemar p 9.82e-17 (Holm 1.964e-16); significant by frozen rule: True"
+RQ3: Does multimodal modelling outperform image-only (M04 vs I03)?,NOT SUPPORTED,"macro-F1 difference -0.0015 [-0.0249, +0.0213]; McNemar p 1 (Holm 1); significant by frozen rule: False"
+RQ4: multicategory (Task 8.5 narrowed RQ4),NOT EVALUATED,no sub-category model was trained (stage 2 disabled); descriptive sub-label recall only
