@@ -160,3 +160,14 @@ def test_test_split_is_locked_by_default():
         sp.load_split("test")
     with pytest.raises(ValueError):
         sp.load_split("holdout")
+
+
+def test_compare_with_canonical(tmp_path):
+    path = tmp_path / "split_assignments.csv"
+    new = pd.DataFrame({"sample_id": ["a", "b", "c"], "split": ["train", "validation", "test"]})
+    assert sp.compare_with_canonical(new, path) == {"exists": False, "identical": False, "samples_moved": None}
+    new.assign(group_id="g").to_csv(path, index=False)
+    assert sp.compare_with_canonical(new, path)["identical"]
+    moved = new.assign(split=["train", "test", "validation"])
+    result = sp.compare_with_canonical(moved, path)
+    assert result["exists"] and not result["identical"] and result["samples_moved"] == 2

@@ -196,6 +196,25 @@ python -m pytest
 For an NVIDIA GPU, install PyTorch first with the command from
 <https://pytorch.org/get-started/locally/>, then install the rest.
 
+### Continuous integration (GitHub Actions)
+`.github/workflows/ci.yml` runs on every pull request and on pushes to
+`main`:
+
+1. **Repository safety.** It fails if dataset files, per-split text
+   files, model weights, `.env` or a MongoDB connection string with
+   credentials are committed.
+2. **Syntax.** All Python files must compile.
+3. **Tests.** It runs `pytest` on **Python 3.10** (the development
+   version) and **3.14** (newest).
+
+How it works:
+- CI uses the small `requirements-ci.txt`, which has no PyTorch or
+  Transformers.
+- It has **no dataset, `.env` or MongoDB access**, by design: tests use
+  synthetic data and mocks. The one dataset-dependent check is skipped.
+- When a test needs a new third-party package, add it to
+  `requirements-ci.txt` as well.
+
 ## 15. Environment Variable Instructions
 1. Copy `.env.example` to `.env` in the repository root.
 2. Fill in your own values (`MONGODB_URI`, `MONGODB_DATABASE`,

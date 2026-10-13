@@ -211,6 +211,23 @@ def load_split_assignments(config: dict | None = None, verify: bool = True) -> p
     return table
 
 
+def compare_with_canonical(new_assignments: pd.DataFrame, path: Path) -> dict:
+    """Compare a freshly generated assignment with the existing canonical file.
+
+    Different library versions (e.g. scikit-learn 1.9 vs 1.7) can shuffle
+    differently, so regeneration elsewhere may produce a DIFFERENT split.
+    The canonical file must then not be overwritten silently.
+    """
+    path = Path(path)
+    if not path.exists():
+        return {"exists": False, "identical": False, "samples_moved": None}
+    old = pd.read_csv(path, dtype=str, keep_default_na=False)
+    merged = old[["sample_id", "split"]].merge(new_assignments[["sample_id", "split"]], on="sample_id",
+                                               how="outer", suffixes=("_old", "_new"))
+    moved = int((merged["split_old"] != merged["split_new"]).sum())
+    return {"exists": True, "identical": moved == 0, "samples_moved": moved}
+
+
 def load_split(name: str, allow_test: bool = False, config: dict | None = None) -> pd.DataFrame:
     """Load one split's metadata (data/splits/<name>.csv).
 

@@ -160,6 +160,15 @@ which is proportional.
   (`load_split_assignments`). A future scikit-learn version that shuffled
   differently therefore cannot silently change the split. The manifest
   records Python 3.10.0, scikit-learn 1.7.2 and pandas 2.3.3.
+- **This risk is real (measured while setting up CI, 2026-10-12).**
+  Regenerating the split under Python 3.14 / scikit-learn 1.9.1 / pandas
+  3.0.6 produced a **different** split: 2,279 of 5,044 samples would
+  move.
+  - `scripts/create_splits.py` therefore **aborts and writes nothing**
+    when the regenerated split differs from the existing canonical file,
+    unless `--regenerate` is passed deliberately.
+  - Always load the frozen file. Never regenerate it to "reproduce" the
+    split.
 
 ## 14. Test-set usage policy
 The test set is **LOCKED** from now on.
