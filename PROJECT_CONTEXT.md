@@ -312,7 +312,7 @@ data, document what is persisted, avoid logging raw user input.
 
 ## 17. Current project stage
 
-**Task 10 — Image-Only Vision Model (complete, validation only).**
+**Task 11 — Multimodal Image + Text Fusion Model (complete, validation only).**
 
 IMPLEMENTED in Task 1: directory structure, documentation
 (`CLAUDE.md`, `PROJECT_CONTEXT.md`, `RESEARCH_LOG.md`, `README.md`),
@@ -466,10 +466,45 @@ IMPLEMENTED in Task 10 (binary task; image only, no OCR or caption input):
 - **Test set NOT evaluated; no test image opened.**
   `docs/IMAGE_MODEL_REPORT.md`; log entries I01, I02, D01.
 
-NOT STARTED: multimodal models, tuning, final test evaluation, OCR,
-explainability, Streamlit UI, deployment, paper writing.
+IMPLEMENTED in Task 11 (binary task; MIMIC captions, no new OCR):
+- **Text features** (no Task 9 retraining):
+  - T05 fine-tuned MuRIL pooled `[CLS]`;
+  - frozen MuRIL mean pooling, as a control. T05 was fine-tuned on the
+    same train set (train 0.748 vs validation 0.687).
+- **Image features:** the cached SigLIP vectors. All modalities are
+  joined on `sample_id`, with an alignment audit.
+- **Results on the same 754 validation samples:**
+  - M01 (concat + LR): 0.7679;
+  - **M02** (projection + MLP, T05 text; main model, declared in advance):
+    **0.8076**;
+  - M03 (same MLP, frozen text): 0.8077.
+  - Gains: M02 vs I01 image **+0.049**; vs T05 text **+0.121**. Every MLP
+    epoch beats I01.
+  - No significance is claimed, and the test set was not evaluated.
+- **Findings:**
+  - the fusion is image-led and corrected by text (in 264 text/image
+    disagreements it is right 191 times);
+  - fine-tuned vs frozen text makes no difference inside the fusion;
+  - the MLPs overfit within 1–2 epochs, so the selected epochs are
+    optimistic by about 1.4 points.
+- **New architecture pieces:**
+  - `src/features/multimodal.py` (sample-id keyed feature cache,
+    `align()`);
+  - `src/models/fusion.py` (train-only standardisation, pickle-free
+    safetensors artifacts);
+  - `src/inference/multimodal.py` `predict_multimodal(image, text,
+    model_version)` (raises `MissingModalityError`; never fakes an
+    embedding), with the registry
+    `results/metrics/multimodal_model_registry.json`;
+  - config `multimodal_model`.
+- **Sub-category fusion:** SUPPORTED FOR FUTURE / NOT TRAINED (stage 2
+  is still disabled).
+- `docs/MULTIMODAL_MODEL_REPORT.md`; log entries M01–M03.
 
-Next planned task: **TASK 11 — Multimodal Image + Text Fusion Model.**
+NOT STARTED: tuning, final test evaluation, OCR, explainability,
+Streamlit UI, deployment, paper writing.
+
+Next planned task: **TASK 12 — Hyperparameter Tuning and Model Optimization.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

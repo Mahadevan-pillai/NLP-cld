@@ -1,0 +1,4 @@
+split,samples,with_image,with_non_empty_text,empty_text,used_in_multimodal,misogynistic
+train,3532,3532,3427,105,3532,1756
+validation,754,754,732,22,754,375
+test,758,not opened,not loaded,not loaded,0,not loaded

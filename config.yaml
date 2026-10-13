@@ -209,11 +209,39 @@ image_model:
   selection_metric: "macro_f1"
 
 multimodal_model:
-  # PROPOSED: start with a simple fusion (e.g. concatenation of image
-  # and text embeddings + classifier) before complex architectures.
-  fusion: null
-  hidden_dim: null
-  dropout: null
+  # Task 11. See docs/MULTIMODAL_MODEL_REPORT.md. Fixed baseline settings,
+  # NOT tuned (Task 12 tunes, on validation only).
+  version: "1.0"
+  text_representations:
+    finetuned_pooled:           # T05 pooled [CLS] (input of T05's classifier head), 768-d
+      source_experiment: "T05"
+      artifact: "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1"
+      preprocessing_mode: "hinglish_normalized"
+    frozen_mean:                # frozen MuRIL mean pooling (T03 representation), 768-d; never saw labels
+      source_experiment: "T03"
+      preprocessing_mode: "hinglish_normalized"
+  image_representation:         # Task 10 frozen SigLIP pooler_output (cached), 768-d
+    source_experiment: "I01"
+  # Text features are cached outside the repo next to the Task 9/10 caches:
+  # <dir of $NLP_CLD_MODEL_DIR>/../cache/multimodal_text (fallback models/multimodal/cache).
+  cache_dir_default: "models/multimodal/cache"
+  artifact_dir: "models/multimodal"
+  logistic_regression: {C: 1.0, max_iter: 3000, class_weight: null}   # M01; classes balanced
+  fusion_mlp:                   # M02 / M03
+    projection_dim: 256         # each modality: Linear(768 -> 256) + LayerNorm
+    hidden_dim: 256
+    dropout: 0.3
+    learning_rate: 1.0e-3
+    weight_decay: 1.0e-2
+    batch_size: 64
+    max_epochs: 50
+    early_stopping_patience: 5  # epochs without validation macro-F1 improvement
+    class_weight: null          # classes balanced (50.3 / 49.7): plain cross-entropy
+  experiments:                  # id: [classifier, text representation]
+    M01: ["logistic_regression", "finetuned_pooled"]
+    M02: ["fusion_mlp", "finetuned_pooled"]
+    M03: ["fusion_mlp", "frozen_mean"]     # control: text features that never saw the labels
+  selection_metric: "macro_f1"
 
 training:
   device: null                  # "cpu" / "cuda", TBD per environment

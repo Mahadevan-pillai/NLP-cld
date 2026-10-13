@@ -1,0 +1,7 @@
+split,modality,labelled_samples,feature_rows,duplicate_ids,missing_from_modality,extra_ids_not_in_labels,dim,all_finite,row_order_already_identical
+train,finetuned_pooled,3532,3532,0,0,0,768,True,True
+train,frozen_mean,3532,3532,0,0,0,768,True,True
+train,image,3532,3532,0,0,0,768,True,True
+validation,finetuned_pooled,754,754,0,0,0,768,True,True
+validation,frozen_mean,754,754,0,0,0,768,True,True
+validation,image,754,754,0,0,0,768,True,True

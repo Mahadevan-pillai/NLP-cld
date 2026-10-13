@@ -163,7 +163,7 @@ hyperparameters across modules.
   - Add new test dependencies to `requirements-ci.txt`.
 
 ## 7. Current stage
-Tasks 1–10 done:
+Tasks 1–11 done:
 - repository foundation;
 - the MongoDB database layer (`src/database/`, see `docs/database.md`);
 - the read-only dataset inventory (`docs/DATASET_REPORT.md`);
@@ -186,6 +186,21 @@ Tasks 1–10 done:
 - image-only models I01/I02 (frozen SigLIP + LR/SVM;
   `src/models/image_encoder.py`, `scripts/train_image_models.py`, see
   `docs/IMAGE_MODEL_REPORT.md`), validation only. Best: I01.
+- multimodal fusion M01–M03 (`src/features/multimodal.py`,
+  `src/models/fusion.py`, `scripts/train_multimodal.py`, see
+  `docs/MULTIMODAL_MODEL_REPORT.md`), validation only. M02 is the main
+  model.
+
+**Multimodal (Task 11):**
+- Join modalities on `sample_id` only (`src.features.multimodal.align`),
+  never on row order. Feature caches store their own sample IDs.
+- Predict with `src.inference.multimodal.predict_multimodal(image, text,
+  model_version)` (registry
+  `results/metrics/multimodal_model_registry.json`).
+  - A missing modality raises `MissingModalityError`. Never substitute
+    fake embeddings.
+- Fusion artifacts are pickle-free (safetensors + JSON). Standardisation
+  statistics come from train only.
 
 **Image inference (Task 10):**
 - Load images only with `src.preprocessing.image.load_image()`.

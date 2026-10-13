@@ -1278,3 +1278,171 @@ Limitations: untuned; frozen encoder (fine-tuning DEFERRED TO GPU); single seed 
 Conclusion: Resolution shortcut is real but small; keep reporting per-resolution results.
 
 Next Experiment: Repeat this check for the Task 11 fusion model.
+
+### Experiment ID: M01
+
+Date: 2026-10-13
+
+Status: COMPLETED
+
+Research Question: RQ2 (does image + text outperform text-only and image-only on the same samples?). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned (Task 4) + preprocessed text (Task 6 v1.0) + images (read-only)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7; all have image and caption entry; 105 empty captions)
+
+Validation Split: 754 (22 empty captions)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Image + text (MIMIC OCR caption; no new OCR). Modalities joined on sample_id (alignment audit: 0 duplicates, 0 missing)
+
+Preprocessing: text `hinglish_normalized` (Task 6 v1.0); image load_image() v1.0 + SigLIP PIL processor (224x224 stretch)
+
+Feature Representation: text: T05 fine-tuned MuRIL pooled [CLS] (input of T05's head), 768-d; image: frozen SigLIP pooler_output (Task 10 cache), 768-d; standardised with TRAIN statistics
+
+Model: early fusion: concat + StandardScaler + LR (concatenation (early))
+
+Model Version / Pretrained Checkpoint: text `google/muril-base-cased` @ `afd9f36c…` fine-tuned as T05; image `google/siglip-base-patch16-224` @ `7fd15f06…` (frozen)
+
+Hyperparameters: {"C": 1.0, "max_iter": 3000, "class_weight": null} with StandardScaler on the 1,536-d concatenation (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_multimodal.py train`; converged: True; train macro-F1 0.9465; save→reload reproduces predictions: True
+
+Validation Metrics: macro-F1 **0.7679** (95% bootstrap CI 0.736–0.798); accuracy 0.7679; precision (misogynistic) 0.7688; recall 0.7627; weighted-F1 0.7679; TN 293, FP 86, FN 89, TP 286; macro-F1 with non-empty caption 0.7675; without watermark 0.7660
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: classifier training 3.371 s on cached features; classifier inference 0.0431 s for 754 samples; text features T05 413 s / frozen 293 s (train + validation); image features reused from Task 10; artifact 50,513 bytes
+
+Artifacts: `models/multimodal/M01_concat_logreg_finetuned_pooled_v1.0.joblib` (git-ignored); `results/metrics/multimodal_model_registry.json`; `results/metrics/multimodal/M01.json`; `results/figures/multimodal/M01_confusion_matrix.png`
+
+Observations: Early-fusion baseline. +0.0093 vs I01 (image), +0.0810 vs T05 (text) on the same 754 samples. Strong overfitting (train macro-F1 0.9465). Coefficient L2 norm text 10.80 vs image 8.52.
+
+Error Analysis Notes: see `docs/MULTIMODAL_MODEL_REPORT.md` §14–15
+
+Limitations: untuned; single seed and split; epoch selected on validation (optimistic); MLP overfits quickly; uncalibrated scores; inherits image gender-presence and text empty-caption shortcuts
+
+Conclusion: Linear concatenation adds little over the image-only model.
+
+Next Experiment: M02 (neural fusion).
+
+### Experiment ID: M02
+
+Date: 2026-10-13
+
+Status: COMPLETED
+
+Research Question: RQ2 (does image + text outperform text-only and image-only on the same samples?). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned (Task 4) + preprocessed text (Task 6 v1.0) + images (read-only)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7; all have image and caption entry; 105 empty captions)
+
+Validation Split: 754 (22 empty captions)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Image + text (MIMIC OCR caption; no new OCR). Modalities joined on sample_id (alignment audit: 0 duplicates, 0 missing)
+
+Preprocessing: text `hinglish_normalized` (Task 6 v1.0); image load_image() v1.0 + SigLIP PIL processor (224x224 stretch)
+
+Feature Representation: text: T05 fine-tuned MuRIL pooled [CLS] (input of T05's head), 768-d; image: frozen SigLIP pooler_output (Task 10 cache), 768-d; standardised with TRAIN statistics
+
+Model: fusion MLP (fine-tuned text + image) (projection (Linear+LayerNorm per modality) + concat + MLP)
+
+Model Version / Pretrained Checkpoint: text `google/muril-base-cased` @ `afd9f36c…` fine-tuned as T05; image `google/siglip-base-patch16-224` @ `7fd15f06…` (frozen)
+
+Hyperparameters: {"projection_dim": 256, "hidden_dim": 256, "dropout": 0.3, "learning_rate": 0.001, "weight_decay": 0.01, "batch_size": 64, "max_epochs": 50, "early_stopping_patience": 5, "seed": 42}; AdamW; cross-entropy (2 classes); no class weights (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_multimodal.py train`; 7 epochs, early stopping (patience 5), best epoch 2; epoch 1: train loss 0.454, val loss 0.453, val macro-F1 0.7837; epoch 2: train loss 0.329, val loss 0.433, val macro-F1 0.8076; epoch 3: train loss 0.292, val loss 0.453, val macro-F1 0.8064; epoch 4: train loss 0.253, val loss 0.515, val macro-F1 0.7891; epoch 5: train loss 0.229, val loss 0.539, val macro-F1 0.7851; epoch 6: train loss 0.187, val loss 0.591, val macro-F1 0.7904; epoch 7: train loss 0.158, val loss 0.653, val macro-F1 0.7944; parameters 526,594; train macro-F1 0.8915; save→reload reproduces predictions: True
+
+Validation Metrics: macro-F1 **0.8076** (95% bootstrap CI 0.779–0.834); accuracy 0.8077; precision (misogynistic) 0.8194; recall 0.7867; weighted-F1 0.8076; TN 314, FP 65, FN 80, TP 295; macro-F1 with non-empty caption 0.8027; without watermark 0.8059
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: classifier training 8.83 s on cached features; classifier inference 0.0245 s for 754 samples; text features T05 413 s / frozen 293 s (train + validation); image features reused from Task 10; artifact 2,121,071 bytes
+
+Artifacts: `models/multimodal/M02_fusion_mlp_finetuned_pooled_v1.0` (git-ignored); `results/metrics/multimodal_model_registry.json`; `results/metrics/multimodal/M02.json`; `results/figures/multimodal/M02_confusion_matrix.png`; `results/figures/multimodal/M02_training_curves.png`; `results/tables/multimodal/M02_training_history.csv`
+
+Observations: MAIN multimodal model (declared in advance). +0.0490 vs I01, +0.1207 vs T05 on the same samples; every epoch (0.784-0.808) is above I01. Best epoch 2 of 7 (selected peak about 1.4 pp above the epoch mean 0.794). When T05 and I01 disagree (264 samples) M02 is right in 191, siding with the image 178 times. Reliance diagnostic: image->train mean drops macro-F1 to 0.682, text->train mean to 0.786 (image-led). Validation loss lowest at epoch 2, then rises (overfitting).
+
+Error Analysis Notes: see `docs/MULTIMODAL_MODEL_REPORT.md` §14–15
+
+Limitations: untuned; single seed and split; epoch selected on validation (optimistic); MLP overfits quickly; uncalibrated scores; inherits image gender-presence and text empty-caption shortcuts
+
+Conclusion: Best development model so far together with M03 (validation only); multimodal > image-only > text-only on identical samples. No significance claimed; test not evaluated.
+
+Next Experiment: TASK 12 - Hyperparameter Tuning and Model Optimization
+
+### Experiment ID: M03
+
+Date: 2026-10-13
+
+Status: COMPLETED
+
+Research Question: RQ2 (does image + text outperform text-only and image-only on the same samples?). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned (Task 4) + preprocessed text (Task 6 v1.0) + images (read-only)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7; all have image and caption entry; 105 empty captions)
+
+Validation Split: 754 (22 empty captions)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Image + text (MIMIC OCR caption; no new OCR). Modalities joined on sample_id (alignment audit: 0 duplicates, 0 missing)
+
+Preprocessing: text `hinglish_normalized` (Task 6 v1.0); image load_image() v1.0 + SigLIP PIL processor (224x224 stretch)
+
+Feature Representation: text: frozen MuRIL attention-mask mean pooling (T03 representation), 768-d; image: frozen SigLIP pooler_output (Task 10 cache), 768-d; standardised with TRAIN statistics
+
+Model: fusion MLP (frozen text + image) (projection (Linear+LayerNorm per modality) + concat + MLP)
+
+Model Version / Pretrained Checkpoint: text `google/muril-base-cased` @ `afd9f36c…` (frozen); image `google/siglip-base-patch16-224` @ `7fd15f06…` (frozen)
+
+Hyperparameters: {"projection_dim": 256, "hidden_dim": 256, "dropout": 0.3, "learning_rate": 0.001, "weight_decay": 0.01, "batch_size": 64, "max_epochs": 50, "early_stopping_patience": 5, "seed": 42}; AdamW; cross-entropy (2 classes); no class weights (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11, CPU only (i5-13500H), Python 3.10.0, PyTorch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_multimodal.py train`; 13 epochs, early stopping (patience 5), best epoch 8; epoch 1: train loss 0.478, val loss 0.445, val macro-F1 0.7864; epoch 2: train loss 0.333, val loss 0.452, val macro-F1 0.7864; epoch 3: train loss 0.280, val loss 0.463, val macro-F1 0.7984; epoch 4: train loss 0.217, val loss 0.531, val macro-F1 0.7957; epoch 5: train loss 0.183, val loss 0.614, val macro-F1 0.7957; epoch 6: train loss 0.131, val loss 0.645, val macro-F1 0.8062; epoch 7: train loss 0.115, val loss 0.753, val macro-F1 0.7917; epoch 8: train loss 0.104, val loss 0.800, val macro-F1 0.8077; epoch 9: train loss 0.076, val loss 0.928, val macro-F1 0.7891; epoch 10: train loss 0.062, val loss 1.010, val macro-F1 0.7838; epoch 11: train loss 0.060, val loss 0.983, val macro-F1 0.8050; epoch 12: train loss 0.050, val loss 1.153, val macro-F1 0.7719; epoch 13: train loss 0.054, val loss 1.089, val macro-F1 0.7997; parameters 526,594; train macro-F1 0.9918; save→reload reproduces predictions: True
+
+Validation Metrics: macro-F1 **0.8077** (95% bootstrap CI 0.780–0.836); accuracy 0.8077; precision (misogynistic) 0.8026; recall 0.8133; weighted-F1 0.8077; TN 304, FP 75, FN 70, TP 305; macro-F1 with non-empty caption 0.8045; without watermark 0.8061
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: classifier training 16.1 s on cached features; classifier inference 0.0281 s for 754 samples; text features T05 413 s / frozen 293 s (train + validation); image features reused from Task 10; artifact 2,121,066 bytes
+
+Artifacts: `models/multimodal/M03_fusion_mlp_frozen_mean_v1.0` (git-ignored); `results/metrics/multimodal_model_registry.json`; `results/metrics/multimodal/M03.json`; `results/figures/multimodal/M03_confusion_matrix.png`; `results/figures/multimodal/M03_training_curves.png`; `results/tables/multimodal/M03_training_history.csv`
+
+Observations: Control for the T05 feature bias (T05 train 0.748 vs validation 0.687): same MLP with frozen MuRIL text features. 0.8077, indistinguishable from M02 (0.8076), so the fine-tuned features gave no measurable fusion advantage and no visible harm. Best epoch 8 of 13 while validation loss had risen to 0.80 (overconfident). Relies on the image even more (image->mean 0.455, text->mean 0.760).
+
+Error Analysis Notes: see `docs/MULTIMODAL_MODEL_REPORT.md` §14–15
+
+Limitations: untuned; single seed and split; epoch selected on validation (optimistic); MLP overfits quickly; uncalibrated scores; inherits image gender-presence and text empty-caption shortcuts
+
+Conclusion: Frozen text representation is sufficient inside fusion at this stage.
+
+Next Experiment: TASK 12 - Hyperparameter Tuning and Model Optimization

@@ -1,0 +1,51 @@
+{
+  "task": "misogyny_detection",
+  "modality": "image+text",
+  "label_map": {
+    "0": "non_misogynistic",
+    "1": "misogynistic"
+  },
+  "note": "Needs image AND caption (no OCR). Scores are uncalibrated.",
+  "main_model": "M02",
+  "models": {
+    "M01": {
+      "kind": "concat_logreg",
+      "artifact": "models/multimodal/M01_concat_logreg_finetuned_pooled_v1.0.joblib",
+      "text_representation": "finetuned_pooled",
+      "text_source": "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1",
+      "text_encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+      "text_preprocessing_mode": "hinglish_normalized",
+      "text_preprocessing_version": "1.0",
+      "max_length": 64,
+      "image_encoder": "google/siglip-base-patch16-224",
+      "image_encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+      "image_preprocessing_version": "1.0"
+    },
+    "M02": {
+      "kind": "fusion_mlp",
+      "artifact": "models/multimodal/M02_fusion_mlp_finetuned_pooled_v1.0",
+      "text_representation": "finetuned_pooled",
+      "text_source": "{MODEL_DIR}/T05_muril_finetuned_hinglish_normalized_v1",
+      "text_encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+      "text_preprocessing_mode": "hinglish_normalized",
+      "text_preprocessing_version": "1.0",
+      "max_length": 64,
+      "image_encoder": "google/siglip-base-patch16-224",
+      "image_encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+      "image_preprocessing_version": "1.0"
+    },
+    "M03": {
+      "kind": "fusion_mlp",
+      "artifact": "models/multimodal/M03_fusion_mlp_frozen_mean_v1.0",
+      "text_representation": "frozen_mean",
+      "text_source": "google/muril-base-cased",
+      "text_encoder_revision": "afd9f36c7923d54e97903922ff1b260d091d202f",
+      "text_preprocessing_mode": "hinglish_normalized",
+      "text_preprocessing_version": "1.0",
+      "max_length": 64,
+      "image_encoder": "google/siglip-base-patch16-224",
+      "image_encoder_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+      "image_preprocessing_version": "1.0"
+    }
+  }
+}

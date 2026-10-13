@@ -1,0 +1,4 @@
+multimodal,macro_f1,minus_best_text_T05,minus_best_image_I01,matched_text_model,minus_matched_text
+M01,0.7679,0.081,0.0093,T05,0.081
+M02,0.8076,0.1207,0.049,T05,0.1207
+M03,0.8077,0.1208,0.0491,T03,0.1886
