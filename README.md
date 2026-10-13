@@ -197,6 +197,17 @@ python -m pytest
 For an NVIDIA GPU, install PyTorch first with the command from
 <https://pytorch.org/get-started/locally/>, then install the rest.
 
+**If the repository is inside a cloud-synced folder (e.g. OneDrive),**
+create the virtual environment *outside* it so the large environment
+is not synced, for example:
+
+```bash
+python -m venv C:\Users\<you>\venvs\nlp-cld
+```
+
+and activate it with `C:\Users\<you>\venvs\nlp-cld\Scripts\Activate.ps1`.
+(The primary developer machine uses this layout.)
+
 ### Continuous integration (GitHub Actions)
 `.github/workflows/ci.yml` runs on every pull request and on pushes to
 `main`:
