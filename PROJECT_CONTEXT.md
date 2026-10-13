@@ -198,16 +198,22 @@ Every run is recorded in `RESEARCH_LOG.md`.
 - Statistical significance is only claimed if a suitable test is
   actually performed.
 
-## 13. Database strategy (PLANNED)
+## 13. Database strategy (foundation IMPLEMENTED in Task 2)
 
-- Technology: **MongoDB Atlas**, driver **PyMongo** (unless a later
-  reason requires otherwise).
-- Likely collections: `analysis_history`, `user_feedback`,
-  `model_versions` (PROPOSED).
-- Possible stored fields: analysis ID, analysis type (text/meme),
-  timestamps, submitted text (where appropriate), OCR text, normalized
-  text, image metadata/reference, text/image/multimodal/final
-  predictions, model version, processing time, optional feedback.
+- Technology: **MongoDB Atlas**, driver **PyMongo**. Stores application
+  data only — **training datasets are never stored in MongoDB**.
+- Collections (IMPLEMENTED): `analysis_history`, `user_feedback`,
+  `model_versions`. Schemas, validation rules and indexes are
+  documented in `docs/database.md`.
+- Stored fields: analysis ID, analysis type (text/meme), UTC
+  timestamps, submitted text, OCR text, normalized text, basic image
+  metadata/optional reference, text/image/multimodal/final
+  predictions, model versions, processing time, optional feedback.
+- Code: `src/database/` (connection manager, schemas/validation,
+  repositories, `ensure_indexes()`); scripts `scripts/check_mongodb.py`
+  and `scripts/init_database.py`. Not yet used by the app (no UI yet).
+- Classification labels are not hard-coded; they stay configurable
+  until verified by dataset inspection.
 - **Image binaries are not stored in normal MongoDB documents.** Whether
   images are temporary only, stored as references, kept in object
   storage, or in GridFS is **NOT YET DECIDED**.
@@ -271,7 +277,8 @@ data, document what is persisted, avoid logging raw user input.
 
 ## 17. Current project stage
 
-**Task 1 — Project Foundation and Repository Initialization.**
+**Task 2 — MongoDB Atlas Foundation and Secure Database Layer
+(complete).**
 
 IMPLEMENTED in Task 1: directory structure, documentation
 (`CLAUDE.md`, `PROJECT_CONTEXT.md`, `RESEARCH_LOG.md`, `README.md`),
@@ -279,12 +286,17 @@ IMPLEMENTED in Task 1: directory structure, documentation
 `requirements.txt`, a minimal config loader (`src/utils/config.py`)
 and its tests.
 
-NOT STARTED: dataset inspection, preprocessing, EDA, splitting, model
-training, tuning, OCR, explainability, database layer, Streamlit UI,
-deployment, paper writing. No experimental results exist.
+IMPLEMENTED in Task 2: MongoDB database layer (`src/database/`),
+health-check and init scripts, unit tests with a mocked client and an
+in-memory fake database, `docs/database.md`. Live Atlas connectivity is
+verified separately with `scripts/check_mongodb.py`.
 
-Next planned task: **Task 2 — MongoDB Atlas Foundation and Secure
-Database Layer.**
+NOT STARTED: dataset inspection, preprocessing, EDA, splitting, model
+training, tuning, OCR, explainability, Streamlit UI, deployment, paper
+writing. No experimental results exist.
+
+Next planned task: **Task 3 — Dataset Inventory, Verification and
+Compatibility Analysis.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model
