@@ -1,0 +1,16 @@
+example_type,sample_id,cer_raw,wer_raw,cer_hinglish,wer_hinglish
+good OCR,mimic_27aa4def9f57,0.0,0.0,0.0,0.0
+good OCR,mimic_7798982c39ff,0.0,0.0,0.0,0.0
+good OCR,mimic_092771c48e90,0.0,0.0,0.0,0.0
+moderate OCR,mimic_acc2fc145478,0.29310344827586204,0.2222222222222222,0.2982456140350877,0.2222222222222222
+moderate OCR,mimic_b5fe1c33b782,0.2289156626506024,0.3125,0.2289156626506024,0.3125
+moderate OCR,mimic_8d850df13bc6,0.23333333333333334,0.4,0.23333333333333334,0.4
+poor OCR,mimic_beb020871993,28.666666666666668,16.0,29.666666666666668,16.0
+poor OCR,mimic_3e5e22b052ec,11.8,10.0,10.6,10.0
+poor OCR,mimic_cb873d3a0d72,11.25,10.0,12.0,10.0
+normalization improves CER,mimic_e0932880211d,8.5,9.0,5.555555555555555,9.0
+normalization improves CER,mimic_18da320262c0,5.0,4.0,3.75,4.0
+normalization improves CER,mimic_3e5e22b052ec,11.8,10.0,10.6,10.0
+normalization worsens CER,mimic_702ce987bcbc,2.9583333333333335,4.5,5.0,4.0
+normalization worsens CER,mimic_e590647877ff,2.03125,2.75,3.8947368421052633,2.75
+normalization worsens CER,mimic_beb020871993,28.666666666666668,16.0,29.666666666666668,16.0

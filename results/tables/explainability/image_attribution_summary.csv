@@ -1,0 +1,4 @@
+population,memes,median_concentration_top10,median_text_enrichment,share_text_enrichment_gt1,median_spearman_vs_random_classifiers,median_spearman_I03_vs_M04
+uniform random TEST sample,200,0.2477,0.985,0.49,0.0111,0.8689
+"I03 false positives (all, research set)",70,0.2519,0.9017,0.4571,0.0042,0.8862
+I03 true negatives (research set),97,0.2502,1.1581,0.6392,-0.0047,0.8587

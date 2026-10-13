@@ -1,0 +1,27 @@
+,value
+samples,758.0
+ocr_success_rate (text found),0.9987
+no_text_rate,0.0013
+ocr_error_or_invalid_rate,0.0
+empty_ocr_rate,0.0013
+reference_empty,21.0
+ocr_text_where_reference_empty,20.0
+mean_confidence,0.5746
+median_confidence,0.5967
+low_confidence_lt_0.30,48.0
+fresh_ocr_calls,669.0
+mean_seconds_per_image (fresh OCR),4.84
+median_seconds_per_image (fresh OCR),4.56
+max_seconds_per_image (fresh OCR),16.65
+corpus_cer_raw,0.3307
+corpus_wer_raw,0.4399
+median_cer_raw,0.2456
+median_wer_raw,0.3333
+corpus_cer_basic,0.3299
+corpus_wer_basic,0.4378
+median_cer_basic,0.2444
+median_wer_basic,0.3333
+corpus_cer_hinglish_normalized,0.3297
+corpus_wer_hinglish_normalized,0.4378
+median_cer_hinglish_normalized,0.2439
+median_wer_hinglish_normalized,0.3333

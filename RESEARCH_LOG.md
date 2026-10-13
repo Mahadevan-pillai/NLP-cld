@@ -2174,3 +2174,171 @@ Limitations: descriptive (no significance claims outside the two primary compari
 Conclusion: normalization not beneficial on TEST; projection-MLP fusion > concatenation; tuning of fusion not beneficial
 
 Next Experiment: TASK 14 - OCR Pipeline & OCR Robustness Experiment
+
+### Experiment ID: OCR-SEL
+
+Date: 2026-10-13
+
+Status: COMPLETED (validation only; OCR setting selection)
+
+Research Question: Task 14 OCR experiment (planned "OCR" design): which OCR image preparation to use before any TEST meme is OCR'd
+
+Dataset: MIMIC (cleaned, Task 4) with Task 6 v1.0 text and the original images
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: not used
+
+Validation Split: stratified random subset of 150 of 754 (75 per class, seed 42; ID-list SHA-256 `2e23047f…` in `results/metrics/ocr/test_plan.json`)
+
+Test Split: NOT EVALUATED in this entry (test plan written before any TEST OCR)
+
+Input Modality: image -> OCR text
+
+Preprocessing: OCR preparation candidates `none` (RGB as decoded) and `grayscale_autocontrast`; OCR text and caption both through Task 6 `preprocess()` (HINGLISH_NORMALIZED) before comparison
+
+Feature Representation: none (OCR quality only)
+
+Model: EasyOCR 1.7.2, languages ["en", "hi"] (CRAFT detector + Devanagari recogniser), CPU; OCR pipeline v1.0 (`src/ocr/`)
+
+Model Version / Pretrained Checkpoint: EasyOCR weights `craft_mlt_25k.pth` (83 MB) and `devanagari.pth` (215 MB) in `~/.EasyOCR/model`
+
+Hyperparameters: EasyOCR defaults; selection rule (pre-declared): lowest corpus CER of HINGLISH-normalised OCR vs HINGLISH-normalised caption, ties -> `none`
+
+Random Seed: 42
+
+Training Environment: no training; CPU i5-13500H, Python 3.10.0, torch 2.14.1+cpu, torchvision 0.29.1+cpu, easyocr 1.7.2
+
+Training Details: none
+
+Validation Metrics: corpus CER / WER / median CER / empty-OCR rate / mean confidence: `none` 0.2805 / 0.3698 / 0.1812 / 0.0067 / 0.5723; `grayscale_autocontrast` 0.2856 / 0.3698 / 0.1979 / 0.0067 / 0.5779 -> **`none` selected**
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: 4.89 s (`none`) and 4.61 s (`grayscale_autocontrast`) per image on CPU; about 24 min for both variants
+
+Artifacts: `results/tables/ocr/preparation_selection_validation.csv`; `results/metrics/ocr/test_plan.json`; `config/ocr.yaml` (`preparation: "none"`); per-sample OCR text `results/predictions/ocr/validation_subset_*.jsonl` (git-ignored)
+
+Observations: the two preparations differ by 0.005 corpus CER; grayscale + autocontrast did not help
+
+Error Analysis Notes: see `docs/OCR_ROBUSTNESS_REPORT.md` §8–9
+
+Limitations: caption reference is the dataset's own EasyOCR output (not ground truth); only two preparations compared; 150 memes
+
+Conclusion: OCR preparation fixed to `none` before TEST
+
+Next Experiment: OCR-TEST
+
+### Experiment ID: OCR-TEST
+
+Date: 2026-10-13
+
+Status: COMPLETED: post-hoc OCR robustness measurement of the FROZEN Task 13 models on TEST (no training, tuning or setting change)
+
+Research Question: How does OCR-extracted text affect meme classification compared with the dataset caption? Is the multimodal model more robust to OCR errors than the text-only model? Does Hinglish normalization recover OCR loss?
+
+Dataset: MIMIC (cleaned, Task 4) with Task 6 v1.0 text and the original images
+
+Dataset Version: canonical split SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: not used
+
+Validation Split: used only by OCR-SEL
+
+Test Split: all 758 TEST memes (382 non-misogynistic / 376 misogynistic; 21 empty captions), read through the Task 13 access point after `verify_freeze()` passed; TEST had already been evaluated once in Task 13
+
+Input Modality: text (OCR), image + text (OCR); image-only I03 as fallback
+
+Preprocessing: OCR preparation `none`; OCR text through each model's frozen Task 6 v1.0 preprocessing (OCR_NATIVE) plus two documented mismatch ablations (OCR_RAW_ONLY, OCR_BASIC_ONLY for the HINGLISH-trained finals)
+
+Feature Representation: as frozen in Tasks 8–13
+
+Model: B01, B02, B03, B07, T04, T05, M04 (+ I03 for the fallback); all frozen
+
+Model Version / Pretrained Checkpoint: checksums in `results/final/model_freeze_manifest.json` (freeze commit `ed0de53`); EasyOCR 1.7.2
+
+Hyperparameters: frozen; fallback policy fixed in the test plan before TEST OCR (min_confidence 0.30; no text / OCR error -> image-only; low confidence -> image-only + HUMAN REVIEW)
+
+Random Seed: bootstrap 10,000 resamples, seed 42
+
+Training Environment: no training; CPU i5-13500H, Python 3.10.0, torch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2, easyocr 1.7.2
+
+Training Details: none
+
+Validation Metrics: unchanged (Tasks 8–13)
+
+Test Metrics: **Task 13 final results are unchanged.** OCR QUALITY (vs dataset caption, HINGLISH level, 737 non-empty captions): OCR success 757/758, empty 1/758, corpus CER 0.3297, corpus WER 0.4378, median CER 0.2439, median WER 0.3333 (RAW level: 0.3307 / 0.4399 / 0.2456 / 0.3333); mean confidence 0.5746; 48 memes < 0.30. MODEL PERFORMANCE macro-F1, reference -> OCR native (drop, 95% paired CI): B07 0.6359 -> 0.6263 (+0.0096, −0.018 to 0.037); T05 0.6476 -> 0.6372 (+0.0104, −0.015 to 0.036); M04 0.8031 -> 0.8018 (+0.0013, −0.013 to 0.016); B01 0.6319 -> 0.6278; B02 0.6346 -> 0.6291; B03 0.6359 -> 0.6289; T04 0.6736 -> 0.6623. Ablations: OCR_RAW_ONLY B07 0.6304, T05 0.6385, M04 0.8031; OCR_BASIC_ONLY B07 0.6276, T05 0.6438, M04 0.8018. M04 + fallback 0.8031 (709 multimodal, 48 image-only + review, 1 image-only). Normalization recovery (HINGLISH − RAW-only): B07 −0.0041, T05 −0.0013, M04 −0.0013 (all CIs include 0). Text vs multimodal: drop difference T05 − M04 = +0.0091 (CI −0.0128 to 0.0309); predictions changed T05 92 vs M04 31 of 758
+
+Runtime / Resource Notes: EasyOCR CPU 4.84 s per image (mean of 669 fresh calls; median 4.56, max 16.65); about 54 min of OCR for TEST; 89 cache hits; weights 285 MB; cache 1,058 records, 5.0 MB (outside repo)
+
+Artifacts: `results/tables/ocr/` (`ocr_quality_summary.csv`, `ocr_quality_by_group.csv`, `ocr_errors.csv`, `manual_ocr_review.csv`, `reference_text_check.csv`, `ocr_examples.csv`, `ocr_robustness_results.csv`, `ocr_robustness_by_subset.csv`, `normalization_recovery.csv`, `text_vs_multimodal_robustness.csv`, `fallback_routes_test.csv`); `results/figures/ocr/*.png` (6); per-sample OCR text and predictions in `results/predictions/ocr/` (git-ignored); `docs/OCR_ROBUSTNESS_REPORT.md`
+
+Observations: all OCR drops ≤ 0.011 macro-F1 with CIs including 0; 12–15% of text-model predictions and about 4% of M04 predictions change; results with and without `doublemean` watermark memes nearly identical (T05 drop +0.0108, M04 +0.0014 without watermark); on the 21 empty-caption memes, OCR text raised text-model macro-F1 (0.30 -> about 0.50; small n)
+
+Error Analysis Notes: 189 memes with CER > 0.5 (`ocr_errors.csv`); manual review of the 16 worst: 8 incomplete dataset captions, 3 stylized font, 2 multiple regions, 2 screenshot/UI, 1 Devanagari; low-confidence memes have median CER 1.38
+
+Limitations: reference captions are EasyOCR output (agreement, not accuracy; models trained on OCR text already); one OCR engine; post-hoc use of an already-evaluated TEST set; small subsets descriptive only; fallback threshold uncalibrated; config kept in `config/ocr.yaml` because `config.yaml` is checksum-frozen
+
+Conclusion: the deployable OCR pipeline performs close to the reported caption-based TEST results; Hinglish normalization recovers nothing; multimodal predictions are more stable, but a robustness advantage in macro-F1 is not statistically supported. No model, threshold, preprocessing rule or split was changed.
+
+Next Experiment: TASK 15 - Explainability & Advanced Error Analysis
+
+### Experiment ID: XAI-T15
+
+Date: 2026-10-13
+
+Status: COMPLETED: post-hoc explainability and advanced error analysis of the FROZEN Task 13 final models (no training, tuning or setting change)
+
+Research Question: What drives the frozen models' predictions (text words, image regions, modalities), which shortcuts do they use, how do OCR errors change explanations, and how should explanations and moderation be presented in the application?
+
+Dataset: MIMIC (cleaned, Task 4) with Task 6 v1.0 text, the original images and Task 14 OCR outputs
+
+Dataset Version: canonical split SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: not used (only M04's stored train-mean standardiser, for the ablation)
+
+Validation Split: not used
+
+Test Split: 758 TEST memes, read through the Task 13 access point after `verify_freeze()`; TEST already evaluated once in Task 13. Plan `results/metrics/explainability/xai_plan.json` written before any TEST explanation
+
+Input Modality: text, image, image + text
+
+Preprocessing: frozen per model (Task 6 v1.0 HINGLISH_NORMALIZED for T05/B07/M04 text; Task 10 v1.0 for images); OCR text from Task 14 (EasyOCR 1.7.2, preparation `none`)
+
+Feature Representation: as frozen in Tasks 8–13
+
+Model: T05 (FINAL_TEXT_MODEL), I03 (FINAL_IMAGE_MODEL), M04 (FINAL_MULTIMODAL_MODEL), B07 (traditional baseline); artifact SHA-256 prefixes 697692cc1d9e / 73c5497e95da / 5b132e127981 / a2aaae391288
+
+Model Version / Pretrained Checkpoint: `google/muril-base-cased@afd9f36c`, `google/siglip-base-patch16-224@7fd15f06` (PIL processor)
+
+Hyperparameters: XAI methods (config/explainability.yaml v1.0): T05 Integrated Gradients, 32 steps, [PAD]-embedding baseline, target logit difference, WordPiece sum per word; B07 coefficient x TF-IDF (exact); I03 occlusion, 56 px window, stride 28 (49 copies, 8 x 8 cells), grey fill; M04 train-mean modality ablation + agreement rule (0/1/2 single-modality models disagreeing = AGREE/PARTIAL/DISAGREE) + IG/occlusion through the fusion model
+
+Random Seed: 42 (sample set, research image set, manual-review sample, deletion test); random-classifier / randomisation checks seed 0
+
+Training Environment: no training; CPU i5-13500H, Python 3.10.0, torch 2.14.1+cpu, transformers 5.19.0, scikit-learn 1.7.2
+
+Training Details: none
+
+Validation Metrics: unchanged (Tasks 8–13)
+
+Test Metrics: **Task 13 final metrics unchanged.** Explanation sample set 30 memes (3 x 10 categories); T05 IG + B07 linear for all 758 captions; I03/M04 occlusion for 351 memes (200 uniform random + all I03/M04 errors + sample set). Consistency: XAI code reproduces T05/I03/M04/B07 TEST predictions 758/758. T05: female-reference words mean IG +0.281 (+0.245 in non-misogynistic memes, 86% positive), male-reference −0.108, negation −0.045; FP rate on non-misogynistic memes with vs without a female-reference word T05 70.2% vs 33.1% (Fisher Holm p 1.3e-5), M04 38.3% vs 13.4% (6.3e-4), I03 34.0% vs 16.1% (0.038), B07 42.6% vs 35.5% (0.79); all 21 empty captions predicted misogynistic; synthetic probes: negation 0/6 T05 label changes, gender swap 4/6. Deletion faithfulness: top-1 IG word drop median 0.066 vs random 0.008 (183 memes). I03: random-classifier map correlation median 0.01; OCR-text-region enrichment median 0.99; correct vs incorrect maps not different (Holm p ≥ 0.80); 10 of 12 I03-positive sample memes have the strongest positive cell on a pictured woman (qualitative). M04: AGREE 472 (acc 0.864), PARTIAL 281 (0.705), DISAGREE 5 (0.600); label depends on image 208, on text 83 (acc 0.518). OCR: where T05's label changes with OCR text, top-3 word Jaccard 0.00 vs 0.50 (control), decisive OCR word absent from the reference 58.7% vs 28.3%. Error taxonomy: 391 memes; M04 149 errors (63 FP / 86 FN), 60 manually reviewed (24 Task 13 + 36 new): image–text dependency 15, slang 8, cultural reference 6, annotation ambiguity 6, gender cues in both modalities 6. Moderation simulation (meme mode, dataset captions): ALLOW 242 / WARNING 225 (85.8% truly misogynistic) / HUMAN_REVIEW 291
+
+Runtime / Resource Notes: see `results/tables/explainability/explanation_runtime.csv` and docs §18; full TEST computation about 1 h on CPU (occlusion about 8 s per image); cache outside the repo
+
+Artifacts: `src/explainability/` (text, image, multimodal, moderation, explanation, errors); `config/explainability.yaml`; `scripts/xai_experiment.py`, `scripts/report_xai.py`; `results/tables/explainability/*.csv` (advanced_error_analysis.csv, error_distribution.csv, …); `results/figures/explainability/*.png` (6 tracked); `results/metrics/explainability/xai_plan.json`, `explanation_object_example.json`; per-meme explanations in `results/predictions/explainability/` (git-ignored); `docs/EXPLAINABILITY_ERROR_ANALYSIS_REPORT.md`; `tests/test_explainability.py`
+
+Observations: T05 behaves like a female-reference-word detector and ignores negation; I03 attribution concentrates on pictured women (qualitative), not on rendered text; M04 is image-dominated and inherits T05's lexical cues when the text decides; OCR changes T05 labels by adding or removing decisive words
+
+Error Analysis Notes: methodology and categories in docs §11–12; manual categories are a single reviewer's judgement (no agreement statistic)
+
+Limitations: attribution is not causation (baseline/fill dependent, no interactions); T05 head-only randomisation not discriminative (cascading check added after the plan); no automatic face detection (OpenCV 5 has no Haar detector); probes are 14 invented sentences; TEST reused post-hoc (nothing changed); config in `config/explainability.yaml` because `config.yaml` is checksum-frozen
+
+Conclusion: explanations are consistent with the frozen models and pass the faithfulness checks; they reveal gender-presence / female-term shortcuts (fairness risks) that are reported, not fixed; a conservative ALLOW / WARNING / HUMAN_REVIEW design and a structured explanation object are ready for Task 16
+
+Next Experiment: TASK 16 - Complete Application Integration: Inference + MongoDB + Streamlit

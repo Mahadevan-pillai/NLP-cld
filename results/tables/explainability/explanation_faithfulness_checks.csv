@@ -1,0 +1,4 @@
+check,memes,median_top_drop,median_random_drop,share_top_larger,wilcoxon_like_mwu_p
+T05 deletion: top-1 IG words vs 1 random words,183,0.0657,0.0081,0.7705,4.941734125281394e-08
+T05 deletion: top-3 IG words vs 3 random words,183,0.2751,0.0809,0.7814,2.0738344168964286e-09
+T05 IG with a re-initialised classifier head: Spearman with real attributions,50,0.9211,,0.02,

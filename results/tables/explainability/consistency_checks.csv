@@ -1,0 +1,10 @@
+check,matches,of
+T05 predictions reproduce Task 13 TEST predictions,758.0,758.0
+I03 predictions reproduce Task 13 TEST predictions,758.0,758.0
+M04 predictions reproduce Task 13 TEST predictions,758.0,758.0
+B07 predictions reproduce Task 13 TEST predictions,758.0,758.0
+M04 ablation 'full' label == M04 prediction,758.0,758.0
+B07 linear decomposition sign == B07 prediction,758.0,758.0
+B07 max |decomposition error|,0.0,
+T05 IG forward sign == T05 prediction (reference captions),758.0,758.0
+T05 IG forward sign == T05 OCR_NATIVE prediction (OCR text),184.0,184.0

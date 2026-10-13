@@ -1,0 +1,3 @@
+comparison,memes,median_spearman
+"word attributions: T05 head vs M04 (through fusion, image fixed)",51,0.9069
+M04 text attribution magnitude: median sum|IG| through M04 / through T05,56,1.9003

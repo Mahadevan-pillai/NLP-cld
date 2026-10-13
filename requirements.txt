@@ -10,9 +10,9 @@
 #   and record that file / Python version in RESEARCH_LOG.md entries.
 #
 # Not included on purpose:
-#   - OCR libraries (engine not yet selected)
 #   - TensorFlow / other DL frameworks (PyTorch only)
-#   - SHAP / LIME (explainability is a later task)
+#   - SHAP / LIME (Task 15 explainability is implemented with torch / numpy only: Integrated Gradients,
+#     exact linear contributions, occlusion; no extra dependency)
 #
 # PyTorch note: on Windows, plain "pip install torch" installs the CPU
 # build. For an NVIDIA GPU, install torch first using the command from
@@ -48,6 +48,12 @@ opencv-python-headless>=4.9
 torch>=2.2
 transformers>=5.19      # Task 10 uses the 5.x image-processor backend API (backend="pil"); tested with 5.19.0
 sentence-transformers>=3.0
+
+# OCR (Task 14): EasyOCR. It needs torchvision: install the CPU build from
+# https://download.pytorch.org/whl/cpu matching your torch (torchvision 0.29.1+cpu for torch 2.14.1).
+# Weights (CRAFT detector + Devanagari/Latin recogniser, ~285 MB) download on first use.
+# Not needed for the tests (they use a fake OCR reader).
+easyocr==1.7.2
 
 # Application
 streamlit>=1.35

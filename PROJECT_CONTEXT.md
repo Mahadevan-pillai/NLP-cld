@@ -194,7 +194,9 @@ task:
 - a small manually transcribed subset as reference.
 
 The research question has not been changed yet; that is a decision for
-the developer.
+the developer. **Task 14 used the first option** (dataset OCR vs the
+project's own EasyOCR pipeline; no manual transcription), so its CER/WER
+measure agreement, not accuracy. See `docs/OCR_ROBUSTNESS_REPORT.md`.
 
 ## 11. Planned experiments (PLANNED — no results exist)
 
@@ -210,8 +212,8 @@ means `text_basic`; "With" means `text_hinglish_normalized`.
 | E4 | Image + Text | Without |
 | E5 | Image + Text | With |
 
-OCR experiment (PLANNED; TO BE REFRAMED, see §10): reference dataset
-text vs OCR-extracted text vs OCR-extracted + normalized text. Note
+OCR experiment (DONE in Task 14, see §17): reference dataset text vs
+OCR-extracted text (raw / basic / normalized), frozen models only. Note
 that the "reference" dataset text is itself OCR output.
 
 Every run is recorded in `RESEARCH_LOG.md`.
@@ -259,10 +261,12 @@ Every run is recorded in `RESEARCH_LOG.md`.
 
 Streamlit app with pages: Home, Analyze Text, Analyze Meme, Analysis
 History, Research Dashboard, About, plus user feedback where
-appropriate. OCR engine (Tesseract / EasyOCR / PaddleOCR / other) is
-**NOT YET SELECTED** — a later task evaluates requirements.
-Explainability (SHAP / LIME / token attribution / image heatmaps) is
-PLANNED and must correspond to the actual trained model.
+appropriate. OCR engine: **EasyOCR 1.7.2** (selected in Task 14;
+`config/ocr.yaml`, `src/ocr/`), with the fallback and privacy design in
+`docs/OCR_ROBUSTNESS_REPORT.md` §15–16.
+Explainability is DONE in Task 15 with methods matched to the actual models
+(Integrated Gradients, exact TF-IDF contributions, occlusion, modality
+ablation); SHAP / LIME were not needed. See `docs/EXPLAINABILITY_ERROR_ANALYSIS_REPORT.md`.
 Deployment target (e.g. Hugging Face Spaces) is TO BE EVALUATED.
 
 Privacy: avoid retaining uploads unnecessarily, store only necessary
@@ -561,9 +565,65 @@ DONE in Task 13 (FINAL TEST EVALUATION, 758 test memes):
 - **The TEST set is now spent.** It must not influence any further
   development. Any new model is a separate, post-hoc experiment.
 
-NOT STARTED: OCR, explainability, Streamlit UI, deployment, paper writing.
+DONE in Task 14 (OCR pipeline + post-hoc OCR robustness on TEST; no
+model, threshold, preprocessing rule or split changed):
+- **Engine:** EasyOCR 1.7.2, `["en", "hi"]`, CPU; preparation `none`,
+  chosen on 150 VALIDATION memes before any TEST OCR (log OCR-SEL).
+- **Where the code and settings live:**
+  - `src/ocr/`:
+    - `extract_text_from_image()`;
+    - `analyze_meme_input()` with the fallback `route()`;
+    - CER/WER;
+    - a hash-keyed research cache.
+  - `config/ocr.yaml`.
+  - **Architecture note:** both live outside `src/preprocessing/` and
+    `config.yaml` because the Task 13 freeze checksums those folders and
+    files. OCR text goes through the unchanged Task 6 `preprocess()`.
+- **OCR quality** (vs dataset caption, which is itself EasyOCR output):
+  - text found in 757 / 758;
+  - median CER 0.244, corpus CER 0.330.
+  - Much of the high-CER tail is incomplete dataset captions.
+- **Robustness:** frozen models with OCR text instead of the caption:
+  - drops of at most 0.011 macro-F1 (T05 −0.010, M04 −0.001), all CIs
+    include 0;
+  - normalization recovered nothing.
+  - M04 predictions are more stable (4% vs 12% changed), but the
+    degradation difference is not significant.
+- **Fallback policy:** no text / OCR error → image-only; confidence < 0.30 →
+  image-only + HUMAN REVIEW; invalid image → reject.
+- **Privacy:** uploads are processed in memory and never cached.
+- Report: `docs/OCR_ROBUSTNESS_REPORT.md`; log entries OCR-SEL, OCR-TEST.
 
-Next planned task: **TASK 14 — OCR Pipeline & OCR Robustness Experiment.**
+DONE in Task 15 (explainability + advanced error analysis of the frozen
+models on TEST; nothing changed; plan `results/metrics/explainability/xai_plan.json`
+written first):
+- **Methods** (`src/explainability/`, `config/explainability.yaml`):
+  - T05: Integrated Gradients (word level);
+  - B07: exact coefficient × TF-IDF;
+  - I03: occlusion (8 × 8 map);
+  - M04: unimodal comparison + train-mean modality ablation + AGREE /
+    PARTIAL / DISAGREE.
+  - All in log-odds; consistency 758/758 with the Task 13 predictions.
+- **Findings (shortcuts, fairness risks; reported, not fixed):**
+  - T05 behaves like a female-reference-word detector and ignores
+    negation: FP rate 70% vs 33% on non-misogynistic memes with / without
+    such a word.
+  - I03's strongest positive region is usually a pictured woman
+    (qualitative).
+  - M04 is image-dominated; when the text decides, it is right only 52%
+    of the time.
+  - OCR changes T05 labels by adding or removing decisive words.
+- **Error taxonomy:** 391 memes; 60 of 149 M04 errors manually reviewed.
+- **Design for Task 16:**
+  - moderation ALLOW / WARNING / HUMAN_REVIEW (label + agreement based,
+    no thresholds, no BLOCK);
+  - the UI explanation object `explain_meme()` / `explain_text_input()`
+    (in memory, never cached).
+- Report: `docs/EXPLAINABILITY_ERROR_ANALYSIS_REPORT.md`; log entry XAI-T15.
+
+NOT STARTED: Streamlit UI, deployment, paper writing.
+
+Next planned task: **TASK 16 — Complete Application Integration: Inference + MongoDB + Streamlit.**
 
 ### Academic evaluation milestones (for planning)
 - **MSE 1** — Problem identification, dataset, preprocessing, EDA, model

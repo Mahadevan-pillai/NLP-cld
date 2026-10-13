@@ -1,0 +1,17 @@
+sample_id,reference_matches_visible_text,issue
+mimic_cd1afba4cc53,close,minor character errors (digits read as Devanagari numerals)
+mimic_659fec7bca1b,partial,one caption line missing and several words garbled
+mimic_e0be2d931592,close,watermark rendered as garbage characters; main Devanagari caption correct
+mimic_07d9973a81ea,partial,small text region (sticker text) missing
+mimic_83edb9df14a2,partial,word order differs from the image
+mimic_02b9d1be79da,partial,top text region missing
+mimic_ff5b4fcd3015,partial,one word placed out of order
+mimic_b36c74ddad42,partial,two words moved to the end (reading-order error)
+mimic_d6310c2b8c25,close,watermark garbled; caption correct
+mimic_ca9c4c82fd2f,close,matches
+mimic_036c220326ad,partial,time misread and watermark garbled
+mimic_d10b9def403d,partial,bottom caption line missing entirely
+mimic_fb3c5792cac7,close,minor character errors
+mimic_4d471d2b3e88,close,matches apart from watermark text
+mimic_bd20bd32f369,close,matches
+mimic_3b5565efad13,close,minor Devanagari character errors

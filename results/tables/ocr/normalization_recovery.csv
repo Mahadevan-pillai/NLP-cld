@@ -1,0 +1,4 @@
+model,reference,ocr_raw_only,ocr_basic_only,ocr_hinglish (native),loss_without_normalization,recovered_by_normalization,recovered_ci95,share_of_loss_recovered
+B07,0.6359,0.6304,0.6276,0.6263,0.0055,-0.0041,-0.0158-0.0075,-0.745
+T05,0.6476,0.6385,0.6438,0.6372,0.0091,-0.0013,-0.0122-0.0096,-0.143
+M04,0.8031,0.8031,0.8018,0.8018,0.0,-0.0013,-0.0068-0.0041,

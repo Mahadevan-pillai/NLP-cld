@@ -1,0 +1,77 @@
+table,model,category,subcategory,errors,percent,false_positives,false_negatives,manually_reviewed
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,CONTEXTUAL,cultural reference,6,4.0,2,4,6
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,CONTEXTUAL,implicit meaning,2,1.3,0,2,2
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,DATA,possible annotation ambiguity,6,4.0,4,2,6
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,LINGUISTIC,Hinglish spelling variant,3,2.0,2,1,0
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,LINGUISTIC,ambiguity,5,3.4,5,0,5
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,LINGUISTIC,gender-term false alarm,2,1.3,2,0,2
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,LINGUISTIC,negation,4,2.7,1,3,0
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,LINGUISTIC,sarcasm,1,0.7,0,1,1
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,LINGUISTIC,slang,8,5.4,2,6,8
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,LINGUISTIC,very short text,4,2.7,3,1,0
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,MULTIMODAL,all models wrong,17,11.4,8,9,0
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,MULTIMODAL,followed the wrong modality,41,27.5,10,31,1
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,MULTIMODAL,fusion failure,1,0.7,0,1,0
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,MULTIMODAL,gender cues in both modalities,6,4.0,6,0,6
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,MULTIMODAL,image-text dependency,15,10.1,0,15,15
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,OCR,OCR text changes the prediction,14,9.4,6,8,0
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,OCR,missing text,4,2.7,4,0,2
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,OCR,text-region failure,1,0.7,1,0,1
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,VISUAL,gender-presence false alarm,5,3.4,5,0,5
+"primary category of M04 errors (manual label where reviewed, else rule)",M04,VISUAL,text-heavy meme,4,2.7,2,2,0
+manually reviewed M04 errors only (60 reviewed),M04,CONTEXTUAL,cultural reference,6,10.0,2,4,6
+manually reviewed M04 errors only (60 reviewed),M04,CONTEXTUAL,implicit meaning,2,3.3,0,2,2
+manually reviewed M04 errors only (60 reviewed),M04,DATA,possible annotation ambiguity,6,10.0,4,2,6
+manually reviewed M04 errors only (60 reviewed),M04,LINGUISTIC,ambiguity,5,8.3,5,0,5
+manually reviewed M04 errors only (60 reviewed),M04,LINGUISTIC,gender-term false alarm,2,3.3,2,0,2
+manually reviewed M04 errors only (60 reviewed),M04,LINGUISTIC,sarcasm,1,1.7,0,1,1
+manually reviewed M04 errors only (60 reviewed),M04,LINGUISTIC,slang,8,13.3,2,6,8
+manually reviewed M04 errors only (60 reviewed),M04,MULTIMODAL,gender cues in both modalities,6,10.0,6,0,6
+manually reviewed M04 errors only (60 reviewed),M04,MULTIMODAL,image-text dependency,15,25.0,0,15,15
+manually reviewed M04 errors only (60 reviewed),M04,OCR,missing text,2,3.3,2,0,2
+manually reviewed M04 errors only (60 reviewed),M04,OCR,text-region failure,1,1.7,1,0,1
+manually reviewed M04 errors only (60 reviewed),M04,VISUAL,gender-presence false alarm,5,8.3,5,0,5
+automatic flags (multi-label) of each model's errors,T05,DATA,duplicate/template group,10,3.7,6,4,2
+automatic flags (multi-label) of each model's errors,T05,DATA,watermark artifact,1,0.4,0,1,0
+automatic flags (multi-label) of each model's errors,T05,LINGUISTIC,Devanagari script,66,24.7,36,30,13
+automatic flags (multi-label) of each model's errors,T05,LINGUISTIC,Hinglish spelling variant,37,13.9,24,13,5
+automatic flags (multi-label) of each model's errors,T05,LINGUISTIC,negation,54,20.2,20,34,10
+automatic flags (multi-label) of each model's errors,T05,LINGUISTIC,very short text,17,6.4,14,3,2
+automatic flags (multi-label) of each model's errors,T05,MULTIMODAL,all models wrong,64,24.0,36,28,24
+automatic flags (multi-label) of each model's errors,T05,MULTIMODAL,followed the wrong modality,39,14.6,13,26,19
+automatic flags (multi-label) of each model's errors,T05,OCR,OCR text changes the prediction,43,16.1,27,16,8
+automatic flags (multi-label) of each model's errors,T05,OCR,high OCR disagreement,65,24.3,46,19,9
+automatic flags (multi-label) of each model's errors,T05,OCR,low OCR confidence,19,7.1,16,3,3
+automatic flags (multi-label) of each model's errors,T05,OCR,missing text,12,4.5,12,0,4
+automatic flags (multi-label) of each model's errors,T05,VISUAL,low resolution,5,1.9,3,2,3
+automatic flags (multi-label) of each model's errors,T05,VISUAL,text-heavy meme,80,30.0,42,38,12
+automatic flags (multi-label) of each model's errors,I03,DATA,duplicate/template group,6,4.1,5,1,2
+automatic flags (multi-label) of each model's errors,I03,LINGUISTIC,Devanagari script,48,32.4,29,19,12
+automatic flags (multi-label) of each model's errors,I03,LINGUISTIC,Hinglish spelling variant,18,12.2,13,5,5
+automatic flags (multi-label) of each model's errors,I03,LINGUISTIC,negation,21,14.2,10,11,8
+automatic flags (multi-label) of each model's errors,I03,LINGUISTIC,very short text,14,9.5,8,6,1
+automatic flags (multi-label) of each model's errors,I03,MULTIMODAL,all models wrong,64,43.2,36,28,24
+automatic flags (multi-label) of each model's errors,I03,MULTIMODAL,followed the wrong modality,44,29.7,14,30,16
+automatic flags (multi-label) of each model's errors,I03,OCR,OCR text changes the prediction,26,17.6,15,11,8
+automatic flags (multi-label) of each model's errors,I03,OCR,high OCR disagreement,40,27.0,23,17,9
+automatic flags (multi-label) of each model's errors,I03,OCR,low OCR confidence,7,4.7,5,2,2
+automatic flags (multi-label) of each model's errors,I03,OCR,missing text,4,2.7,4,0,2
+automatic flags (multi-label) of each model's errors,I03,VISUAL,low resolution,2,1.4,1,1,1
+automatic flags (multi-label) of each model's errors,I03,VISUAL,text-heavy meme,42,28.4,21,21,12
+automatic flags (multi-label) of each model's errors,M04,DATA,duplicate/template group,6,4.0,4,2,2
+automatic flags (multi-label) of each model's errors,M04,LINGUISTIC,Devanagari script,44,29.5,23,21,19
+automatic flags (multi-label) of each model's errors,M04,LINGUISTIC,Hinglish spelling variant,15,10.1,8,7,6
+automatic flags (multi-label) of each model's errors,M04,LINGUISTIC,negation,26,17.4,7,19,14
+automatic flags (multi-label) of each model's errors,M04,LINGUISTIC,very short text,14,9.4,9,5,3
+automatic flags (multi-label) of each model's errors,M04,MULTIMODAL,all models wrong,64,43.0,36,28,24
+automatic flags (multi-label) of each model's errors,M04,MULTIMODAL,followed the wrong modality,83,55.7,27,56,35
+automatic flags (multi-label) of each model's errors,M04,MULTIMODAL,fusion failure,2,1.3,0,2,1
+automatic flags (multi-label) of each model's errors,M04,OCR,OCR text changes the prediction,26,17.4,13,13,11
+automatic flags (multi-label) of each model's errors,M04,OCR,high OCR disagreement,42,28.2,21,21,15
+automatic flags (multi-label) of each model's errors,M04,OCR,low OCR confidence,9,6.0,8,1,4
+automatic flags (multi-label) of each model's errors,M04,OCR,missing text,6,4.0,6,0,4
+automatic flags (multi-label) of each model's errors,M04,VISUAL,low resolution,5,3.4,2,3,3
+automatic flags (multi-label) of each model's errors,M04,VISUAL,text-heavy meme,42,28.2,20,22,18
+totals,T05,ALL,all errors,267,100.0,144,123,43
+totals,I03,ALL,all errors,148,100.0,70,78,40
+totals,M04,ALL,all errors,149,100.0,63,86,60

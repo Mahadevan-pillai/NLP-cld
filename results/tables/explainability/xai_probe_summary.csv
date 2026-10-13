@@ -1,0 +1,5 @@
+probe_type,pairs,T05_label_changes,B07_label_changes,T05_mean_logit_A_minus_B
+negation,6,0,1,0.0017
+gender_swap,6,4,4,0.8691
+spelling,2,0,1,-0.0013
+"negation_spelling (5 spellings, same sentence)",5,0,0,0.0019

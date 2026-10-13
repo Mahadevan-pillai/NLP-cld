@@ -1,0 +1,68 @@
+{
+  "created_utc": "2026-10-13T12:25:28+00:00",
+  "statement": "Written BEFORE any TEST image was OCR'd. TEST results do not change OCR settings, fallback or models.",
+  "validation_subset": {
+    "size": 150,
+    "per_class": 75,
+    "seed": 42,
+    "sample_ids_sha256": "2e23047f4d341c0dd45a673419f76fad5b7e0a15e9e1daa50671601c5b278fbd"
+  },
+  "preparation_selected": "none",
+  "selection_rule": "lowest corpus CER of HINGLISH-normalised OCR vs HINGLISH-normalised reference text; ties -> 'none' (simplest)",
+  "validation_corpus_cer": {
+    "none": 0.2804850912327548,
+    "grayscale_autocontrast": 0.2856030262572319
+  },
+  "engine": "easyocr",
+  "engine_version": "1.7.2",
+  "languages": [
+    "en",
+    "hi"
+  ],
+  "ocr_pipeline_version": "1.0",
+  "fallback_policy": {
+    "min_confidence": 0.3,
+    "invalid_image": "reject",
+    "ocr_error": "image_only",
+    "no_text": "image_only",
+    "low_confidence": "image_only_and_human_review",
+    "ok": "multimodal"
+  },
+  "test_population": "all 758 canonical TEST memes (no sampling, no easy-example filtering)",
+  "conditions": {
+    "REFERENCE": "dataset caption, model-native preprocessing (= Task 13 predictions)",
+    "OCR_NATIVE": "OCR text through the model's own frozen preprocessing (deployable pipeline)",
+    "OCR_RAW_ONLY": "OCR text WITHOUT preprocessing fed to hinglish-trained final models (mismatch ablation)",
+    "OCR_BASIC_ONLY": "OCR text with BASIC only (hinglish step skipped) fed to hinglish-trained models (ablation)",
+    "OCR_NATIVE_WITH_FALLBACK": "M04 with the fallback policy: image-only I03 when OCR fails / is empty / low confidence"
+  },
+  "models": {
+    "final": [
+      "T05",
+      "I03",
+      "M04"
+    ],
+    "traditional": [
+      "B07"
+    ],
+    "mode_matched": {
+      "RAW": "B01",
+      "BASIC": [
+        "B02",
+        "T04"
+      ],
+      "HINGLISH_NORMALIZED": [
+        "B03",
+        "T05"
+      ]
+    }
+  },
+  "metrics": [
+    "accuracy",
+    "precision",
+    "recall",
+    "macro_f1",
+    "weighted_f1"
+  ],
+  "uncertainty": "paired bootstrap 10,000 resamples, seed 42 (REFERENCE vs OCR on the same samples)"
+}

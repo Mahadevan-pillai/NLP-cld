@@ -1,0 +1,17 @@
+sample_id,error_category,review_notes
+mimic_beb020871993,other: reference caption incomplete,QUALITATIVE: dataset caption is one word; OCR read the full Devanagari verse (with some character errors) plus a watermark
+mimic_cb873d3a0d72,other: reference caption incomplete,QUALITATIVE: caption keeps one word; OCR read the stylised caption with garbled characters
+mimic_3e5e22b052ec,other: reference caption incomplete,QUALITATIVE: caption truncated; OCR read the visible caption and a handle correctly
+mimic_9c953034b13f,multiple text regions,QUALITATIVE: screenshot full of repeated watermark handles; OCR mixes them into the caption
+mimic_1975d2c38ceb,other: reference caption incomplete,QUALITATIVE: caption truncated; OCR read the bottom caption with some noise from a banknote image
+mimic_d975c437f2b3,other: reference caption incomplete,QUALITATIVE: caption keeps only a small name; OCR read both caption lines
+mimic_2701b27d7d68,stylized font,QUALITATIVE: italic decorative caption merged into one garbled token
+mimic_5fa6b8141009,screenshot/UI content,QUALITATIVE: chat-bubble screenshot; caption kept two bubbles; OCR read all bubbles plus the bottom caption
+mimic_e0932880211d,stylized font,QUALITATIVE: decorative caption with emoji read as symbols and digits
+mimic_cff618e05bcd,other: reference caption incomplete,QUALITATIVE: caption keeps the top line; OCR also read the stylised bottom line with errors
+mimic_702ce987bcbc,multiple text regions,QUALITATIVE: several captions and logos; OCR merged words across regions
+mimic_a0f49c077bd3,Devanagari issue,QUALITATIVE: long Devanagari caption over a photo; caption truncated; OCR read most of it with character substitutions
+mimic_c9b49eed553c,stylized font,QUALITATIVE: decorative TV-show logo text and a watermark
+mimic_efcdacee4474,other: reference caption incomplete,QUALITATIVE: caption keeps fragments; OCR read both captions with word errors
+mimic_db7fe6d48508,screenshot/UI content,QUALITATIVE: video-app screenshot (title / views / timestamp) plus Devanagari
+mimic_247c87574e20,other: reference caption incomplete,QUALITATIVE: caption keeps the bottom line; OCR also read the stylised top line with errors
