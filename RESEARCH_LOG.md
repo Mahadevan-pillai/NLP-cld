@@ -427,3 +427,339 @@ Limitations:
 Conclusion: The canonical split is ready. All learned preprocessing must be fitted on train only; the test set is locked.
 
 Next Experiment: TASK 8: Traditional Text Baselines (TF-IDF + Logistic Regression + SVM).
+
+### Experiment ID: B01
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: RQ1 (text-only baseline; effect of Hinglish normalization). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned + preprocessed (Task 6 v1.0)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text only (empty texts included as all-zero vectors)
+
+Preprocessing: `raw` (Task 6 v1.0), applied inside the pipeline from `text_raw`; verified identical to the stored Task 6 column
+
+Feature Representation: TF-IDF word 1–2-grams, `min_df=2`, `sublinear_tf`, lowercase, Devanagari-safe `token_pattern`; 6,042 features (fitted on train only)
+
+Model: TF-IDF + Logistic Regression
+
+Model Version / Pretrained Checkpoint: baseline v1.0 (no pretrained weights)
+
+Hyperparameters: {"C": 1.0, "solver": "lbfgs", "max_iter": 2000, "class_weight": null} (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11 CPU, Python 3.10.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_text_baselines.py`; train time 0.11 s; converged: True; no warnings
+
+Validation Metrics: macro-F1 **0.6538** (95% bootstrap CI 0.619–0.685); accuracy 0.6538; precision (misogynistic) 0.6541; recall 0.6453; weighted-F1 0.6538; TN 251, FP 128, FN 133, TP 242; macro-F1 with text only 0.6456; without watermark 0.6509
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: validation prediction 0.015 s; artifact 181,220 bytes
+
+Artifacts: `models/text/B01_logistic_regression_tfidf_raw_v1.0.joblib` (git-ignored); `results/tables/text_baselines/`; `results/figures/text_baselines/B01_confusion_matrix.png`
+
+Observations: Watermark tokens (`doublemean`, `doublemeaning`, bigrams) are among the top-25 misogynistic features.
+
+Error Analysis Notes: see `docs/TEXT_BASELINE_REPORT.md` §12 (best model B03)
+
+Limitations: untuned; small validation set (CI about ±3.4 pp); shortcut features (watermark pattern, empty text predicted misogynistic, OCR `meः`) are learned
+
+Conclusion: Within the uncertainty of the best baseline.
+
+Next Experiment: TASK 9: Transformer / Pretrained Text Model.
+
+### Experiment ID: B02
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: RQ1 (text-only baseline; effect of Hinglish normalization). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned + preprocessed (Task 6 v1.0)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text only (empty texts included as all-zero vectors)
+
+Preprocessing: `basic` (Task 6 v1.0), applied inside the pipeline from `text_raw`; verified identical to the stored Task 6 column
+
+Feature Representation: TF-IDF word 1–2-grams, `min_df=2`, `sublinear_tf`, lowercase, Devanagari-safe `token_pattern`; 6,058 features (fitted on train only)
+
+Model: TF-IDF + Logistic Regression
+
+Model Version / Pretrained Checkpoint: baseline v1.0 (no pretrained weights)
+
+Hyperparameters: {"C": 1.0, "solver": "lbfgs", "max_iter": 2000, "class_weight": null} (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11 CPU, Python 3.10.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_text_baselines.py`; train time 0.17 s; converged: True; no warnings
+
+Validation Metrics: macro-F1 **0.6565** (95% bootstrap CI 0.622–0.690); accuracy 0.6565; precision (misogynistic) 0.6559; recall 0.6507; weighted-F1 0.6565; TN 251, FP 128, FN 131, TP 244; macro-F1 with text only 0.6484; without watermark 0.6536
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: validation prediction 0.029 s; artifact 181,700 bytes
+
+Artifacts: `models/text/B02_logistic_regression_tfidf_basic_v1.0.joblib` (git-ignored); `results/tables/text_baselines/`; `results/figures/text_baselines/B02_confusion_matrix.png`
+
+Observations: Mention masking replaces handles, but the placeholder bigrams `user user` and `user in` become top misogynistic features (watermark proxy).
+
+Error Analysis Notes: see `docs/TEXT_BASELINE_REPORT.md` §12 (best model B03)
+
+Limitations: untuned; small validation set (CI about ±3.4 pp); shortcut features (watermark pattern, empty text predicted misogynistic, OCR `meः`) are learned
+
+Conclusion: Within the uncertainty of the best baseline.
+
+Next Experiment: TASK 9: Transformer / Pretrained Text Model.
+
+### Experiment ID: B03
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: RQ1 (text-only baseline; effect of Hinglish normalization). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned + preprocessed (Task 6 v1.0)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text only (empty texts included as all-zero vectors)
+
+Preprocessing: `hinglish_normalized` (Task 6 v1.0), applied inside the pipeline from `text_raw`; verified identical to the stored Task 6 column
+
+Feature Representation: TF-IDF word 1–2-grams, `min_df=2`, `sublinear_tf`, lowercase, Devanagari-safe `token_pattern`; 6,052 features (fitted on train only)
+
+Model: TF-IDF + Logistic Regression
+
+Model Version / Pretrained Checkpoint: baseline v1.0 (no pretrained weights)
+
+Hyperparameters: {"C": 1.0, "solver": "lbfgs", "max_iter": 2000, "class_weight": null} (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11 CPU, Python 3.10.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_text_baselines.py`; train time 0.27 s; converged: True; no warnings
+
+Validation Metrics: macro-F1 **0.6671** (95% bootstrap CI 0.633–0.701); accuracy 0.6671; precision (misogynistic) 0.6676; recall 0.6587; weighted-F1 0.6671; TN 256, FP 123, FN 128, TP 247; macro-F1 with text only 0.6593; without watermark 0.6643
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: validation prediction 0.036 s; artifact 181,860 bytes
+
+Artifacts: `models/text/B03_logistic_regression_tfidf_hinglish_normalized_v1.0.joblib` (git-ignored); `results/tables/text_baselines/`; `results/figures/text_baselines/B03_confusion_matrix.png`
+
+Observations: Best validation macro-F1 of the six. +0.0106 vs B02 and +0.0133 vs B01; confidence intervals overlap and no significance is claimed. Error rates are highest for Devanagari (39.6%) and very short texts (40.0%); 207/251 errors are shared by all six models.
+
+Error Analysis Notes: see `docs/TEXT_BASELINE_REPORT.md` §12 (best model B03)
+
+Limitations: untuned; small validation set (CI about ±3.4 pp); shortcut features (watermark pattern, empty text predicted misogynistic, OCR `meः`) are learned
+
+Conclusion: Best development baseline.
+
+Next Experiment: TASK 9: Transformer / Pretrained Text Model.
+
+### Experiment ID: B04
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: RQ1 (text-only baseline; effect of Hinglish normalization). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned + preprocessed (Task 6 v1.0)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text only (empty texts included as all-zero vectors)
+
+Preprocessing: `raw` (Task 6 v1.0), applied inside the pipeline from `text_raw`; verified identical to the stored Task 6 column
+
+Feature Representation: TF-IDF word 1–2-grams, `min_df=2`, `sublinear_tf`, lowercase, Devanagari-safe `token_pattern`; 6,042 features (fitted on train only)
+
+Model: TF-IDF + Linear SVM (LinearSVC)
+
+Model Version / Pretrained Checkpoint: baseline v1.0 (no pretrained weights)
+
+Hyperparameters: {"C": 1.0, "loss": "squared_hinge", "dual": "auto", "max_iter": 10000, "class_weight": null} (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11 CPU, Python 3.10.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_text_baselines.py`; train time 0.10 s; converged: True; no warnings
+
+Validation Metrics: macro-F1 **0.6512** (95% bootstrap CI 0.614–0.684); accuracy 0.6512; precision (misogynistic) 0.6497; recall 0.6480; weighted-F1 0.6512; TN 248, FP 131, FN 132, TP 243; macro-F1 with text only 0.6430; without watermark 0.6483
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: validation prediction 0.017 s; artifact 181,088 bytes
+
+Artifacts: `models/text/B04_linear_svm_tfidf_raw_v1.0.joblib` (git-ignored); `results/tables/text_baselines/`; `results/figures/text_baselines/B04_confusion_matrix.png`
+
+Observations: SVM on RAW. Same watermark artefacts as B01.
+
+Error Analysis Notes: see `docs/TEXT_BASELINE_REPORT.md` §12 (best model B03)
+
+Limitations: untuned; small validation set (CI about ±3.4 pp); shortcut features (watermark pattern, empty text predicted misogynistic, OCR `meः`) are learned
+
+Conclusion: Within the uncertainty of the best baseline.
+
+Next Experiment: TASK 9: Transformer / Pretrained Text Model.
+
+### Experiment ID: B05
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: RQ1 (text-only baseline; effect of Hinglish normalization). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned + preprocessed (Task 6 v1.0)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text only (empty texts included as all-zero vectors)
+
+Preprocessing: `basic` (Task 6 v1.0), applied inside the pipeline from `text_raw`; verified identical to the stored Task 6 column
+
+Feature Representation: TF-IDF word 1–2-grams, `min_df=2`, `sublinear_tf`, lowercase, Devanagari-safe `token_pattern`; 6,058 features (fitted on train only)
+
+Model: TF-IDF + Linear SVM (LinearSVC)
+
+Model Version / Pretrained Checkpoint: baseline v1.0 (no pretrained weights)
+
+Hyperparameters: {"C": 1.0, "loss": "squared_hinge", "dual": "auto", "max_iter": 10000, "class_weight": null} (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11 CPU, Python 3.10.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_text_baselines.py`; train time 0.14 s; converged: True; no warnings
+
+Validation Metrics: macro-F1 **0.6525** (95% bootstrap CI 0.615–0.685); accuracy 0.6525; precision (misogynistic) 0.6507; recall 0.6507; weighted-F1 0.6525; TN 248, FP 131, FN 131, TP 244; macro-F1 with text only 0.6444; without watermark 0.6497
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: validation prediction 0.024 s; artifact 181,552 bytes
+
+Artifacts: `models/text/B05_linear_svm_tfidf_basic_v1.0.joblib` (git-ignored); `results/tables/text_baselines/`; `results/figures/text_baselines/B05_confusion_matrix.png`
+
+Observations: Placeholder bigrams again among the strongest features.
+
+Error Analysis Notes: see `docs/TEXT_BASELINE_REPORT.md` §12 (best model B03)
+
+Limitations: untuned; small validation set (CI about ±3.4 pp); shortcut features (watermark pattern, empty text predicted misogynistic, OCR `meः`) are learned
+
+Conclusion: Within the uncertainty of the best baseline.
+
+Next Experiment: TASK 9: Transformer / Pretrained Text Model.
+
+### Experiment ID: B06
+
+Date: 2026-10-12
+
+Status: COMPLETED
+
+Research Question: RQ1 (text-only baseline; effect of Hinglish normalization). Development comparison on VALIDATION.
+
+Dataset: MIMIC, cleaned + preprocessed (Task 6 v1.0)
+
+Dataset Version: canonical split `data/splits/split_assignments.csv` SHA-256 `47fb02a87b36…`
+
+Dataset Source: Paper https://doi.org/10.1145/3656169; dataset card https://huggingface.co/datasets/Aakash941/MIMIC-Meme-Dataset
+
+Train Split: 3,532 (canonical Task 7)
+
+Validation Split: 754 (canonical Task 7)
+
+Test Split: 758. NOT LOADED, NOT EVALUATED.
+
+Input Modality: Text only (empty texts included as all-zero vectors)
+
+Preprocessing: `hinglish_normalized` (Task 6 v1.0), applied inside the pipeline from `text_raw`; verified identical to the stored Task 6 column
+
+Feature Representation: TF-IDF word 1–2-grams, `min_df=2`, `sublinear_tf`, lowercase, Devanagari-safe `token_pattern`; 6,052 features (fitted on train only)
+
+Model: TF-IDF + Linear SVM (LinearSVC)
+
+Model Version / Pretrained Checkpoint: baseline v1.0 (no pretrained weights)
+
+Hyperparameters: {"C": 1.0, "loss": "squared_hinge", "dual": "auto", "max_iter": 10000, "class_weight": null} (fixed defaults, NOT tuned)
+
+Random Seed: 42
+
+Training Environment: Windows 11 CPU, Python 3.10.0, scikit-learn 1.7.2
+
+Training Details: `python scripts/train_text_baselines.py`; train time 0.23 s; converged: True; no warnings
+
+Validation Metrics: macro-F1 **0.6499** (95% bootstrap CI 0.615–0.683); accuracy 0.6499; precision (misogynistic) 0.6480; recall 0.6480; weighted-F1 0.6499; TN 247, FP 132, FN 132, TP 243; macro-F1 with text only 0.6417; without watermark 0.6470
+
+Test Metrics: NOT EVALUATED
+
+Runtime / Resource Notes: validation prediction 0.045 s; artifact 181,728 bytes
+
+Artifacts: `models/text/B06_linear_svm_tfidf_hinglish_normalized_v1.0.joblib` (git-ignored); `results/tables/text_baselines/`; `results/figures/text_baselines/B06_confusion_matrix.png`
+
+Observations: Hinglish normalization did not help the SVM (-0.0026 vs B05).
+
+Error Analysis Notes: see `docs/TEXT_BASELINE_REPORT.md` §12 (best model B03)
+
+Limitations: untuned; small validation set (CI about ±3.4 pp); shortcut features (watermark pattern, empty text predicted misogynistic, OCR `meः`) are learned
+
+Conclusion: Within the uncertainty of the best baseline.
+
+Next Experiment: TASK 9: Transformer / Pretrained Text Model.

@@ -147,3 +147,6 @@ ocr_output/
 
 # Preprocessing before/after examples contain dataset text (Task 6)
 results/tables/preprocessing/preprocessing_examples.csv
+
+# Text-baseline validation errors with dataset text (Task 8)
+results/tables/text_baselines/*_with_text.csv

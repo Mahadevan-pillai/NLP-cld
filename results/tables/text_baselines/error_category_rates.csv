@@ -1,0 +1,10 @@
+category,samples,errors,error_rate
+no_text,22,2,0.0909
+very_short_1_3_words,45,18,0.4
+long_20plus_words,79,23,0.2911
+has_negation,132,40,0.303
+has_devanagari,217,86,0.3963
+has_hinglish_rule_variant,93,25,0.2688
+has_watermark,6,0,0.0
+has_mention,57,10,0.1754
+ALL,754,251,0.3329
