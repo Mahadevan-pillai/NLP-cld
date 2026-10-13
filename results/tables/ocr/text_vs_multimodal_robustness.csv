@@ -1,0 +1,2 @@
+text_model,text_degradation,multimodal_model,multimodal_degradation,difference_text_minus_multimodal,ci95_low,ci95_high,share_resamples_multimodal_more_robust
+T05,0.0104,M04,0.0013,0.0091,-0.0128,0.0309,0.785

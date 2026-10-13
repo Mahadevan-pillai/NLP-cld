@@ -1,0 +1,46 @@
+# ==================================================================
+# config/ocr.yaml - OCR pipeline settings (Task 14)
+# ==================================================================
+# Kept separate from config.yaml because config.yaml is checksum-frozen by the Task 13 final
+# evaluation (results/final/model_freeze_manifest.json). No credentials here.
+# See docs/OCR_ROBUSTNESS_REPORT.md.
+# ==================================================================
+
+version: "1.0"
+engine: "easyocr"                 # Apache-2.0; MIMIC captions were produced with EasyOCR (dataset card)
+engine_version: "1.7.2"
+languages: ["en", "hi"]           # English + Devanagari recognisers; CRAFT text detector
+device: "cpu"
+
+# OCR-specific image preparation (separate from the Task 10 vision preprocessing).
+preparation_candidates: ["none", "grayscale_autocontrast"]
+preparation: "none"                 # set ONCE from the validation selection below, BEFORE any TEST OCR
+selection:
+  split: "validation"
+  subset_size: 150                # stratified by label, seed 42
+  seed: 42
+  rule: "lowest corpus CER of HINGLISH-normalised OCR vs HINGLISH-normalised reference text; ties -> 'none' (simplest)"
+
+# Text produced by OCR goes through the UNCHANGED Task 6 preprocess() (raw / basic / hinglish_normalized).
+
+# Fallback policy for future inference (designed in Task 14; fixed BEFORE the TEST experiment; not tuned on TEST).
+fallback:
+  min_confidence: 0.30            # mean EasyOCR region confidence below this = "very low confidence"
+  invalid_image: "reject"         # cannot analyse; ask for another image
+  ocr_error: "image_only"         # run the image-only model; tell the user text could not be read
+  no_text: "image_only"           # no text detected (or empty after preprocessing)
+  low_confidence: "image_only_and_human_review"
+  ok: "multimodal"
+
+# Research cache (dataset images only). User uploads are NEVER cached by default.
+cache:
+  dir_env: "NLP_CLD_MODEL_DIR"    # cache lives at <dir of $NLP_CLD_MODEL_DIR>/../cache/ocr (outside the repo)
+  subdir: "cache/ocr"
+  key: "image_sha256 + engine + engine_version + preparation + pipeline_version"
+  cache_user_uploads: false
+
+outputs:
+  tables: "results/tables/ocr"
+  figures: "results/figures/ocr"
+  metrics: "results/metrics/ocr"
+  texts: "results/predictions/ocr"  # per-sample OCR text (dataset-derived text): git-ignored
