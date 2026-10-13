@@ -13,6 +13,7 @@
 numpy>=1.26
 pandas>=2.1
 scikit-learn>=1.4
+scipy>=1.10              # Task 13: exact McNemar test (scipy.stats.binomtest)
 matplotlib>=3.8
 PyYAML>=6.0
 python-dotenv>=1.0

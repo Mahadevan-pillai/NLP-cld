@@ -303,6 +303,12 @@ tuning:
       fusion_mlp: {projection_dim: 256, hidden_dim: 512, dropout: 0.1, learning_rate: 3.0e-4, weight_decay: 0.1,
                    batch_size: 64, max_epochs: 50, early_stopping_patience: 5, min_improvement: 0.0}
 
+final_evaluation:             # Task 13. Frozen BEFORE the test set was opened; see docs/FINAL_EVALUATION_REPORT.md
+  freeze_manifest: "results/final/model_freeze_manifest.json"   # artifact/config checksums + evaluation plan
+  final_registry: "results/final/final_model_registry.json"     # final models + FINAL TEST metrics (written after test)
+  bootstrap: {resamples: 10000, seed: 42}
+  primary_comparisons: [["M04", "T05"], ["M04", "I03"]]          # RQ2 (vs text), RQ3 (vs image)
+
 final_models:                 # Task 12 development selection (VALIDATION only; TEST not evaluated)
   FINAL_TEXT_MODEL: "T05"     # fine-tuned MuRIL, HINGLISH_NORMALIZED (fallback: B07)
   FINAL_IMAGE_MODEL: "I03"    # frozen SigLIP + LR C=0.001
